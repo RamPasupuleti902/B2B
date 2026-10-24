@@ -1013,6 +1013,13 @@ STATIC.iptv = reg([
   { id: 'iptv:premium', label: 'IPTV Premium', big: '1,000+ channels', sub: '3 devices · Full HD and 4K', price: 24.99, per: 'per month', pop: true, badge: 'Popular', feats: ['Everything in Standard', 'Sports and international packs', 'Cloud recording'] },
   { id: 'iptv:family', label: 'IPTV Family', big: '1,000+ channels', sub: '5 devices · 4K', price: 34.99, per: 'per month', feats: ['Everything in Premium', 'Kids profiles with parental controls', 'Priority support'] }
 ]);
+ICON.mdm = svg('<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/><path d="M10 9l2 1.5L14 9v2.5c0 1-.9 1.8-2 2.2-1.1-.4-2-1.2-2-2.2z"/>');
+STATIC.mdm = reg([
+  { id: 'mdm:essentials', label: 'MDM Essentials', big: '$2.50 / device', sub: 'Per device, every month', price: 2.5, per: 'per device / month', feats: ['Device inventory and groups', 'Remote lock and wipe', 'App allow and block lists'] },
+  { id: 'mdm:business', label: 'MDM Business', big: '$5 / device', sub: 'Per device, every month', price: 5, per: 'per device / month', pop: true, badge: 'Popular', feats: ['Everything in Essentials', 'Push apps and policies', 'Location tracking and geofencing'] },
+  { id: 'mdm:enterprise', label: 'MDM Enterprise', big: '$9 / device', sub: 'Per device, every month', price: 9, per: 'per device / month', feats: ['Everything in Business', 'Zero-touch enrolment and kiosk mode', 'Audit logs and single sign-on'] },
+  { id: 'mdm:team25', label: 'MDM Team 25', big: '25 devices', sub: 'Bundle with Business features', price: 99, per: 'per month', feats: ['25 devices on Business features', 'Lower price per device', 'Onboarding help included'] }
+]);
 STATIC.pg = reg([
   { id: 'pg:starter', label: 'Gateway Starter', big: '2.9% + 30c', sub: 'Per successful card payment', price: 9, per: 'per month', feats: ['Cards and wallets on one checkout', 'Test mode and live mode', 'Email receipts'] },
   { id: 'pg:growth', label: 'Gateway Growth', big: '2.4% + 25c', sub: 'Per successful card payment', price: 29, per: 'per month', feats: ['Everything in Starter', 'Payment links and invoices', 'Refunds from the dashboard'] },
@@ -1035,7 +1042,8 @@ const SERVICES = [
   { id: 'voip', name: 'VOIP', tone: 'var(--t7)', icon: 'voip', desc: 'Business calling lines with menus, voicemail and call groups.', from: () => lowest(STATIC.voip) },
   { id: 'iot', name: 'IoT SIM', tone: 'var(--t2)', icon: 'esim', desc: 'Low-cost data SIMs for trackers, meters and connected devices.', from: () => lowest(STATIC.iot) },
   { id: 'pg', name: 'Payment Gateway', tone: 'var(--t5)', icon: 'bag', desc: 'Accept cards and wallets on your website with a single integration.', from: () => lowest(STATIC.pg) },
-  { id: 'iptv', name: 'IPTV', tone: 'var(--t6)', icon: 'tv', desc: 'Live TV, catch-up and on-demand streaming on phones, smart TVs and set-top boxes.', from: () => lowest(STATIC.iptv) }
+  { id: 'iptv', name: 'IPTV', tone: 'var(--t6)', icon: 'tv', desc: 'Live TV, catch-up and on-demand streaming on phones, smart TVs and set-top boxes.', from: () => lowest(STATIC.iptv) },
+  { id: 'mdm', name: 'MDM', tone: 'var(--t3)', icon: 'mdm', desc: 'Mobile device management: lock, wipe, track and control phones and tablets.', from: () => lowest(STATIC.mdm) }
 ];
 const EXPLAIN = {
   did: ['What is a DID?', 'DID stands for Direct Inward Dialing. It is an ordinary phone number in a country or city of your choice. When someone calls it, the call is forwarded to your mobile, an app or your office phone system. People use DIDs to give customers a local number abroad, or to run a business line without a second SIM.']
@@ -1180,7 +1188,7 @@ function viewAuth(m) {
   const left = `<section class="auth-brand">
     <div class="brand">${LOGO}<span>GigHub Systems B2B Outreach</span></div>
     <div><h1>One account for every line you carry.</h1><p class="lead">Buy travel eSIMs, phone numbers, SMS packs, VPN and mobile plans from a single place.</p></div>
-    <div class="facts"><div class="fact"><b>12</b>eSIM destinations, countries and regions</div><div class="fact"><b>2FA</b>Every sign-in needs a 6-digit code</div><div class="fact"><b>10</b>services under one cart</div></div>
+    <div class="facts"><div class="fact"><b>12</b>eSIM destinations, countries and regions</div><div class="fact"><b>2FA</b>Every sign-in needs a 6-digit code</div><div class="fact"><b>11</b>services under one cart</div></div>
     <canvas class="globe rings" width="480" height="480" aria-hidden="true"></canvas>
   </section>`;
   let body;

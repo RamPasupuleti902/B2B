@@ -1,0 +1,1874 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Linkport</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: full-bleed sticky top bar, one centered 1120px column. Sign-in is a split panel (brand story left, form right).
+   Palette: pale mineral grey, deep teal accent, amber used only for highlights. Type: Bricolage Grotesque (display), DM Sans (body), JetBrains Mono (numbers, codes). */
+:root{
+  --bg:#EDF1F0; --surface:#FFFFFF; --surface-2:#F4F7F6; --ink:#0F1F27; --ink-2:#4B5E68; --line:#D8E1DF;
+  --accent:#0C7A6E; --accent-ink:#FFFFFF; --accent-soft:#DAF0EC;
+  --amber:#B97800; --amber-soft:#FBEFD2; --danger:#BF332C; --danger-soft:#FBE3E1; --ok:#1B8548; --ok-soft:#DCF2E4;
+  --shadow:0 1px 2px rgba(15,31,39,.06),0 10px 30px rgba(15,31,39,.07);
+  --t1:#0C7A6E; --t2:#3A5AD6; --t3:#C0570F; --t4:#7B3FBD; --t5:#B3224A; --t6:#1B7898; --t7:#667800;
+  --f-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif; --f-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif; --f-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#091216; --surface:#111E24; --surface-2:#16262D; --ink:#E6EEF0; --ink-2:#9BB0B8; --line:#243740;
+  --accent:#3CCBB6; --accent-ink:#042019; --accent-soft:#12332F;
+  --amber:#F2B63C; --amber-soft:#3A2E10; --danger:#F0766F; --danger-soft:#3A1816; --ok:#4CC987; --ok-soft:#12301F;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  --t1:#3CCBB6; --t2:#8CA2FF; --t3:#F59A5B; --t4:#BE92F0; --t5:#F27C9C; --t6:#62C4E6; --t7:#C0D44A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#091216; --surface:#111E24; --surface-2:#16262D; --ink:#E6EEF0; --ink-2:#9BB0B8; --line:#243740;
+  --accent:#3CCBB6; --accent-ink:#042019; --accent-soft:#12332F;
+  --amber:#F2B63C; --amber-soft:#3A2E10; --danger:#F0766F; --danger-soft:#3A1816; --ok:#4CC987; --ok-soft:#12301F;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  --t1:#3CCBB6; --t2:#8CA2FF; --t3:#F59A5B; --t4:#BE92F0; --t5:#F27C9C; --t6:#62C4E6; --t7:#C0D44A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:60}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:-.02em;line-height:1.12;margin:0;text-wrap:balance}
+p{margin:0}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin:0 auto;width:100%}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:10px 16px;font-weight:700;transition:transform .12s,background .12s,border-color .12s}
+.btn:hover{border-color:var(--accent)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.08)}
+.btn-block{width:100%;padding:13px 16px}
+.btn-link{background:none;border:0;color:var(--accent);font-weight:700;padding:4px 0;text-decoration:underline;text-underline-offset:3px}
+.btn-icon{width:42px;height:42px;padding:0;border-radius:11px}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .in{display:flex;align-items:center;gap:12px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em;background:none;border:0;padding:0}
+.brand svg{width:30px;height:30px;color:var(--accent)}
+.grow{flex:1}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border:1px solid var(--line);border-radius:999px;font-weight:500;background:var(--surface-2)}
+.avatar{width:28px;height:28px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:13px;text-transform:uppercase}
+.cartbtn{position:relative}
+.cartbtn .count{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--amber);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;font-family:var(--f-mono)}
+:root[data-theme="dark"] .cartbtn .count{color:#1b1400}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cartbtn .count{color:#1b1400}}
+.hide-sm{display:inline}
+@media (max-width:560px){.hide-sm{display:none}.chip{padding:6px}}
+
+main{padding-block:28px 72px}
+
+/* auth */
+.auth{min-height:100vh;display:grid;grid-template-columns:1.05fr 1fr}
+.auth-brand{padding:48px max(32px,env(safe-area-inset-left,0px));background:var(--ink);color:var(--bg);display:flex;flex-direction:column;justify-content:space-between;gap:40px;position:relative;overflow:hidden}
+.auth-brand .brand{color:inherit}
+.auth-brand .brand svg{color:#3CCBB6}
+.auth-brand h1{font-size:clamp(34px,4.6vw,56px);max-width:12ch}
+.auth-brand p.lead{max-width:38ch;opacity:.78;margin-top:16px;font-size:17px}
+.rings{position:absolute;right:-120px;bottom:-120px;width:420px;height:420px;opacity:.5;pointer-events:none}
+.facts{display:grid;gap:12px;position:relative}
+.fact{display:flex;gap:12px;align-items:center;font-weight:500}
+.fact b{font-family:var(--f-mono);font-size:13px;background:rgba(60,203,182,.16);color:#3CCBB6;border-radius:8px;padding:4px 8px;min-width:54px;text-align:center}
+.auth-form{display:grid;place-items:center;padding:32px max(16px,env(safe-area-inset-right,0px))}
+.auth-card{width:100%;max-width:420px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:24px}
+.tabs button{border:0;background:none;padding:9px;border-radius:9px;font-weight:700;color:var(--ink-2)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.auth-card h2{font-size:28px}
+.auth-card .sub{color:var(--ink-2);margin:6px 0 22px}
+.field{display:grid;gap:6px;margin-bottom:16px}
+.field label{font-weight:700;font-size:13px}
+.input{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 14px;transition:border-color .12s,box-shadow .12s}
+.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.input.bad{border-color:var(--danger)}
+.pw{position:relative}
+.pw .input{padding-right:64px}
+.pw button{position:absolute;right:6px;top:6px;bottom:6px;border:0;background:none;color:var(--accent);font-weight:700;padding:0 10px;border-radius:8px}
+.meter{display:flex;gap:4px;margin-top:2px}
+.meter i{flex:1;height:4px;border-radius:4px;background:var(--line)}
+.meter[data-s="1"] i:nth-child(-n+1){background:var(--danger)}
+.meter[data-s="2"] i:nth-child(-n+2){background:var(--amber)}
+.meter[data-s="3"] i:nth-child(-n+3){background:var(--ok)}
+.meter[data-s="4"] i{background:var(--ok)}
+.hint{font-size:13px;color:var(--ink-2)}
+.msg{min-height:20px;font-size:13px;color:var(--danger);font-weight:500;margin:-4px 0 12px}
+.msg.ok{color:var(--ok)}
+.otp{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:6px 0 16px}
+.otp input{width:100%;aspect-ratio:1/1.15;text-align:center;font-family:var(--f-mono);font-size:24px;font-weight:700;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0;min-width:0}
+.otp input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.shake{animation:shake .35s}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.setup{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);margin-bottom:18px}
+#qr{background:#fff;padding:8px;border-radius:10px;width:calc(168px + 16px);height:calc(168px + 16px);display:grid;place-items:center}
+#qr img,#qr canvas{display:block;max-width:100%}
+.secret{font-family:var(--f-mono);font-size:13px;word-break:break-all;background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin:6px 0}
+.demo{margin-top:18px;padding:12px 14px;border-radius:12px;background:var(--amber-soft);color:var(--ink);font-size:13px}
+.demo b.code{font-family:var(--f-mono);font-size:18px;letter-spacing:.14em;margin-left:6px;color:var(--amber)}
+@media (max-width:860px){
+  .auth{grid-template-columns:1fr}
+  .auth-brand{padding-block:28px;gap:24px}
+  .auth-brand h1{font-size:34px;max-width:none}
+  .facts,.rings{display:none}
+  .setup{grid-template-columns:1fr;justify-items:center;text-align:center}
+}
+
+/* dashboard */
+.hello{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px;margin-bottom:24px}
+.hello h1{font-size:clamp(28px,4vw,40px)}
+.hello p{color:var(--ink-2);margin-top:6px}
+.grid-svc{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.svc{position:relative;text-align:left;display:flex;flex-direction:column;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;min-height:206px;transition:transform .15s,box-shadow .15s,border-color .15s}
+.svc:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--tone)}
+.tile{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:var(--tone);background:color-mix(in srgb,var(--tone) 14%,var(--surface))}
+.tile svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tile .mono{font-size:17px;font-weight:700}
+.svc h3{font-size:22px}
+.svc p{color:var(--ink-2);font-size:14px}
+.svc .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ink-2)}
+.svc .foot b{color:var(--ink);font-family:var(--f-mono)}
+.svc .go{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--tone)}
+.svc:hover .go{background:var(--tone);color:var(--surface)}
+.svc.blank{border-style:dashed;background:transparent;cursor:default;align-items:flex-start}
+.svc.blank:hover{transform:none;box-shadow:none;border-color:var(--line)}
+.svc.blank .tile{background:var(--surface-2);color:var(--ink-2)}
+.svc.blank h3{color:var(--ink-2)}
+
+/* service page */
+.back{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--ink-2);font-weight:700;padding:4px 0;margin-bottom:14px}
+.back:hover{color:var(--ink)}
+.svc-head{display:flex;gap:16px;align-items:center;margin-bottom:22px}
+.svc-head h1{font-size:clamp(28px,4vw,40px)}
+.svc-head p{color:var(--ink-2);margin-top:4px;max-width:60ch}
+.explain{background:var(--accent-soft);border-radius:16px;padding:18px 20px;margin-bottom:24px;display:grid;gap:6px}
+.explain h3{font-size:17px}
+.explain p{max-width:70ch}
+.dest-wrap{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:26px}
+.dest-label{display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 10px}
+.dest-label h2{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2);font-family:var(--f-body);font-weight:700}
+.dest-label span{font-size:12px;color:var(--ink-2)}
+.dests{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px}
+.dests + .dest-label{margin-top:18px}
+.dest{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--surface-2);border:1.5px solid transparent;border-radius:14px;padding:12px;transition:border-color .12s,background .12s,transform .12s}
+.dest:hover{transform:translateY(-2px);border-color:var(--line)}
+.dest[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.mono-badge{width:38px;height:28px;border-radius:7px;display:grid;place-items:center;background:var(--ink);color:var(--bg);font-family:var(--f-mono);font-size:13px;font-weight:700}
+.dest.region .mono-badge{background:var(--accent);color:var(--accent-ink);border-radius:999px;width:42px}
+.dest b{font-size:14px;line-height:1.2}
+.dest small{color:var(--ink-2);font-size:12px}
+.plans-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:6px 16px;margin-bottom:16px}
+.plans-head h2{font-size:26px}
+.plans-head p{color:var(--ink-2);font-size:14px}
+.plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px;position:relative}
+.plan.pop{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.plan .lab{display:flex;justify-content:space-between;align-items:center;font-size:12px;text-transform:uppercase;letter-spacing:.09em;font-weight:700;color:var(--ink-2);min-height:24px}
+.badge{background:var(--amber-soft);color:var(--amber);border-radius:999px;padding:3px 10px;font-size:11px;letter-spacing:.04em}
+.plan.pop .badge{background:var(--accent);color:var(--accent-ink)}
+.plan .big{font-family:var(--f-display);font-size:34px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.plan .sub{color:var(--ink-2);font-size:14px;margin-top:-8px}
+.plan ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:14px}
+.plan li{display:flex;gap:9px;align-items:flex-start}
+.plan li::before{content:"";flex:none;width:16px;height:16px;margin-top:3px;border-radius:50%;background:var(--accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.2 2.2 4.8-4.9' fill='none' stroke='%230C7A6E' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
+.plan .buy{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px dashed var(--line)}
+.price{font-family:var(--f-mono);font-size:22px;font-weight:700}
+.price small{display:block;font-family:var(--f-body);font-size:12px;font-weight:400;color:var(--ink-2)}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--accent);border-radius:11px;overflow:hidden}
+.stepper button{width:36px;height:40px;border:0;background:var(--accent-soft);color:var(--accent);font-size:18px;font-weight:700}
+.stepper span{min-width:34px;text-align:center;font-family:var(--f-mono);font-weight:700}
+
+/* cart drawer */
+.scrim{position:fixed;inset:0;background:rgba(5,12,15,.5);z-index:70;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;bottom:0;right:0;width:min(440px,100%);background:var(--surface);z-index:80;transform:translateX(102%);transition:transform .25s ease;display:flex;flex-direction:column;box-shadow:var(--shadow);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer.on{transform:none}
+.drawer header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+.drawer header h2{font-size:22px}
+.lines{flex:1;overflow:auto;padding:8px 20px}
+.line{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.line b{font-size:14px}
+.line small{color:var(--ink-2);grid-column:1}
+.line .amt{font-family:var(--f-mono);font-weight:700;text-align:right}
+.line .ctl{grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.line .stepper button{height:32px;width:32px}
+.empty{display:grid;place-items:center;text-align:center;gap:10px;padding:60px 20px;color:var(--ink-2)}
+.empty svg{width:44px;height:44px;fill:none;stroke:currentColor;stroke-width:1.5}
+.sumbox{padding:16px 20px calc(16px);border-top:1px solid var(--line);display:grid;gap:10px;background:var(--surface-2)}
+.row{display:flex;justify-content:space-between;gap:12px}
+.row.total{font-weight:700;font-size:18px}
+.row .mono{font-weight:700}
+.promo{display:flex;gap:8px}
+.promo .input{padding:9px 12px}
+.tag-ok{color:var(--ok);font-size:13px;font-weight:700}
+
+/* checkout */
+.steps{display:flex;gap:8px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--ink-2);font-size:14px}
+.step i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--line);font-family:var(--f-mono);font-size:12px}
+.step.on{color:var(--ink)}
+.step.on i{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.step.done i{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.step-sep{width:28px;height:2px;background:var(--line);border-radius:2px}
+.co{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px}
+.panel h2{font-size:24px;margin-bottom:18px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.test{padding:12px 14px;border-radius:12px;background:var(--amber-soft);font-size:13px;margin-bottom:18px}
+.test code{font-family:var(--f-mono);font-weight:700}
+.brandtag{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--ink-2);font-family:var(--f-mono)}
+.cardfield{position:relative}
+.secure{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-2);margin-top:12px;justify-content:center}
+.secure svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8}
+.side{position:sticky;top:calc(80px + env(safe-area-inset-top,0px))}
+.side .item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.side .item small{display:block;color:var(--ink-2)}
+.done-card{max-width:560px;margin:20px auto;text-align:center;display:grid;gap:14px;justify-items:center}
+.tick{width:68px;height:68px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center}
+.tick svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.receipt{width:100%;text-align:left;border:1px dashed var(--line);border-radius:14px;padding:6px 16px}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (max-width:900px){.co{grid-template-columns:1fr}.side{position:static}}
+@media (max-width:480px){.two{grid-template-columns:1fr}.panel{padding:18px}.step span{display:none}.step.on span{display:inline}}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:12px;font-weight:700;opacity:0;pointer-events:none;transition:.2s;z-index:90;max-width:calc(100% - 32px)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<style>
+/* Visual layer: atmospheric background, frosted-glass surfaces, blue-marble globe and marble veining. Loaded after the base styles so it overrides surfaces only. */
+:root{
+  --marble-w:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .010' numOctaves='5' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0 0 .85 0 0 0 .85 0 0 0 .6 0 0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  --marble-b:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .010' numOctaves='5' seed='11'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 .05 0 0 0 0 .32 0 0 0 0 .62 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0 0 .85 0 0 0 .85 0 0 0 .6 0 0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  --marble:var(--marble-b); --vein:.30;
+  --glass:rgba(255,255,255,.58); --glass-strong:rgba(255,255,255,.82); --glass-line:rgba(255,255,255,.8); --glass-edge:rgba(20,70,110,.12); --hi:rgba(255,255,255,.7);
+  --dot:rgba(20,80,120,.22);
+  --mesh:radial-gradient(55% 45% at 12% 8%,#b4def6 0%,transparent 62%),radial-gradient(45% 45% at 92% 14%,#c4d3ff 0%,transparent 60%),radial-gradient(60% 55% at 78% 98%,#b4eee2 0%,transparent 62%),linear-gradient(180deg,#e4f0f9,#d8e8f3);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --marble:var(--marble-w); --vein:.16;
+  --glass:rgba(12,30,42,.55); --glass-strong:rgba(10,26,36,.80); --glass-line:rgba(150,210,235,.17); --glass-edge:rgba(0,0,0,.45); --hi:rgba(255,255,255,.07);
+  --dot:rgba(140,205,235,.20);
+  --mesh:radial-gradient(55% 45% at 12% 8%,#0d4a70 0%,transparent 62%),radial-gradient(45% 45% at 92% 14%,#12356f 0%,transparent 60%),radial-gradient(60% 55% at 78% 98%,#0a5a5c 0%,transparent 62%),linear-gradient(180deg,#07121d,#050d16)}}
+:root[data-theme="dark"]{
+  --marble:var(--marble-w); --vein:.16;
+  --glass:rgba(12,30,42,.55); --glass-strong:rgba(10,26,36,.80); --glass-line:rgba(150,210,235,.17); --glass-edge:rgba(0,0,0,.45); --hi:rgba(255,255,255,.07);
+  --dot:rgba(140,205,235,.20);
+  --mesh:radial-gradient(55% 45% at 12% 8%,#0d4a70 0%,transparent 62%),radial-gradient(45% 45% at 92% 14%,#12356f 0%,transparent 60%),radial-gradient(60% 55% at 78% 98%,#0a5a5c 0%,transparent 62%),linear-gradient(180deg,#07121d,#050d16)}
+
+/* background scene */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:var(--mesh);overflow:hidden}
+#bg::before{content:"";position:absolute;inset:-12%;background:var(--marble);background-size:900px 900px;opacity:var(--vein);animation:drift 80s ease-in-out infinite alternate}
+#bg::after{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,var(--dot) 1.2px,transparent 1.6px);background-size:30px 30px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 75%);mask-image:linear-gradient(180deg,#000,transparent 75%)}
+@keyframes drift{to{transform:translate(-5%,3%) scale(1.06)}}
+#hdr{display:contents}
+main{position:relative;z-index:1}
+
+/* glass surfaces */
+.top{background:var(--glass-strong);border-bottom:1px solid var(--glass-line);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5)}
+body::before{background:var(--glass-strong)}
+.svc,.plan,.dest-wrap,.panel,.svc-head,.hero,.auth-card{background:var(--glass);border:1px solid var(--glass-line);box-shadow:inset 0 1px 0 var(--hi),0 14px 34px var(--glass-edge);-webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5)}
+.plan{background:var(--glass-strong)}
+.explain{background:color-mix(in srgb,var(--accent) 14%,var(--glass-strong));border:1px solid var(--glass-line)}
+.drawer{background:color-mix(in srgb,var(--surface) 92%,transparent);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
+.chip{background:var(--glass)}
+
+/* service cards: tone glow + marble veining */
+.svc{overflow:hidden;isolation:isolate}
+.svc::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--tone) 32%,transparent),transparent 62%)}
+.svc::after{content:"";position:absolute;inset:0;z-index:-1;background:var(--marble);background-size:520px 520px;opacity:var(--vein)}
+.svc:hover{box-shadow:inset 0 1px 0 var(--hi),0 20px 44px color-mix(in srgb,var(--tone) 30%,transparent)}
+.tile{background:color-mix(in srgb,var(--tone) 18%,var(--glass-strong));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tone) 38%,transparent)}
+.svc.blank{background:transparent;border:1.5px dashed var(--glass-line);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.svc.blank::before,.svc.blank::after{display:none}
+.svc.blank .tile{background:var(--glass);box-shadow:none}
+.svc .go{background:var(--glass-strong)}
+
+/* hero */
+.hero{position:relative;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:12px;padding:clamp(24px,4vw,52px);border-radius:30px;overflow:hidden;isolation:isolate;margin-bottom:32px;background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 24%,var(--glass-strong)),var(--glass) 70%)}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--marble);background-size:760px 760px;opacity:var(--vein)}
+.hero-copy{min-width:0}
+.eyebrow{font-weight:700;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+.hero h1{font-size:clamp(34px,5vw,60px);max-width:14ch;margin-top:10px}
+.hero p{max-width:44ch;color:var(--ink-2);font-size:17px;margin-top:14px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.hero-chips span{padding:7px 14px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--glass-line);font-weight:700;font-size:13px}
+.hero-globe{display:grid;place-items:center;position:relative;min-height:280px}
+.hero-globe::before{content:"";position:absolute;width:min(112%,440px);aspect-ratio:1;border-radius:50%;border:1.5px dashed color-mix(in srgb,var(--accent) 55%,transparent);animation:spin 70s linear infinite}
+.globe{opacity:0;transition:opacity .9s;border-radius:50%}
+.globe.on{opacity:1}
+.hero-globe .globe{width:min(100%,380px);height:auto;aspect-ratio:1;box-shadow:0 0 0 1px rgba(160,220,255,.3),0 0 64px 8px rgba(70,160,255,.38),0 30px 60px rgba(0,30,70,.35);animation:float 8s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px)}}
+.sec-title{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 2px 14px}
+.sec-title h2{font-size:24px}
+.sec-title span{color:var(--ink-2);font-size:13px}
+@media (max-width:760px){.hero{grid-template-columns:1fr}.hero-globe{min-height:250px}.hero-globe .globe{width:230px}.hero-globe::before{width:270px}}
+
+/* service header banner */
+.svc-head{position:relative;overflow:hidden;isolation:isolate;padding:24px;border-radius:26px}
+.svc-head::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(90% 140% at 100% 0%,color-mix(in srgb,var(--tone) 34%,transparent),transparent 65%)}
+.svc-head::after{content:"";position:absolute;inset:0;z-index:-1;background:var(--marble);background-size:620px 620px;opacity:var(--vein)}
+
+/* destinations and plans */
+.dest{background-color:color-mix(in srgb,var(--surface) 55%,transparent);background-image:linear-gradient(135deg,hsl(var(--h,190) 80% 58% / .24),transparent 72%)}
+.dest[aria-pressed="true"]{background-image:linear-gradient(135deg,hsl(var(--h,190) 80% 58% / .42),color-mix(in srgb,var(--accent) 14%,transparent));box-shadow:0 8px 24px color-mix(in srgb,var(--accent) 28%,transparent)}
+.plan .big{background-image:linear-gradient(120deg,var(--ink) 35%,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.plan.pop{box-shadow:0 0 0 1px var(--accent),0 18px 44px color-mix(in srgb,var(--accent) 26%,transparent)}
+.plan:hover{transform:translateY(-3px)}
+.plan{transition:transform .15s}
+
+/* auth */
+.auth-brand{background:radial-gradient(70% 50% at 20% 0%,#0d6f8f 0%,transparent 60%),radial-gradient(60% 60% at 100% 100%,#0a4f8a 0%,transparent 65%),linear-gradient(160deg,#061a30,#07304a 60%,#064a55);color:#EAF4F6;isolation:isolate}
+.auth-brand::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--marble-w);background-size:700px 700px;opacity:.22}
+.auth-brand .lead{opacity:.85}
+.auth-brand .globe.rings{width:480px;height:480px;right:-140px;bottom:-140px;opacity:0;box-shadow:0 0 70px 10px rgba(70,160,255,.35)}
+.auth-brand .globe.rings.on{opacity:1}
+.auth-card{padding:32px;border-radius:26px;background:var(--glass-strong)}
+@media (max-width:480px){.auth-card{padding:22px}}
+</style>
+<style>
+/* Destination cards, country page and flags */
+.flag{display:block;overflow:hidden;border-radius:10px;aspect-ratio:3/2;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 6px 16px rgba(0,0,0,.16)}
+.flag svg{width:100%;height:100%;display:block}
+.flag.sm{width:28px;flex:none;border-radius:5px;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
+.dests{grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:14px}
+.dest{position:relative;gap:12px;padding:10px 10px 14px}
+.dest .flag{width:100%}
+.dest .flag svg{transition:transform .35s}
+.dest:hover .flag svg{transform:scale(1.08)}
+.dest-meta{display:grid;gap:2px;padding:0 4px}
+.dest-meta b{font-size:15px}
+.dest .arr{position:absolute;right:18px;top:18px;width:30px;height:30px;border-radius:50%;background:var(--glass-strong);display:grid;place-items:center;font-weight:700;opacity:0;transform:translateX(-4px);transition:.15s;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.dest:hover .arr,.dest:focus-visible .arr{opacity:1;transform:none}
+.dest:hover{box-shadow:0 14px 30px color-mix(in srgb,var(--accent) 22%,transparent)}
+
+/* country hero */
+.chero{position:relative;overflow:hidden;isolation:isolate;border-radius:30px;padding:clamp(24px,4vw,52px);min-height:300px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;border:1px solid var(--glass-line);box-shadow:inset 0 1px 0 var(--hi),0 18px 44px var(--glass-edge);
+  background:radial-gradient(80% 120% at 0% 0%,color-mix(in srgb,var(--c1) 50%,transparent),transparent 62%),radial-gradient(70% 100% at 100% 100%,color-mix(in srgb,var(--c2) 42%,transparent),transparent 64%),linear-gradient(135deg,color-mix(in srgb,var(--c3) 26%,var(--glass-strong)),var(--glass))}
+.chero::after{content:"";position:absolute;inset:0;z-index:-1;background:var(--marble);background-size:700px 700px;opacity:var(--vein)}
+.chero .wm{position:absolute;z-index:-1;right:-8%;top:-14%;width:66%;aspect-ratio:3/2;opacity:.3;filter:blur(1.5px) saturate(1.25);transform:rotate(-7deg);-webkit-mask-image:linear-gradient(90deg,transparent 8%,#000 62%);mask-image:linear-gradient(90deg,transparent 8%,#000 62%)}
+.chero .wm svg{width:100%;height:100%;display:block}
+.chero-copy{min-width:0}
+.chero h1{font-size:clamp(40px,6.5vw,76px);margin-top:8px}
+.chero p{color:var(--ink-2);font-size:18px;max-width:42ch;margin-top:12px}
+.spots{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:22px}
+.spots span{padding:6px 13px;border-radius:999px;background:var(--glass-strong);border:1px solid var(--glass-line);font-weight:700;font-size:13px}
+.spots .spots-l{background:none;border:0;padding:0 4px 0 0;color:var(--ink-2);font-weight:500}
+.bigflag{width:min(270px,36vw);aspect-ratio:3/2;border-radius:18px;overflow:hidden;background:#fff;transform:rotate(3deg);box-shadow:0 0 0 5px rgba(255,255,255,.6),0 26px 56px rgba(0,0,0,.32);animation:float 8s ease-in-out infinite}
+.bigflag svg{width:100%;height:100%;display:block}
+@media (max-width:760px){.chero{grid-template-columns:1fr;min-height:0}.bigflag{order:-1;width:190px}.chero .wm{width:110%;right:-30%}}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0 32px}
+.stat{background:var(--glass);border:1px solid var(--glass-line);border-radius:16px;padding:14px 16px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.stat small{display:block;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.stat b{font-family:var(--f-mono);font-size:21px}
+
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.fchip{border:1px solid var(--glass-line);background:var(--glass-strong);border-radius:999px;padding:7px 15px;font-weight:700;font-size:13px}
+.fchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.lab-l{display:flex;align-items:center;gap:8px}
+
+.how{margin:36px 0 34px}
+.how ol{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;padding:0;margin:0;counter-reset:s}
+.how li{counter-increment:s;position:relative;display:grid;gap:2px;background:var(--glass);border:1px solid var(--glass-line);border-radius:18px;padding:18px 18px 18px 70px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.how li::before{content:counter(s);position:absolute;left:18px;top:18px;width:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-mono);font-weight:700}
+.how li span{color:var(--ink-2);font-size:14px}
+
+.strip{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity}
+.mini{flex:none;scroll-snap-align:start;display:flex;align-items:center;gap:10px;padding:8px 16px 8px 8px;border-radius:999px;border:1px solid var(--glass-line);background:var(--glass-strong);font-weight:700;transition:transform .12s,border-color .12s}
+.mini:hover{transform:translateY(-2px);border-color:var(--accent)}
+</style>
+<style>
+/* Bright skin: pastel mesh background, vivid tone tiles, violet-to-pink buttons. Applied with data-skin="bright" on the root; "classic" keeps the glass look. */
+html:root[data-skin="bright"]{
+  --marble-p:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cfilter id='m' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .010' numOctaves='5' seed='23'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 .62 0 0 0 0 .42 0 0 0 0 1 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0 0 .8 0 0 0 .8 0 0 0 .55 0 0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  --marble:var(--marble-p); --vein:.26;
+  --bg:#FBF9FF; --surface:#FFFFFF; --surface-2:#F4F1FF; --ink:#1B1740; --ink-2:#5C577F; --line:#E5DFF6;
+  --accent:#6D4AFF; --accent-ink:#FFFFFF; --accent-soft:#EAE4FF;
+  --amber:#A85A00; --amber-soft:#FFEACB; --danger:#D6324A; --danger-soft:#FFE3E8; --ok:#0F9457; --ok-soft:#D9F6E7;
+  --shadow:0 2px 4px rgba(109,74,255,.06),0 14px 34px rgba(109,74,255,.13);
+  --t1:#00A98F; --t2:#4F6BFF; --t3:#FF7A3D; --t4:#A855F7; --t5:#FF4D8D; --t6:#0A9BD6; --t7:#5E9A00;
+  --glass:rgba(255,255,255,.74); --glass-strong:rgba(255,255,255,.93); --glass-line:rgba(109,74,255,.15); --glass-edge:rgba(109,74,255,.13); --hi:rgba(255,255,255,.95);
+  --dot:rgba(109,74,255,.17);
+  --mesh:radial-gradient(40% 35% at 8% 6%,#FFD3C0 0%,transparent 66%),radial-gradient(38% 38% at 95% 8%,#DCCBFF 0%,transparent 66%),radial-gradient(42% 40% at 4% 92%,#C6F3E3 0%,transparent 66%),radial-gradient(42% 40% at 96% 90%,#C5E6FF 0%,transparent 66%),radial-gradient(30% 30% at 50% 45%,#FFE6F3 0%,transparent 72%),#FBF9FF;
+  color-scheme:light;
+}
+html:root[data-skin="bright"] .btn-primary{background:linear-gradient(135deg,#6D4AFF,#B14DFF);border-color:transparent;color:#fff;box-shadow:0 8px 20px rgba(109,74,255,.32)}
+html:root[data-skin="bright"] .btn-primary:hover{filter:brightness(1.07)}
+html:root[data-skin="bright"] .top{background:rgba(255,255,255,.88);border-bottom:1px solid transparent;border-image:linear-gradient(90deg,#FF7A3D,#FF4D8D,#A855F7,#4F6BFF,#00A3E0) 1}
+html:root[data-skin="bright"] .brand svg{color:#6D4AFF}
+html:root[data-skin="bright"] .cartbtn .count{background:#FF4D8D;color:#fff}
+html:root[data-skin="bright"] .avatar{background:linear-gradient(135deg,#FF7A3D,#FF4D8D)}
+html:root[data-skin="bright"] .avatar{color:#fff}
+
+/* cards */
+html:root[data-skin="bright"] .svc{border-radius:24px;background:var(--glass-strong)}
+html:root[data-skin="bright"] .svc::before{background:radial-gradient(110% 80% at 100% 0%,color-mix(in srgb,var(--tone) 24%,transparent),transparent 64%)}
+html:root[data-skin="bright"] .tile{background:var(--tone);color:#fff;box-shadow:0 10px 20px color-mix(in srgb,var(--tone) 42%,transparent)}
+html:root[data-skin="bright"] .svc:hover{box-shadow:0 22px 46px color-mix(in srgb,var(--tone) 30%,transparent)}
+html:root[data-skin="bright"] .svc:hover .go{background:var(--tone);color:#fff}
+html:root[data-skin="bright"] .svc.blank{background:rgba(255,255,255,.4)}
+html:root[data-skin="bright"] .svc.blank .tile{background:#fff;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+html:root[data-skin="bright"] .svc-head .tile{border-radius:18px}
+html:root[data-skin="bright"] .plan{border-radius:22px}
+html:root[data-skin="bright"] .plan.pop{box-shadow:0 0 0 2px var(--accent),0 20px 44px rgba(109,74,255,.22)}
+html:root[data-skin="bright"] .plan .big{background-image:linear-gradient(120deg,#1B1740 25%,#6D4AFF 70%,#FF4D8D)}
+html:root[data-skin="bright"] .plan.pop .badge{background:linear-gradient(135deg,#6D4AFF,#B14DFF)}
+html:root[data-skin="bright"] .badge{background:#FFEACB;color:#A85A00}
+html:root[data-skin="bright"] .stat b{color:var(--accent)}
+html:root[data-skin="bright"] .fchip[aria-pressed="true"],html:root[data-skin="bright"] .how li::before{background:linear-gradient(135deg,#6D4AFF,#B14DFF);border-color:transparent;color:#fff}
+html:root[data-skin="bright"] .hero{background:linear-gradient(120deg,#FFE0EC,#E6DCFF 55%,#D6EEFF)}
+html:root[data-skin="bright"] .hero-chips span:nth-child(1){background:#FFE9DC}
+html:root[data-skin="bright"] .hero-chips span:nth-child(2){background:#E9E2FF}
+html:root[data-skin="bright"] .hero-chips span:nth-child(3){background:#D9F5EC}
+html:root[data-skin="bright"] .chero{background:radial-gradient(80% 120% at 0% 0%,color-mix(in srgb,var(--c1) 34%,transparent),transparent 64%),radial-gradient(70% 100% at 100% 100%,color-mix(in srgb,var(--c2) 30%,transparent),transparent 66%),linear-gradient(135deg,color-mix(in srgb,var(--c3) 14%,#fff),#fff)}
+html:root[data-skin="bright"] .chero .wm{opacity:.4}
+html:root[data-skin="bright"] .dest{background-color:#fff;background-image:linear-gradient(135deg,hsl(var(--h,190) 90% 62% / .20),transparent 70%)}
+html:root[data-skin="bright"] .explain{background:linear-gradient(120deg,#EAE4FF,#DFF3FF)}
+
+/* sign-in */
+html:root[data-skin="bright"] .auth-brand{background:radial-gradient(60% 50% at 0% 0%,#FF9A5C 0%,transparent 60%),radial-gradient(60% 60% at 100% 100%,#00A3E0 0%,transparent 66%),linear-gradient(150deg,#6D4AFF,#B14DFF 58%,#FF6FA3);color:#fff}
+html:root[data-skin="bright"] .auth-brand::before{opacity:.3}
+html:root[data-skin="bright"] .auth-brand .brand svg{color:#fff}
+html:root[data-skin="bright"] .auth-brand .lead{opacity:.95}
+html:root[data-skin="bright"] .fact b{background:rgba(255,255,255,.22);color:#fff}
+html:root[data-skin="bright"] .auth-card{background:rgba(255,255,255,.9)}
+html:root[data-skin="bright"] .tabs button[aria-selected="true"]{color:var(--accent)}
+
+/* look switcher */
+.swatch{width:16px;height:16px;border-radius:50%;background:conic-gradient(#FF7A3D,#FF4D8D,#A855F7,#4F6BFF,#00A3E0,#00A98F,#FF7A3D);flex:none}
+.skin-fab{position:fixed;z-index:40;top:calc(14px + env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));background:var(--glass-strong);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+</style>
+<style>
+/* Destination poster cards (service page) and plain country page */
+.dest-wrap{background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0!important;border-radius:0!important}
+.dest-label{margin:0 2px 14px}
+.dest-label h2{font-family:var(--f-display);font-size:22px;text-transform:none;letter-spacing:-.02em;color:var(--ink)}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-bottom:30px}
+.dcard{position:relative;display:block;padding:0;border:0;border-radius:22px;overflow:hidden;aspect-ratio:1/1.08;text-align:left;color:#fff;background:#223;isolation:isolate;box-shadow:0 10px 26px rgba(15,20,40,.18);transition:transform .2s,box-shadow .2s}
+.dcard:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(15,20,40,.28)}
+.dcard .cv{position:absolute;inset:0;z-index:-2}
+.dcard .cv svg{width:100%;height:100%;display:block;transform:scale(1.02);transition:transform .5s}
+.dcard:hover .cv svg{transform:scale(1.12)}
+.dcard::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,0) 35%,rgba(8,10,24,.78) 100%)}
+.dcard .pill{position:absolute;top:12px;left:12px;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.92);color:#111;font-size:12px;font-weight:700;font-family:var(--f-mono);box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.dcard .nm{position:absolute;left:16px;right:60px;bottom:14px;display:grid;gap:2px}
+.dcard .nm b{font-family:var(--f-display);font-size:21px;letter-spacing:-.02em;line-height:1.1;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.dcard .nm small{font-size:12px;opacity:.85}
+.dcard .go2{position:absolute;right:12px;bottom:12px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-weight:700;transition:background .15s,color .15s,transform .15s}
+.dcard:hover .go2{background:#fff;color:#111;transform:translateX(3px)}
+.dcard.region .pill{background:var(--accent);color:var(--accent-ink)}
+
+/* Country page: plain background, flag fills the header */
+html:root.plain[data-skin] #bg{display:none}
+html:root.plain[data-skin] body{background:var(--bg)}
+html:root.plain[data-skin] .chero{background:var(--surface);box-shadow:0 1px 2px rgba(15,31,39,.08);border:1px solid var(--line);min-height:320px;grid-template-columns:1fr;-webkit-backdrop-filter:none;backdrop-filter:none}
+html:root.plain[data-skin] .chero::after{background:linear-gradient(90deg,color-mix(in srgb,var(--surface) 96%,transparent) 0%,color-mix(in srgb,var(--surface) 82%,transparent) 38%,color-mix(in srgb,var(--surface) 10%,transparent) 78%,transparent 100%);opacity:1;z-index:-1}
+html:root.plain[data-skin] .chero .wm{inset:0;right:0;top:0;width:100%;height:100%;aspect-ratio:auto;opacity:1;filter:none;transform:none;-webkit-mask-image:none;mask-image:none;z-index:-2}
+html:root.plain[data-skin] .chero .wm svg{width:100%;height:100%}
+html:root.plain[data-skin] .stat,html:root.plain[data-skin] .plan,html:root.plain[data-skin] .how li,html:root.plain[data-skin] .mini,html:root.plain[data-skin] .fchip{background:var(--surface);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:1px solid var(--line)}
+html:root.plain[data-skin] .fchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+html:root.plain[data-skin] .plan.pop{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+html:root.plain[data-skin] .spots span{background:var(--surface)}
+@media (max-width:760px){.dgrid{grid-template-columns:repeat(2,1fr);gap:12px}.dcard .nm b{font-size:18px}html:root.plain[data-skin] .chero::after{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 92%,transparent),color-mix(in srgb,var(--surface) 55%,transparent))}}
+</style>
+<style>
+/* eSIM destination page: tab bar + round-flag cards (reference style); country page: flag-filled header */
+.etabs{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:8px;margin:4px 0 22px;box-shadow:0 1px 2px rgba(15,31,39,.05)}
+.etab{display:inline-flex;align-items:center;gap:8px;border:0;background:none;border-radius:14px;padding:11px 20px;font-weight:700;font-size:16px;color:var(--ink-2);transition:background .12s,color .12s}
+.etab svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.etab:hover{color:var(--ink)}
+.etab[aria-selected="true"]{background:var(--surface-2);color:var(--ink);box-shadow:0 1px 4px rgba(15,31,39,.1)}
+.egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px;margin-bottom:30px}
+.ecard{display:flex;flex-direction:column;align-items:center;gap:14px;padding:30px 16px 24px;border-radius:22px;border:1px solid color-mix(in srgb,var(--accent) 16%,var(--line));text-align:center;background:linear-gradient(100deg,color-mix(in srgb,#4A90E2 14%,var(--surface)),color-mix(in srgb,#9B7BE0 12%,var(--surface)));transition:transform .18s,box-shadow .18s,border-color .18s}
+.ecard:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 16px 34px color-mix(in srgb,var(--accent) 20%,transparent)}
+.rflag{width:96px;height:96px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.9),0 6px 16px rgba(15,31,39,.18)}
+.rflag svg{width:100%;height:100%;display:block;transition:transform .35s}
+.ecard:hover .rflag svg{transform:scale(1.1)}
+.ecard b{font-size:18px;font-weight:700;color:var(--ink)}
+.ecard .from{font-size:16px;color:var(--ink);font-weight:500}
+.ecard .from i{font-style:normal;color:var(--ink-2);font-weight:500;margin-left:2px}
+.ecard small{color:var(--ink-2);font-size:12px;margin-top:-8px}
+
+html:root.plain[data-skin] .chero{grid-template-columns:1fr auto;border:0;box-shadow:0 14px 36px rgba(15,20,40,.22);color:#fff}
+html:root.plain[data-skin] .chero::after{background:linear-gradient(90deg,rgba(8,12,30,.74) 0%,rgba(8,12,30,.48) 46%,rgba(8,12,30,.06) 100%);opacity:1}
+html:root.plain[data-skin] .chero h1,html:root.plain[data-skin] .chero .eyebrow{color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.35)}
+html:root.plain[data-skin] .chero p{color:rgba(255,255,255,.92);text-shadow:0 1px 8px rgba(0,0,0,.35)}
+html:root.plain[data-skin] .chero .spots span{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.5);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+html:root.plain[data-skin] .chero .spots .spots-l{background:none;border:0;color:rgba(255,255,255,.85);-webkit-backdrop-filter:none;backdrop-filter:none}
+.clogo{width:min(190px,24vw);aspect-ratio:1;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.85),0 22px 48px rgba(0,0,0,.4)}
+.clogo svg{width:100%;height:100%;display:block}
+html:root.plain[data-skin] .svc-head{background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(15,31,39,.06);-webkit-backdrop-filter:none;backdrop-filter:none}
+html:root.plain[data-skin] .svc-head::before,html:root.plain[data-skin] .svc-head::after{display:none}
+@media (max-width:760px){html:root.plain[data-skin] .chero{grid-template-columns:1fr}.clogo{order:-1;width:120px}html:root.plain[data-skin] .chero::after{background:linear-gradient(180deg,rgba(8,12,30,.35),rgba(8,12,30,.7))}.egrid{grid-template-columns:repeat(2,1fr);gap:12px}.rflag{width:78px;height:78px}.etab{padding:9px 14px;font-size:14px}}
+</style>
+<style>
+/* Home service cards: vivid gradient tiles, white text, clean dark background */
+html:root[data-skin] .svc:not(.blank){background:linear-gradient(145deg,color-mix(in srgb,var(--tone) 80%,#0a1030),color-mix(in srgb,var(--tone) 40%,#0a1030));color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:0 14px 30px color-mix(in srgb,var(--tone) 32%,transparent);-webkit-backdrop-filter:none;backdrop-filter:none}
+html:root[data-skin] .svc:not(.blank)::before{background:radial-gradient(70% 60% at 100% 0%,rgba(255,255,255,.30),transparent 62%)}
+html:root[data-skin] .svc:not(.blank)::after{background:radial-gradient(circle,rgba(255,255,255,.16) 1.3px,transparent 1.8px) 0 0/18px 18px;opacity:1;-webkit-mask-image:linear-gradient(135deg,transparent 35%,#000);mask-image:linear-gradient(135deg,transparent 35%,#000)}
+html:root[data-skin] .svc:not(.blank):hover{transform:translateY(-5px);box-shadow:0 24px 46px color-mix(in srgb,var(--tone) 48%,transparent);border-color:rgba(255,255,255,.4)}
+html:root[data-skin] .svc:not(.blank) .tile{background:rgba(255,255,255,.2);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+html:root[data-skin] .svc:not(.blank) h3{color:#fff}
+html:root[data-skin] .svc:not(.blank) p,html:root[data-skin] .svc:not(.blank) .foot{color:rgba(255,255,255,.88)}
+html:root[data-skin] .svc:not(.blank) .foot b{color:#fff}
+html:root[data-skin] .svc:not(.blank) .go{background:rgba(255,255,255,.22);color:#fff}
+html:root[data-skin] .svc:not(.blank):hover .go{background:#fff;color:#111}
+html:root[data-skin] .svc.blank p{color:var(--ink-2)}
+@media (prefers-color-scheme: dark){
+  html:root[data-skin="classic"]:not([data-theme="light"]){--vein:.06}
+  html:root[data-skin="classic"]:not([data-theme="light"]) #bg{background:radial-gradient(60% 50% at 12% 0%,#1d2f78 0%,transparent 60%),radial-gradient(50% 50% at 96% 8%,#4b1f72 0%,transparent 60%),radial-gradient(60% 50% at 80% 100%,#0c606a 0%,transparent 62%),linear-gradient(180deg,#070b1c,#050816)}
+}
+html:root[data-skin="classic"][data-theme="dark"]{--vein:.06}
+html:root[data-skin="classic"][data-theme="dark"] #bg{background:radial-gradient(60% 50% at 12% 0%,#1d2f78 0%,transparent 60%),radial-gradient(50% 50% at 96% 8%,#4b1f72 0%,transparent 60%),radial-gradient(60% 50% at 80% 100%,#0c606a 0%,transparent 62%),linear-gradient(180deg,#070b1c,#050816)}
+</style>
+<style>
+/* Country header: clean card, round flag logo, thin flag ribbon on top */
+.chead{position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;overflow:hidden;isolation:isolate;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:38px 32px 30px;box-shadow:0 1px 2px rgba(15,31,39,.06),0 12px 30px rgba(15,31,39,.07)}
+.chead::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 130% at 0% 0%,color-mix(in srgb,var(--c1) 13%,transparent),transparent 62%),radial-gradient(50% 120% at 100% 100%,color-mix(in srgb,var(--c2) 10%,transparent),transparent 64%)}
+.ribbon{position:absolute;top:0;left:0;right:0;height:8px;background:linear-gradient(90deg,var(--c1),var(--c2) 55%,var(--c3))}
+.ribbon svg{width:100%;height:100%;display:block}
+.clogo2{width:116px;height:116px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 4px var(--surface),0 0 0 5px var(--line),0 14px 28px rgba(15,31,39,.2)}
+.clogo2 svg{width:100%;height:100%;display:block}
+.chead-copy{min-width:0}
+.chead h1{font-size:clamp(34px,5vw,54px);margin-top:4px}
+.chead p{color:var(--ink-2);font-size:17px;margin-top:8px;max-width:48ch}
+.chead .spots{margin-top:16px}
+.chead .spots span{background:var(--surface-2);border:1px solid var(--line)}
+.chead .spots .spots-l{background:none;border:0}
+.cfrom{text-align:right;padding:12px 18px;border-radius:16px;background:var(--surface-2);border:1px solid var(--line)}
+.cfrom small{display:block;color:var(--ink-2);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.cfrom b{font-family:var(--f-mono);font-size:28px;color:var(--accent)}
+@media (max-width:760px){.chead{grid-template-columns:1fr;justify-items:center;text-align:center;padding:34px 20px 24px;gap:16px}.chead .spots{justify-content:center}.cfrom{text-align:center}.clogo2{width:96px;height:96px}}
+</style>
+<style>
+/* Support chat widget (all pages) */
+.chat-fab{position:fixed;z-index:65;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#7c3aed));color:var(--accent-ink);box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 45%,transparent),0 2px 6px rgba(0,0,0,.2);transition:transform .15s}
+html:root[data-skin="bright"] .chat-fab{background:linear-gradient(135deg,#6D4AFF,#B14DFF);color:#fff}
+.chat-fab:hover{transform:scale(1.07)}
+.chat-fab svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.chat-fab .x{display:none}
+.chat-fab.on .x{display:block}.chat-fab.on .m{display:none}
+.chat-fab .dot{position:absolute;top:4px;right:4px;width:13px;height:13px;border-radius:50%;background:#FF4D8D;border:2px solid var(--surface)}
+.chat-fab.on .dot,.chat-fab.seen .dot{display:none}
+.chat{position:fixed;z-index:65;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(88px + env(safe-area-inset-bottom,0px));width:min(370px,calc(100vw - 28px));height:min(520px,calc(100vh - 120px));display:flex;flex-direction:column;overflow:hidden;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:0 24px 60px rgba(10,16,40,.35);opacity:0;transform:translateY(14px) scale(.97);pointer-events:none;transition:opacity .18s,transform .18s;transform-origin:bottom right}
+.chat.on{opacity:1;transform:none;pointer-events:auto}
+.chat-h{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#7c3aed));color:var(--accent-ink)}
+html:root[data-skin="bright"] .chat-h{background:linear-gradient(135deg,#6D4AFF,#B14DFF);color:#fff}
+.chat-h .av{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center}
+.chat-h .av svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.chat-h b{display:block;font-family:var(--f-display);font-size:17px}
+.chat-h small{opacity:.85;font-size:12px}
+.chat-body{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--surface-2)}
+.msg-b,.msg-u{max-width:84%;padding:10px 13px;border-radius:16px;font-size:14px;line-height:1.45;word-wrap:break-word}
+.msg-b{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.msg-u{background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:5px;align-self:flex-end}
+html:root[data-skin="bright"] .msg-u{background:linear-gradient(135deg,#6D4AFF,#B14DFF);color:#fff}
+.typing{display:inline-flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--ink-2);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+.qr{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start}
+.qr button{border:1px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+.qr button:hover{background:var(--accent-soft)}
+.chat-f{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:var(--surface)}
+.chat-f .input{padding:10px 13px}
+.chat-f .btn{padding:0 16px}
+.chat-note{font-size:11px;color:var(--ink-2);text-align:center;padding:0 12px 8px;background:var(--surface)}
+@media (max-width:480px){.chat{right:14px;bottom:calc(84px + env(safe-area-inset-bottom,0px))}.toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+</style>
+<style>
+/* eSIM search */
+.esearch{text-align:center;margin:6px auto 22px;max-width:760px}
+.etag{font-family:var(--f-display);font-weight:700;font-size:clamp(16px,2.4vw,21px);color:var(--ink-2);margin-bottom:16px;text-wrap:balance}
+.sbox{position:relative;display:flex;align-items:center;gap:10px;height:64px;padding:0 20px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 2px 6px rgba(15,31,39,.05);transition:border-color .12s,box-shadow .12s}
+.sbox:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.sbox .sico,.sbox .spin-pin{display:grid;place-items:center;color:var(--ink-2);flex:none}
+.sbox svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sbox input{flex:1;min-width:0;height:100%;border:0;background:none;outline:none;font-size:17px;color:var(--ink)}
+.sbox input::placeholder{color:var(--ink-2);opacity:.75}
+.sbox input::-webkit-search-cancel-button{display:none}
+.sclear{border:0;background:var(--surface-2);color:var(--ink-2);width:28px;height:28px;border-radius:50%;font-size:12px;flex:none}
+.sclear:hover{color:var(--ink)}
+.rcount{text-align:left;color:var(--ink-2);font-size:14px;margin:0 2px 12px;font-weight:500}
+.enone{display:grid;justify-items:center;gap:8px;text-align:center;padding:44px 20px;border:1px dashed var(--line);border-radius:20px;background:var(--surface);color:var(--ink-2);margin-bottom:30px}
+.enone b{color:var(--ink);font-size:18px}
+</style>
+<style>
+/* View details dropdown on plan cards */
+.pd{display:grid;gap:10px}
+.pdbtn{display:flex;align-items:center;justify-content:space-between;width:100%;border:1px solid var(--line);background:var(--surface-2);border-radius:11px;padding:9px 12px;font-weight:700;font-size:13px;color:var(--accent)}
+.pdbtn:hover{border-color:var(--accent)}
+.chev{display:grid;transition:transform .18s}.chev.up{transform:rotate(180deg)}
+.pdet{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:10px;font-size:13px}
+.pdet b{font-size:13px}
+.clist{display:flex;flex-wrap:wrap;gap:6px;max-height:156px;overflow:auto;padding-right:2px}
+.clist span{padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12px;font-weight:500}
+.pmeta{list-style:none;margin:0;padding:10px 0 0;border-top:1px dashed var(--line);display:grid;gap:4px;color:var(--ink-2)}
+.pmeta li::before{display:none!important}
+.plans{align-items:start}
+.plan .pmeta li{display:block}
+</style>
+<style>
+/* Data vs Data + Voice switch */
+.ptype{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:560px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:6px;margin:0 0 22px}
+.ptbtn{display:grid;gap:2px;text-align:left;border:1.5px solid transparent;background:none;border-radius:13px;padding:11px 16px;color:var(--ink-2);transition:background .12s,border-color .12s}
+.ptbtn b{font-size:16px;color:var(--ink)}
+.ptbtn small{font-size:12px}
+.ptbtn:hover{background:var(--surface-2)}
+.ptbtn[aria-selected="true"]{background:var(--accent-soft);border-color:var(--accent)}
+.ptbtn[aria-selected="true"] b{color:var(--accent)}
+@media (max-width:480px){.ptype{grid-template-columns:1fr}}
+</style>
+<style>
+/* Aligned plan grid + network row with 4G/5G icons */
+.plans{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+@media (max-width:1020px){.plans{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.plans{grid-template-columns:1fr}}
+.plan{height:100%;gap:14px}
+.plan .lab{min-height:26px}
+.plan ul{flex:1;align-content:start}
+.plan .buy{margin-top:auto}
+.plan .pd{margin-top:auto}
+.plan .pd + .buy{margin-top:0}
+.netrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--line);background:var(--surface-2);border-radius:12px}
+.netname{display:flex;align-items:center;gap:9px;min-width:0;color:var(--accent)}
+.netname>span{display:grid;min-width:0}
+.netname small{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--ink-2)}
+.netname b{font-size:13.5px;color:var(--ink);font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.gens{display:flex;gap:6px;flex:none}
+.gen{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:.02em;border:1px solid var(--line);background:var(--surface);color:var(--ink-2)}
+.gen svg{width:13px;height:13px}
+.gen.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+.gen.g5{color:#fff;border-color:transparent;background:linear-gradient(135deg,#6D4AFF,#B14DFF)}
+.gen.off{opacity:.45;text-decoration:line-through}
+</style>
+<style>
+/* eSIM destination grid: fill full width, even columns, aligned cards */
+.egrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:20px;align-items:stretch;justify-items:stretch}
+.ecard{justify-content:flex-start;height:100%;width:100%}
+.ecard .rflag{flex:none}
+.ecard b{min-height:24px;display:flex;align-items:center;justify-content:center}
+.ecard .from{margin-top:auto}
+.ecard:hover{transform:translateY(-4px)}
+@media (max-width:1200px){.egrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:940px){.egrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.egrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+</style>
+<style>
+/* eSIM destinations as a list */
+.elist{display:flex;flex-direction:column;gap:10px;margin-bottom:30px}
+.erow{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto auto;align-items:center;gap:16px;width:100%;text-align:left;padding:12px 18px;border-radius:16px;border:1px solid var(--line);background:var(--surface);transition:border-color .15s,box-shadow .15s,background .15s}
+.erow:hover{border-color:var(--accent);background:var(--surface-2);box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 16%,transparent)}
+.erow .rflag{width:52px;height:52px;box-shadow:0 0 0 2px rgba(255,255,255,.9),0 3px 8px rgba(15,31,39,.18)}
+.erow:hover .rflag svg{transform:scale(1.1)}
+.rname{display:grid;gap:2px;min-width:0}
+.erow .rname b{font-size:17px;font-weight:700;color:var(--ink);display:block;min-height:0}
+.rname small{font-size:13px;color:var(--ink-2);margin:0}
+.rgen{display:flex;gap:6px}
+.erow .from{font-size:16px;font-weight:600;color:var(--ink);white-space:nowrap;margin:0}
+.erow .from i{font-style:normal;color:var(--ink-2);font-weight:500;margin-left:3px;font-size:13px}
+.rgo{font-size:26px;line-height:1;color:var(--ink-2);padding-left:2px}
+.erow:hover .rgo{color:var(--accent)}
+@media (max-width:620px){.erow{grid-template-columns:auto minmax(0,1fr) auto;gap:12px;padding:10px 14px}.erow .rgen,.erow .rgo{display:none}.erow .rflag{width:44px;height:44px}.erow .rname b{font-size:16px}}
+</style>
+<style>
+/* Country banner */
+.cbanner{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 340px;align-items:center;gap:28px;min-height:290px;padding:34px 34px;border-radius:24px;overflow:visible;isolation:isolate;margin-bottom:6px;background:linear-gradient(180deg,#bfdcff 0%,#dcecff 48%,#f4f9ff 100%);border:1px solid rgba(60,110,170,.18);box-shadow:0 14px 36px rgba(30,70,120,.16);color:#17305a}
+.cbanner::before{content:"";position:absolute;inset:0;z-index:-2;border-radius:inherit;background:radial-gradient(60% 90% at 8% 10%,rgba(255,255,255,.75),transparent 60%)}
+.cbanner .cb-art{position:absolute;inset:0;width:100%;height:100%;z-index:-1;border-radius:24px;overflow:hidden}
+.cb-art .cl{fill:#fff;opacity:.75}
+.cb-art .sk1{fill:#9cc3e6;opacity:.7}.cb-art .sk2{fill:#c0d9f0;opacity:.7}
+.cb-art .lmk{opacity:.95}
+.cb-art .lmk .lt{fill:#d8ecf8}.cb-art .lmk .pk{fill:#f6b4cc}
+.cb-art .sea{fill:#8fbfe0;opacity:.55}
+.cb-main{display:grid;gap:18px;min-width:0}
+.cb-title{display:flex;align-items:center;gap:16px}
+.cb-flag{flex:none;width:58px;height:58px;border-radius:50%;overflow:hidden;background:#fff;box-shadow:0 0 0 3px #fff,0 6px 16px rgba(30,70,120,.25)}
+.cb-flag svg{width:100%;height:100%;display:block}
+.cb-title h1{font-size:clamp(28px,3.6vw,44px);line-height:1.1;margin:0;color:#10264d;font-weight:800;letter-spacing:-.02em;background:none;-webkit-text-fill-color:#10264d}
+.cb-title h1 em{font-style:normal;color:#1a73e8;-webkit-text-fill-color:#1a73e8}
+.cb-pills{display:flex;flex-wrap:wrap;gap:10px}
+.cb-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:500;color:#3b4d6e;background:rgba(255,255,255,.7);border:1px solid #bcd3f0}
+.cb-pill b{font-weight:700}
+.cb-pill.pu{background:#f4ebff;border-color:#e0c9fa}
+.cb-pill.or{background:#fff8e6;border-color:#f7dd9a}
+.cb-feats{display:flex;flex-wrap:wrap;gap:12px 24px;padding-top:16px;border-top:1px solid rgba(60,110,170,.18);font-size:15px;font-weight:500;color:#3b4d6e}
+.cb-feats span{display:inline-flex;align-items:center;gap:8px}
+.cb-card{align-self:start;position:relative;z-index:3;display:grid;gap:10px;padding:14px;border-radius:20px;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.9);box-shadow:0 14px 34px rgba(30,70,120,.22)}
+.cb-search{position:relative}
+.cb-search input{width:100%;height:52px;border-radius:14px;border:1px solid #dbe5f2;background:#eef2f8;padding:0 44px 0 18px;font-size:15px;color:#17305a;outline:none}
+.cb-search input::placeholder{color:#6b7c99}
+.cb-search input:focus{border-color:#1a73e8;background:#fff;box-shadow:0 0 0 3px rgba(26,115,232,.18)}
+.cb-search input::-webkit-search-cancel-button{display:none}
+.cb-pin{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#4b5f80;display:grid;pointer-events:none}
+.cb-sug{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:10;background:#fff;border:1px solid #dbe5f2;border-radius:14px;box-shadow:0 14px 30px rgba(30,70,120,.22);padding:6px;display:grid;gap:2px}
+.cb-sug[hidden]{display:none}
+.cb-sug button{display:flex;align-items:center;gap:10px;border:0;background:none;border-radius:10px;padding:8px 10px;font-size:15px;font-weight:600;color:#17305a;text-align:left}
+.cb-sug button:hover{background:#eef4fd}
+.cb-sug .rf{width:26px;height:26px;border-radius:50%;overflow:hidden;flex:none;box-shadow:0 0 0 1px #dbe5f2}
+.cb-sug .rf svg{width:100%;height:100%;display:block}
+.cb-sug .none{padding:10px;font-size:14px;color:#6b7c99}
+.cb-lab{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#4b5f80;margin-top:2px}
+.cb-sel{position:relative;display:flex;align-items:center}
+.cb-sel select{appearance:none;-webkit-appearance:none;width:100%;height:50px;border-radius:14px;border:1px solid #dbe5f2;background:#fff;padding:0 40px 0 44px;font-size:15px;font-weight:700;color:#17305a;outline:none;cursor:pointer}
+.cb-sel select:focus{border-color:#1a73e8;box-shadow:0 0 0 3px rgba(26,115,232,.18)}
+.cb-coin,.cb-chev{position:absolute;top:50%;transform:translateY(-50%);display:grid;pointer-events:none;color:#4b5f80}
+.cb-coin{left:14px}.cb-chev{right:14px}
+@media (max-width:900px){.cbanner{grid-template-columns:1fr;padding:26px 20px 24px;min-height:0;gap:22px}.cb-card{align-self:stretch}.cbanner .cb-art{opacity:.55}.cb-title h1{font-size:28px}.cb-flag{width:48px;height:48px}}
+</style>
+<style>
+/* readable text over scenery */
+.cbanner::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;background:linear-gradient(90deg,rgba(226,239,255,.95) 0%,rgba(226,239,255,.88) 46%,rgba(226,239,255,0) 70%)}
+.cbanner .cb-art{z-index:-2}
+.cbanner::before{z-index:-3}
+</style>
+<style>
+.cbanner{grid-template-columns:minmax(0,1fr) 300px}
+.cb-title h1{font-size:clamp(26px,3.1vw,38px)}
+.cb-flag{width:52px;height:52px}
+.cbanner::after{background:linear-gradient(90deg,rgba(226,239,255,.95) 0%,rgba(226,239,255,.86) 44%,rgba(226,239,255,0) 60%)}
+@media (max-width:900px){.cbanner{grid-template-columns:1fr}.cb-title h1{font-size:26px}}
+</style>
+<div id="bg" aria-hidden="true"></div>
+<div id="hdr"></div>
+<main id="main" class="gut"></main>
+<div class="scrim" id="scrim" data-act="cart-close"></div>
+<aside class="drawer" id="drawer" aria-label="Cart" aria-hidden="true"></aside>
+<button class="chat-fab" id="chat-fab" data-act="chat-toggle" aria-label="Open support chat" aria-expanded="false"><svg class="m" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg><svg class="x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="dot"></span></button>
+<section class="chat" id="chat" aria-label="Support chat" aria-hidden="true">
+  <div class="chat-h"><span class="av"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.5-2 2-5 2"/></svg></span><div><b>Linkport Support</b><small>Ask about plans, orders or your account</small></div></div>
+  <div class="chat-body" id="chat-body" aria-live="polite"></div>
+  <div class="chat-note">Demo assistant: replies are scripted, not a live agent.</div>
+  <div class="chat-f"><input class="input" id="chat-in" placeholder="Type your question" aria-label="Message" autocomplete="off"><button class="btn btn-primary" id="chat-send" type="button">Send</button></div>
+</section>
+<div class="toast" id="toast" role="status"></div>
+
+<style>
+.tiersw{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.tiersw .tbtn{flex:1;min-width:150px;text-align:left;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.tiersw .tbtn[aria-selected=true]{background:var(--accent-soft);border-color:var(--accent)}.tiersw .tn{display:block;font-weight:700}.tiersw small{color:var(--ink-2)}
+.wbox,.arow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.bad{color:var(--danger)}
+.qrbox{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--line)}.qrbox code{display:block;word-break:break-all;font-size:12px;color:var(--ink-2);max-width:360px}
+.acc{display:grid;gap:14px;margin-top:14px}@media(min-width:861px){.cbanner{min-height:360px}}.etab.gold svg{color:#C58F00}.etab.silver svg{color:#8E99A6}.etab.gold[aria-selected=true]{background:linear-gradient(135deg,#FBE7A1,#E7B922 55%,#C98F00);color:#3A2800;box-shadow:0 4px 14px rgba(201,143,0,.4)}.etab.silver[aria-selected=true]{background:linear-gradient(135deg,#F4F6F9,#C9D1DB 55%,#9AA6B4);color:#1F2933;box-shadow:0 4px 14px rgba(120,135,150,.4)}.etab.gold[aria-selected=true] svg,.etab.silver[aria-selected=true] svg{color:inherit}.plan.t-gold{border-color:#D9A400;box-shadow:inset 0 4px 0 #E7B922}.plan.t-silver{border-color:#AEB8C4;box-shadow:inset 0 4px 0 #B8C2CE}.plan.t-gold .lab{color:#8A6400}.plan.t-silver .lab{color:#5E6B78}@media (prefers-color-scheme:dark){.plan.t-gold .lab{color:#F2C94C}.plan.t-silver .lab{color:#C3CCD6}}.pv.gd i{background:#FBEBB0;color:#5A4100}.pv.sv i{background:#E3E8EE;color:#2E3A47}.kindsel{display:flex;flex-direction:column;gap:4px;font-weight:700;max-width:340px;margin:14px 0 0}.kindsel select{padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface);font-weight:500}.dock{position:fixed;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:55;pointer-events:none}.dock .btn{pointer-events:auto;box-shadow:var(--shadow);padding:12px 22px;border-radius:999px;gap:10px}.pv{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}.pv i{font-style:normal;font-size:12px;background:var(--accent-soft);border-radius:999px;padding:1px 9px;font-weight:500}.acc .panel{padding:18px}.pre{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ---------- config ---------- */
+const DEMO_MODE = true;          // shows the current 2FA code on screen so the flow can be tried without an authenticator app. Set false before going live.
+const ISSUER = 'Linkport';
+
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* Display currencies (sample rates: edit freely). Prices are stored in USD and converted for display. */
+const CURS = { USD: { s: '$', r: 1, d: 2, n: 'USD ($)' }, EUR: { s: '€', r: 0.92, d: 2, n: 'EUR (€)' }, GBP: { s: '£', r: 0.79, d: 2, n: 'GBP (£)' }, INR: { s: '₹', r: 83.5, d: 0, n: 'INR (₹)' }, AED: { s: 'AED ', r: 3.67, d: 2, n: 'AED (د.إ)' }, JPY: { s: '¥', r: 150, d: 0, n: 'JPY (¥)' }, SGD: { s: 'S$', r: 1.34, d: 2, n: 'SGD (S$)' }, AUD: { s: 'A$', r: 1.52, d: 2, n: 'AUD (A$)' }, THB: { s: '฿', r: 36, d: 0, n: 'THB (฿)' }, IDR: { s: 'Rp ', r: 15800, d: 0, n: 'IDR (Rp)' }, TRY: { s: '₺', r: 34, d: 0, n: 'TRY (₺)' } };
+let CUR = 'USD';
+const fmt = n => { const c = CURS[CUR] || CURS.USD, v = n * c.r; return c.s + (c.d ? v.toFixed(c.d) : Math.round(v).toLocaleString('en-US')); };
+function setCur(code) { if (!CURS[code]) return; CUR = code; renderHeader(); renderMain(); try { renderCart(); } catch (e) {} }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- crypto: password hashing + real TOTP (RFC 6238) ---------- */
+const te = new TextEncoder();
+const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+/* ---------- fallback crypto for pages where crypto.subtle is unavailable (plain http, some in-app viewers) ---------- */
+const HAS_SUBTLE = !!(window.crypto && crypto.subtle);
+function sha1(msg) {
+  const rotl = (n, b) => (n << b) | (n >>> (32 - b));
+  const l = msg.length, nb = ((l + 8) >> 6) + 1, w = new Uint32Array(nb * 16);
+  for (let i = 0; i < l; i++) w[i >> 2] |= msg[i] << (24 - (i % 4) * 8);
+  w[l >> 2] |= 0x80 << (24 - (l % 4) * 8);
+  w[nb * 16 - 1] = l * 8;
+  let h0 = 0x67452301, h1 = 0xEFCDAB89, h2 = 0x98BADCFE, h3 = 0x10325476, h4 = 0xC3D2E1F0;
+  const x = new Uint32Array(80);
+  for (let b = 0; b < nb; b++) {
+    for (let i = 0; i < 16; i++) x[i] = w[b * 16 + i];
+    for (let i = 16; i < 80; i++) x[i] = rotl(x[i - 3] ^ x[i - 8] ^ x[i - 14] ^ x[i - 16], 1);
+    let a = h0, bb = h1, c = h2, d = h3, e = h4;
+    for (let i = 0; i < 80; i++) {
+      const f = i < 20 ? (bb & c) | (~bb & d) : i < 40 ? bb ^ c ^ d : i < 60 ? (bb & c) | (bb & d) | (c & d) : bb ^ c ^ d;
+      const k = i < 20 ? 0x5A827999 : i < 40 ? 0x6ED9EBA1 : i < 60 ? 0x8F1BBCDC : 0xCA62C1D6;
+      const t = (rotl(a, 5) + f + e + k + x[i]) | 0;
+      e = d; d = c; c = rotl(bb, 30); bb = a; a = t;
+    }
+    h0 = (h0 + a) | 0; h1 = (h1 + bb) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0;
+  }
+  const out = new Uint8Array(20);
+  [h0, h1, h2, h3, h4].forEach((v, i) => { out[i * 4] = v >>> 24; out[i * 4 + 1] = (v >>> 16) & 255; out[i * 4 + 2] = (v >>> 8) & 255; out[i * 4 + 3] = v & 255; });
+  return out;
+}
+function hmacSha1(key, data) {
+  if (key.length > 64) key = sha1(key);
+  const ik = new Uint8Array(64), ok = new Uint8Array(64);
+  for (let i = 0; i < 64; i++) { const k = key[i] || 0; ik[i] = k ^ 0x36; ok[i] = k ^ 0x5c; }
+  const inner = sha1(Uint8Array.from([...ik, ...data]));
+  return sha1(Uint8Array.from([...ok, ...inner]));
+}
+async function hashPw(pw, saltB64) {
+  if (!HAS_SUBTLE) { let h = sha1(Uint8Array.from([...unb64(saltB64), ...te.encode(pw)])); for (let i = 0; i < 3000; i++) h = sha1(h); return b64(h); }
+  const key = await crypto.subtle.importKey('raw', te.encode(pw), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: unb64(saltB64), iterations: 150000, hash: 'SHA-256' }, key, 256);
+  return b64(bits);
+}
+const B32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+function b32enc(bytes) { let bits = '', out = ''; bytes.forEach(b => bits += b.toString(2).padStart(8, '0')); for (let i = 0; i < bits.length; i += 5) out += B32[parseInt(bits.slice(i, i + 5).padEnd(5, '0'), 2)]; return out; }
+function b32dec(s) { let bits = ''; for (const c of s) bits += B32.indexOf(c).toString(2).padStart(5, '0'); const o = []; for (let i = 0; i + 8 <= bits.length; i += 8) o.push(parseInt(bits.slice(i, i + 8), 2)); return new Uint8Array(o); }
+async function hotp(secret, counter) {
+  if (!HAS_SUBTLE) { const bf = new Uint8Array(8), dv0 = new DataView(bf.buffer); dv0.setUint32(0, Math.floor(counter / 2 ** 32)); dv0.setUint32(4, counter >>> 0); const h = hmacSha1(b32dec(secret), bf), o = h[19] & 15; return String((((h[o] & 127) << 24) | (h[o + 1] << 16) | (h[o + 2] << 8) | h[o + 3]) % 1e6).padStart(6, '0'); }
+  const key = await crypto.subtle.importKey('raw', b32dec(secret), { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+  const buf = new ArrayBuffer(8), dv = new DataView(buf);
+  dv.setUint32(0, Math.floor(counter / 2 ** 32)); dv.setUint32(4, counter >>> 0);
+  const h = new Uint8Array(await crypto.subtle.sign('HMAC', key, buf));
+  const o = h[19] & 15;
+  const n = ((h[o] & 127) << 24) | (h[o + 1] << 16) | (h[o + 2] << 8) | h[o + 3];
+  return String(n % 1e6).padStart(6, '0');
+}
+const totpNow = secret => hotp(secret, Math.floor(Date.now() / 30000));
+async function verifyTotp(secret, code) {
+  const c = Math.floor(Date.now() / 30000);
+  for (const d of (DEMO_MODE ? [-2, -1, 0, 1, 2] : [-1, 0, 1])) if (await hotp(secret, c + d) === code) return true;
+  return false;
+}
+const randB64 = n => b64(crypto.getRandomValues(new Uint8Array(n)));
+
+/* ---------- icons ---------- */
+const svg = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+const ICON = {
+  esim: svg('<path d="M8 3h6l4 4v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><rect x="9" y="11" width="6" height="6" rx="1"/>'),
+  did: svg('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>'),
+  sms: svg('<path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/>'),
+  vpn: svg('<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>'),
+  us: '<span class="mono">US</span>',
+  uk: '<span class="mono">UK</span>',
+  voip: svg('<path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.5-2 2-5 2"/>'),
+  plus: svg('<path d="M12 6v12M6 12h12"/>'),
+  arrow: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  bag: svg('<path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>'),
+  lock: svg('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'),
+  check: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>')
+};
+const LOGO = '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 20a11 11 0 0 1 22 0"/><path d="M10 20a6 6 0 0 1 12 0"/><circle cx="16" cy="20" r="2" fill="currentColor" stroke="none"/><path d="M16 22v6"/></svg>';
+
+/* ---------- catalogue (sample data: edit freely) ---------- */
+const DESTS = [
+  { code: 'US', name: 'United States', m: 1.3 }, { code: 'GB', name: 'United Kingdom', m: 1.1 },
+  { code: 'IN', name: 'India', m: 0.8 }, { code: 'AE', name: 'UAE', m: 1.5 },
+  { code: 'JP', name: 'Japan', m: 1.1 }, { code: 'TH', name: 'Thailand', m: 0.9 },
+  { code: 'SG', name: 'Singapore', m: 1.0 }, { code: 'TR', name: 'Türkiye', m: 1.0 },
+  { code: 'AU', name: 'Australia', m: 1.2 }, { code: 'ID', name: 'Indonesia', m: 0.9 }
+];
+const REGIONS = [
+  { code: 'EU', name: 'Europe', m: 1.2, note: '39 countries', region: true },
+  { code: 'AP', name: 'Asia Pacific', m: 1.3, note: '20+ countries', region: true }
+];
+const TIERS = [
+  { gb: 1, d: 7, p: 4.5 }, { gb: 3, d: 15, p: 9 }, { gb: 5, d: 30, p: 13 },
+  { gb: 10, d: 30, p: 22, pop: 1 }, { gb: 20, d: 30, p: 34 }, { gb: 50, d: 30, p: 59 }
+];
+const REG = {}; // plan registry by id
+function reg(list) { list.forEach(p => REG[p.id] = p); return list; }
+const px = (p, m = 1) => Math.ceil(p * m) - 0.01;
+
+const VTIERS = [{ gb: 3, d: 15, min: 100, sms: 100, p: 15 }, { gb: 5, d: 30, min: 200, sms: 200, p: 21 }, { gb: 10, d: 30, min: 400, sms: 400, p: 32, pop: 1 }, { gb: 20, d: 30, min: 800, sms: 800, p: 48 }];
+/* Network operators per destination (sample data: edit freely). g5 = 5G available */
+const NETS = {
+  US: { n: 'T-Mobile', g5: 1 }, GB: { n: 'EE / Vodafone', g5: 1 }, IN: { n: 'Jio / Airtel', g5: 1 },
+  AE: { n: 'du / e&', g5: 1 }, JP: { n: 'NTT Docomo', g5: 1 }, TH: { n: 'AIS / TrueMove H', g5: 1 },
+  SG: { n: 'Singtel', g5: 1 }, TR: { n: 'Turkcell', g5: 0 }, AU: { n: 'Telstra / Optus', g5: 1 },
+  ID: { n: 'Telkomsel', g5: 0 }, EU: { n: 'Vodafone / Orange / Telefónica', g5: 1 }, AP: { n: 'Singtel / Telstra / NTT', g5: 1 }
+};
+const netOf = d => NETS[d.code] || { n: 'Local partner network', g5: 0 };
+/* Tiers: Premium = Data / Voice, Standard = Unlimited / Fixed. Physical SIMs are sold in SIM_CODES countries only. */
+const TIER_INFO = {
+  premium: { name: 'Premium', esim: 'Data or Data + Voice on top networks, 5G where available.', sim: 'Data + Voice SIM on top networks, with 5G.' },
+  standard: { name: 'Standard', esim: 'Unlimited or fixed-data plans on partner networks.', sim: 'Fixed-data and unlimited SIMs on partner networks.' }
+};
+const SUBS = { premium: [['data', 'Data only', 'internet only'], ['voice', 'Data + Voice', 'calls, SMS and data']], standard: [['unl', 'Unlimited', 'unlimited data, fair use'], ['fixed', 'Fixed data', 'a set data allowance']] };
+const UTIERS = [{ d: 1, p: 3.5 }, { d: 3, p: 8 }, { d: 7, p: 15 }, { d: 15, p: 26 }, { d: 30, p: 44, pop: 1 }];
+const FTIERS = [{ gb: 1, d: 7, p: 3.2 }, { gb: 3, d: 15, p: 6.5 }, { gb: 5, d: 30, p: 9 }, { gb: 10, d: 30, p: 15, pop: 1 }, { gb: 20, d: 30, p: 24 }];
+const STD_NET = 'Partner networks (best available)';
+const SIM_CODES = ['US', 'GB', 'IN', 'AE', 'SG', 'TH', 'AU', 'JP'];
+const SIMT = {
+  premium: [{ gb: 10, min: 400, sms: 400, d: 30, p: 26 }, { gb: 20, min: 800, sms: 800, d: 30, p: 38, pop: 1 }, { gb: 50, min: 'Unlimited', sms: 'Unlimited', d: 30, p: 59 }],
+  standard: [{ k: 'fixed', gb: 5, d: 30, p: 14 }, { k: 'fixed', gb: 15, d: 30, p: 24 }, { k: 'unl', d: 30, p: 39, pop: 1 }]
+};
+const poolFor = () => S.kind === 'sim' ? DESTS.filter(d => SIM_CODES.includes(d.code)) : [...DESTS, ...REGIONS];
+const dayWord = n => n + (n === 1 ? ' day' : ' days');
+function esimPlans(dest, kind) {
+  const n = netOf(dest), cov = dest.region ? `Works across ${dest.note}` : 'Top up any time';
+  if (kind === 'voice') return reg(VTIERS.map(t => ({
+    id: `esimv:${dest.code}:${t.gb}`, svc: 'esim', tier: 'Premium', voice: true, code: dest.code, days: t.d, title: `${dest.name} eSIM Premium Data + Voice, ${t.gb} GB`,
+    label: 'Premium · Data + Voice', net: n.n, g5: n.g5, big: `${t.gb} GB`, sub: `${t.min} min + ${t.sms} SMS · ${t.d} days`, min: t.min, sms: t.sms,
+    price: px(t.p, dest.m), per: 'one-time', badge: t.pop ? 'Popular' : '', pop: !!t.pop,
+    feats: [`${t.min} calling minutes`, `${t.sms} SMS`, 'Local phone number included', dest.region ? `Data works across ${dest.note}` : 'Hotspot sharing allowed']
+  })));
+  if (kind === 'unl') return reg(UTIERS.map(t => ({
+    id: `esimu:${dest.code}:${t.d}`, svc: 'esim', tier: 'Standard', code: dest.code, days: t.d, title: `${dest.name} eSIM Standard Unlimited, ${dayWord(t.d)}`,
+    label: 'Standard · Unlimited', net: STD_NET, g5: 0, big: 'Unlimited', sub: `Valid ${dayWord(t.d)}`,
+    price: px(t.p, dest.m), per: 'one-time', badge: t.pop ? 'Best value' : '', pop: !!t.pop,
+    feats: ['Unlimited data, fair use applies', '4G speeds on partner networks', 'Hotspot sharing allowed', 'Activates on first connection']
+  })));
+  if (kind === 'fixed') return reg(FTIERS.map(t => ({
+    id: `esimf:${dest.code}:${t.gb}`, svc: 'esim', tier: 'Standard', code: dest.code, days: t.d, title: `${dest.name} eSIM Standard Fixed, ${t.gb} GB`,
+    label: 'Standard · Fixed data', net: STD_NET, g5: 0, big: `${t.gb} GB`, sub: `Valid ${dayWord(t.d)}`,
+    price: px(t.p, dest.m), per: 'one-time', badge: t.pop ? 'Popular' : '', pop: !!t.pop,
+    feats: ['Fixed data, no surprise charges', '4G speeds on partner networks', 'Activates on first connection', dest.region ? `Works across ${dest.note}` : 'Top up any time']
+  })));
+  return reg(TIERS.map(t => ({
+    id: `esim:${dest.code}:${t.gb}`, svc: 'esim', tier: 'Premium', code: dest.code, days: t.d, title: `${dest.name} eSIM Premium Data, ${t.gb} GB`,
+    label: 'Premium · Data', net: n.n, g5: n.g5, big: `${t.gb} GB`, sub: `Valid ${dayWord(t.d)}`,
+    price: px(t.p, dest.m), per: 'one-time', badge: t.pop ? 'Popular' : t.gb === 50 ? 'Heavy use' : '', pop: !!t.pop,
+    feats: ['Premium network priority', t.gb >= 5 ? 'Hotspot sharing allowed' : 'Data only, no phone number', 'Activates on first connection', cov]
+  })));
+}
+function simPlans(dest, tier) {
+  const n = netOf(dest), prem = tier === 'premium', TN = prem ? 'Premium' : 'Standard';
+  return reg(SIMT[tier].map((t, i) => {
+    const unl = t.k === 'unl', data = unl ? 'Unlimited' : `${t.gb} GB`;
+    return {
+      id: `sim:${dest.code}:${tier}:${i}`, svc: 'esim', phys: true, tier: TN, code: dest.code, days: t.d, title: `${dest.name} Physical SIM ${TN}, ${data}${prem ? ' + voice' : ''}`,
+      label: `${TN} · Physical SIM`, net: prem ? n.n : STD_NET, g5: prem ? n.g5 : 0, big: data,
+      sub: prem ? `${t.min === 'Unlimited' ? 'Unlimited calls' : t.min + ' min'} + ${t.sms === 'Unlimited' ? 'unlimited' : t.sms} SMS · ${t.d} days` : `Valid ${dayWord(t.d)}`,
+      price: px(t.p, dest.m), per: 'one-time', badge: t.pop ? 'Popular' : '', pop: !!t.pop,
+      feats: prem ? [t.min === 'Unlimited' ? 'Unlimited calls and SMS' : `${t.min} calling minutes + ${t.sms} SMS`, 'Local phone number included', 'Hotspot sharing allowed', 'SIM card delivered, free shipping']
+        : [unl ? 'Unlimited data, fair use applies' : 'Fixed data allowance', '4G speeds on partner networks', 'Data only, no phone number', 'SIM card delivered, free shipping']
+    };
+  }));
+}
+const tierPlans = (d, t) => S.kind === 'sim' ? simPlans(d, t) : SUBS[t].flatMap(([k]) => esimPlans(d, k));
+const planListFor = d => ['premium', 'standard'].flatMap(t => tierPlans(d, t));
+const defPtype = () => S.tier === 'standard' ? 'unl' : 'data';
+function tierSwHtml() {
+  const cur = S.tier === 'standard' ? 'standard' : 'premium', sim = S.kind === 'sim';
+  if (sim) return '';
+  const ic = { premium: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>', standard: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.5 3.5 5.4 3.5 8.5s-1 6-3.5 8.5c-2.5-2.5-3.5-5.4-3.5-8.5s1-6 3.5-8.5"/></svg>' };
+  return `<div class="etabs" role="tablist" aria-label="Plan tier" style="margin:14px 0 6px">${['premium', 'standard'].map(t => `<button class="etab ${t === 'premium' ? 'gold' : 'silver'}" role="tab" aria-selected="${cur === t}" data-act="tier" data-id="${t}">${ic[t]}${TIER_INFO[t].name}</button>`).join('')}</div><p class="hint" style="margin:0 0 12px">${TIER_INFO[cur][sim ? 'sim' : 'esim']}</p>`;
+}
+function tierSwHtmlOld() {
+  const sim = S.kind === 'sim', cur = S.tier === 'standard' ? 'standard' : 'premium';
+  return `<div class="tiersw" role="tablist" aria-label="Plan tier">${['premium', 'standard'].map(t => `<button class="tbtn ${t}" role="tab" aria-selected="${cur === t}" data-act="tier" data-id="${t}"><span class="tn">${TIER_INFO[t].name}</span><small>${TIER_INFO[t][sim ? 'sim' : 'esim']}</small></button>`).join('')}</div>`;
+}
+const STATIC = {
+  did: reg([
+    { id: 'did:us-local', label: 'United States', big: 'Local number', sub: 'Pick any area code', price: 2.0, per: 'per month', feats: ['1 number, inbound calls', 'Forward to mobile or app', 'Caller ID shown to you'] },
+    { id: 'did:uk-local', label: 'United Kingdom', big: 'Local number', sub: 'London, Manchester and more', price: 3.0, per: 'per month', feats: ['1 number, inbound calls', 'Forward to mobile or app', 'SMS-enabled option'] },
+    { id: 'did:us-tollfree', label: 'United States', big: 'Toll-free', sub: '800 / 888 / 877', price: 4.5, per: 'per month', pop: true, badge: 'Popular', feats: ['Callers pay nothing', 'Forward to mobile or app', 'Business greeting'] },
+    { id: 'did:in-tollfree', label: 'India', big: 'Toll-free 1800', sub: 'Nationwide', price: 12.0, per: 'per month', feats: ['Callers pay nothing', 'SIP or phone forwarding', 'KYC required at activation'] },
+    { id: 'did:pack10', label: 'Number pack', big: '10 numbers', sub: 'Any mix of local numbers', price: 14.0, per: 'per month', badge: 'Save 30%', feats: ['US or UK local', 'Bulk forwarding rules', 'One invoice'] }
+  ]),
+  sms: reg([
+    { id: 'sms:500', label: 'Starter', big: '500 SMS', sub: 'Valid 12 months', price: 9, per: 'one-time', feats: ['Delivery reports', '1 sender ID', 'Dashboard and API'] },
+    { id: 'sms:5k', label: 'Growth', big: '5,000 SMS', sub: 'Valid 12 months', price: 59, per: 'one-time', pop: true, badge: 'Popular', feats: ['Delivery reports', '3 sender IDs', 'Scheduled sending', 'Webhooks'] },
+    { id: 'sms:50k', label: 'Scale', big: '50,000 SMS', sub: 'Valid 12 months', price: 449, per: 'one-time', feats: ['10 sender IDs', 'Priority routing', 'Webhooks and API keys', 'Usage reports'] },
+    { id: 'sms:250k', label: 'Enterprise', big: '250,000 SMS', sub: 'Valid 12 months', price: 1990, per: 'one-time', badge: 'Best rate', feats: ['Unlimited sender IDs', 'Dedicated route', 'Account manager', 'Custom contract on request'] }
+  ]),
+  vpn: reg([
+    { id: 'vpn:1m', label: 'Monthly', big: '1 month', sub: 'Cancel any time', price: 9.99, per: 'billed once', feats: ['5 devices', 'WireGuard and OpenVPN', 'Kill switch'] },
+    { id: 'vpn:6m', label: 'Half-year', big: '6 months', sub: 'About $6.67 per month', price: 39.99, per: 'billed once', badge: 'Save 33%', feats: ['8 devices', 'WireGuard and OpenVPN', 'Kill switch', 'Split tunneling'] },
+    { id: 'vpn:12m', label: 'Annual', big: '12 months', sub: 'About $5.00 per month', price: 59.99, per: 'billed once', pop: true, badge: 'Popular', feats: ['10 devices', 'WireGuard and OpenVPN', 'Kill switch', 'Split tunneling'] },
+    { id: 'vpn:24m', label: 'Two years', big: '24 months', sub: 'About $3.75 per month', price: 89.99, per: 'billed once', badge: 'Best value', feats: ['10 devices', 'All features', 'Priority support'] }
+  ]),
+  usmvno: reg([
+    { id: 'us:lite', label: 'Lite', big: '3 GB', sub: 'High-speed data per month', price: 12, per: 'per month', feats: ['Unlimited talk and text', 'Nationwide 5G', 'eSIM or physical SIM'] },
+    { id: 'us:std', label: 'Standard', big: '15 GB', sub: 'High-speed data per month', price: 25, per: 'per month', pop: true, badge: 'Popular', feats: ['Unlimited talk and text', 'Nationwide 5G', '5 GB hotspot', 'Wi-Fi calling'] },
+    { id: 'us:unl', label: 'Unlimited', big: 'Unlimited', sub: 'Slows after 40 GB', price: 35, per: 'per month', feats: ['Unlimited talk and text', 'Nationwide 5G', '15 GB hotspot', 'Canada and Mexico roaming'] },
+    { id: 'us:plus', label: 'Unlimited Plus', big: 'Unlimited', sub: 'Slows after 100 GB', price: 45, per: 'per month', feats: ['50 GB hotspot', 'International calling add-on', 'Priority data', 'Canada and Mexico roaming'] }
+  ]),
+  ukmvno: reg([
+    { id: 'uk:lite', label: 'Lite', big: '5 GB', sub: 'Data per month', price: 10, per: 'per month', feats: ['Unlimited calls and texts', '5G where available', '30-day rolling plan'] },
+    { id: 'uk:plus', label: 'Plus', big: '30 GB', sub: 'Data per month', price: 16, per: 'per month', pop: true, badge: 'Popular', feats: ['Unlimited calls and texts', '5G where available', 'Wi-Fi calling', 'Free eSIM'] },
+    { id: 'uk:unl', label: 'Unlimited', big: 'Unlimited', sub: 'No data cap', price: 24, per: 'per month', feats: ['Unlimited calls and texts', '5G where available', 'Tethering included'] },
+    { id: 'uk:eu', label: 'Unlimited + Europe', big: 'Unlimited', sub: 'Roaming in 40+ destinations', price: 32, per: 'per month', feats: ['Everything in Unlimited', 'EU roaming included', 'Free eSIM'] }
+  ]),
+  voip: reg([
+    { id: 'voip:payg', label: 'Pay as you go', big: '$5 credit', sub: 'Top up when you need', price: 5, per: 'one-time', feats: ['Calls from $0.012 per minute', 'Browser and app calling', 'No monthly fee'] },
+    { id: 'voip:solo', label: 'Solo', big: '1 line', sub: '500 minutes per month', price: 7, per: 'per month', feats: ['US and UK numbers', 'Voicemail to email', 'Call forwarding'] },
+    { id: 'voip:team', label: 'Team', big: '5 lines', sub: '2,000 minutes per month', price: 29, per: 'per month', pop: true, badge: 'Popular', feats: ['Auto-attendant menu', 'Ring groups', 'Voicemail to email', 'Desk and mobile apps'] },
+    { id: 'voip:biz', label: 'Business', big: '20 lines', sub: 'Unlimited US and UK calling', price: 99, per: 'per month', feats: ['Call recording', 'Call analytics', 'CRM integrations', 'Priority support'] }
+  ])
+};
+const lowest = list => Math.min(...list.map(p => p.price));
+STATIC.pg = reg([
+  { id: 'pg:starter', label: 'Gateway Starter', big: '2.9% + 30c', sub: 'Per successful card payment', price: 9, per: 'per month', feats: ['Cards and wallets on one checkout', 'Test mode and live mode', 'Email receipts'] },
+  { id: 'pg:growth', label: 'Gateway Growth', big: '2.4% + 25c', sub: 'Per successful card payment', price: 29, per: 'per month', feats: ['Everything in Starter', 'Payment links and invoices', 'Refunds from the dashboard'] },
+  { id: 'pg:business', label: 'Gateway Business', big: '1.9% + 20c', sub: 'Per successful card payment', price: 99, per: 'per month', pop: true, badge: 'Popular', feats: ['Everything in Growth', 'Subscriptions and recurring billing', 'Fraud checks and 3-D Secure'] },
+  { id: 'pg:enterprise', label: 'Gateway Enterprise', big: 'Custom rate', sub: 'Volume pricing', price: 299, per: 'per month', feats: ['Everything in Business', 'Multi-currency settlement', 'Priority support and account manager'] }
+]);
+STATIC.iot = reg([
+  { id: 'iot:starter', label: 'IoT Starter', big: '100 MB', sub: 'Per SIM, every month', price: 1.5, per: 'per month', feats: ['Coverage in 150+ countries', 'Ideal for trackers and sensors', 'Data pooled across your SIMs'] },
+  { id: 'iot:standard', label: 'IoT Standard', big: '1 GB', sub: 'Per SIM, every month', price: 4, per: 'per month', feats: ['Coverage in 150+ countries', 'Smart meters and payment terminals', 'Data pooled across your SIMs'] },
+  { id: 'iot:plus', label: 'IoT Plus', big: '5 GB', sub: 'Per SIM, every month', price: 12, per: 'per month', pop: true, badge: 'Popular', feats: ['Coverage in 150+ countries', 'Cameras and vehicle gateways', 'Usage alerts by email'] },
+  { id: 'iot:fleet', label: 'IoT Fleet', big: '20 GB', sub: 'Per SIM, every month', price: 35, per: 'per month', feats: ['Coverage in 150+ countries', 'Fleets and routers', 'Usage alerts by email'] }
+]);
+const SERVICES = [
+  { id: 'esim', name: 'SIMs / eSIMs', tone: 'var(--t1)', icon: 'esim', desc: 'Premium and Standard travel eSIMs, plus physical SIMs delivered to your door.', from: () => lowest(DESTS.flatMap(d => esimPlans(d, 'fixed'))) },
+  { id: 'usmvno', name: 'US MVNO', tone: 'var(--t5)', icon: 'us', desc: 'Monthly US mobile plans with calls, texts and 5G data.', from: () => lowest(STATIC.usmvno) },
+  { id: 'ukmvno', name: 'UK MVNO', tone: 'var(--t6)', icon: 'uk', desc: 'Rolling UK mobile plans, with optional Europe roaming.', from: () => lowest(STATIC.ukmvno) },
+  { id: 'sms', name: 'SMS', tone: 'var(--t3)', icon: 'sms', desc: 'Message packs for alerts, codes and campaigns, sent by API or dashboard.', from: () => lowest(STATIC.sms) },
+  { id: 'did', name: 'DID', tone: 'var(--t2)', icon: 'did', desc: 'Real phone numbers in other countries that ring wherever you are.', from: () => lowest(STATIC.did) },
+  { id: 'vpn', name: 'VPN', tone: 'var(--t4)', icon: 'vpn', desc: 'Private browsing on up to 10 devices, billed once for the term.', from: () => lowest(STATIC.vpn) },
+  { id: 'voip', name: 'VOIP', tone: 'var(--t7)', icon: 'voip', desc: 'Business calling lines with menus, voicemail and call groups.', from: () => lowest(STATIC.voip) },
+  { id: 'iot', name: 'IoT SIM', tone: 'var(--t2)', icon: 'esim', desc: 'Low-cost data SIMs for trackers, meters and connected devices.', from: () => lowest(STATIC.iot) },
+  { id: 'pg', name: 'Payment Gateway', tone: 'var(--t5)', icon: 'bag', desc: 'Accept cards and wallets on your website with a single integration.', from: () => lowest(STATIC.pg) }
+];
+const EXPLAIN = {
+  did: ['What is a DID?', 'DID stands for Direct Inward Dialing. It is an ordinary phone number in a country or city of your choice. When someone calls it, the call is forwarded to your mobile, an app or your office phone system. People use DIDs to give customers a local number abroad, or to run a business line without a second SIM.']
+};
+
+/* ---------- flags (inline SVG, no image files) and destination info ---------- */
+const star = (cx, cy, r, rot = -90) => {
+  const pts = [];
+  for (let i = 0; i < 10; i++) { const a = (rot + i * 36) * Math.PI / 180, rr = i % 2 ? r * .4 : r; pts.push((cx + rr * Math.cos(a)).toFixed(2) + ',' + (cy + rr * Math.sin(a)).toFixed(2)); }
+  return `<polygon points="${pts.join(' ')}"/>`;
+};
+const UJ = '<rect width="60" height="30" fill="#012169"/><path d="M0 0L60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0L60 30M60 0L0 30" stroke="#C8102E" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/>';
+const usFlag = () => {
+  let s = '<rect width="38" height="20" fill="#fff"/>';
+  for (let i = 0; i < 13; i += 2) s += `<rect y="${(i * 20 / 13).toFixed(2)}" width="38" height="${(20 / 13).toFixed(2)}" fill="#B22234"/>`;
+  s += '<rect width="15.2" height="10.77" fill="#3C3B6E"/><g fill="#fff">';
+  for (let r = 0; r < 9; r++) { const n = r % 2 ? 5 : 6; for (let c = 0; c < n; c++) s += `<circle cx="${(1.3 + c * 2.5 + (r % 2 ? 1.25 : 0)).toFixed(2)}" cy="${(1 + r * 1.09).toFixed(2)}" r=".34"/>`; }
+  return s + '</g>';
+};
+const euStars = () => { let s = '<rect width="30" height="20" fill="#003399"/><g fill="#FFCC00">'; for (let i = 0; i < 12; i++) { const a = i * 30 * Math.PI / 180; s += star(15 + 6 * Math.sin(a), 10 - 6 * Math.cos(a), 1.2); } return s + '</g>'; };
+const FLAGS = {
+  US: ['0 0 38 20', usFlag()],
+  GB: ['0 0 60 30', UJ],
+  IN: ['0 0 30 20', '<rect width="30" height="20" fill="#fff"/><rect width="30" height="6.67" fill="#FF9933"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.7" fill="none" stroke="#000080" stroke-width=".35"/><path d="M15 7.4v5.2M12.4 10h5.2M13.2 8.2l3.6 3.6M16.8 8.2l-3.6 3.6" stroke="#000080" stroke-width=".22"/><circle cx="15" cy="10" r=".4" fill="#000080"/>'],
+  AE: ['0 0 30 20', '<rect width="30" height="20" fill="#00732F"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#000"/><rect width="7.5" height="20" fill="#FF0000"/>'],
+  JP: ['0 0 30 20', '<rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/>'],
+  TH: ['0 0 30 20', '<rect width="30" height="20" fill="#A51931"/><rect y="3.33" width="30" height="13.34" fill="#F4F5F8"/><rect y="6.67" width="30" height="6.66" fill="#2D2A4A"/>'],
+  SG: ['0 0 30 20', `<rect width="30" height="20" fill="#EF3340"/><rect y="10" width="30" height="10" fill="#fff"/><circle cx="6.5" cy="5" r="3.6" fill="#fff"/><circle cx="8" cy="5" r="3.1" fill="#EF3340"/><g fill="#fff">${star(10.6, 3.2, .9)}${star(12.4, 4.6, .9)}${star(11.7, 6.8, .9)}${star(9.5, 6.8, .9)}${star(8.9, 4.6, .9)}</g>`],
+  TR: ['0 0 30 20', `<rect width="30" height="20" fill="#E30A17"/><circle cx="11" cy="10" r="5" fill="#fff"/><circle cx="12.4" cy="10" r="4" fill="#E30A17"/><g fill="#fff">${star(16.4, 10, 2, 0)}</g>`],
+  AU: ['0 0 60 30', `<rect width="60" height="30" fill="#012169"/><g transform="scale(.5)">${UJ}</g><g fill="#fff">${star(15, 23, 3.6)}${star(45, 6, 2)}${star(40, 15, 2)}${star(50, 13, 2)}${star(45, 25, 2)}${star(47.4, 17.6, 1)}</g>`],
+  ID: ['0 0 30 20', '<rect width="30" height="20" fill="#fff"/><rect width="30" height="10" fill="#CE1126"/>'],
+  EU: ['0 0 30 20', euStars()],
+  AP: ['0 0 30 20', '<defs><linearGradient id="apg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0c7a6e"/><stop offset="1" stop-color="#2a5cc4"/></linearGradient></defs><rect width="30" height="20" fill="url(#apg)"/><g fill="none" stroke="#fff" stroke-opacity=".88" stroke-width=".7"><circle cx="15" cy="10" r="7"/><ellipse cx="15" cy="10" rx="3" ry="7"/><path d="M8 10h14M9 6.5h12M9 13.5h12"/></g>']
+};
+const flag = code => { const f = FLAGS[code]; return `<svg viewBox="${f[0]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${f[1]}</svg>`; };
+const flagR = code => flag(code).replace('xMidYMid', ['US', 'AU', 'AE'].includes(code) ? 'xMinYMid' : 'xMidYMid');
+const flagBg = code => flag(code).replace('xMidYMid', ['JP', 'TR', 'SG', 'IN', 'AP'].includes(code) ? 'xMidYMid' : 'none');
+const CINFO = {
+  US: { tag: 'Coast-to-coast data for city breaks and road trips.', spots: ['New York', 'Los Angeles', 'Miami', 'Las Vegas'], c: ['#3C3B6E', '#B22234', '#4d6fe0'] },
+  GB: { tag: 'Stay online from London to the Highlands.', spots: ['London', 'Edinburgh', 'Manchester', 'Cardiff'], c: ['#012169', '#C8102E', '#4a6fd8'] },
+  IN: { tag: 'Data for Delhi, Mumbai, Bengaluru and every stop between.', spots: ['Delhi', 'Mumbai', 'Bengaluru', 'Goa'], c: ['#FF9933', '#138808', '#3a45a8'] },
+  AE: { tag: 'Fast data for Dubai, Abu Dhabi and the desert drives.', spots: ['Dubai', 'Abu Dhabi', 'Sharjah'], c: ['#00732F', '#E4002B', '#2b2f36'] },
+  JP: { tag: 'Data for Tokyo, Kyoto and every station in between.', spots: ['Tokyo', 'Osaka', 'Kyoto', 'Sapporo'], c: ['#BC002D', '#ff6b86', '#3d4a66'] },
+  TH: { tag: 'Beaches, night markets and city hopping, all covered.', spots: ['Bangkok', 'Phuket', 'Chiang Mai', 'Krabi'], c: ['#A51931', '#2D2A4A', '#4b5fb5'] },
+  SG: { tag: 'One city, one eSIM, from Changi to Marina Bay.', spots: ['Marina Bay', 'Sentosa', 'Changi Airport'], c: ['#EF3340', '#ff8a93', '#34406a'] },
+  TR: { tag: 'Istanbul, the coast and Cappadocia on a single plan.', spots: ['Istanbul', 'Antalya', 'Cappadocia', 'Izmir'], c: ['#E30A17', '#ff5a64', '#6a1018'] },
+  AU: { tag: 'Cities, coast and outback on one plan.', spots: ['Sydney', 'Melbourne', 'Gold Coast', 'Perth'], c: ['#012169', '#C8102E', '#2a5cc4'] },
+  ID: { tag: 'From Jakarta to Bali, ready when you land.', spots: ['Bali', 'Jakarta', 'Yogyakarta', 'Lombok'], c: ['#CE1126', '#ff6e7e', '#5b2a3a'] },
+  EU: { tag: 'One eSIM across Europe, with no swapping at borders.', spots: ['France', 'Germany', 'Italy', 'Spain', 'Portugal'], c: ['#003399', '#d9a800', '#2a62d6'] },
+  AP: { tag: 'Hop between Asia Pacific countries on a single plan.', spots: ['Japan', 'Thailand', 'Singapore', 'Australia'], c: ['#0c7a6e', '#2a8bd6', '#7a3fbd'] }
+};
+
+/* Supported countries per region (sample list: edit freely) */
+const COVER = {
+  EU: ['Albania', 'Austria', 'Belgium', 'Bosnia and Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czechia', 'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland', 'Isle of Man', 'Italy', 'Jersey', 'Latvia', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Monaco', 'Montenegro', 'Netherlands', 'North Macedonia', 'Norway', 'Poland', 'Portugal', 'Romania', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'United Kingdom'].slice(0, 39),
+  AP: ['Australia', 'Bangladesh', 'Cambodia', 'China', 'Hong Kong', 'India', 'Indonesia', 'Japan', 'Kazakhstan', 'Laos', 'Macau', 'Malaysia', 'Maldives', 'Mongolia', 'Nepal', 'New Zealand', 'Philippines', 'Singapore', 'South Korea', 'Sri Lanka', 'Taiwan', 'Thailand', 'Vietnam']
+};
+/* ---------- eSIM search ---------- */
+const norm = t => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+const ALIAS = { US: 'usa america states', GB: 'uk britain england scotland wales', IN: 'bharat', AE: 'dubai emirates abu dhabi', JP: 'nippon', TH: 'siam', SG: 'singapura', TR: 'turkey turkiye', AU: 'oz', ID: 'bali', EU: 'europe schengen', AP: 'asia pacific apac' };
+function esimMatches(q) {
+  q = norm(q); if (!q) return null;
+  return poolFor().map(d => {
+    const name = norm(d.name), hay = [name, norm(d.code), norm(ALIAS[d.code] || ''), norm((CINFO[d.code] || { spots: [] }).spots.join(' '))].join(' ');
+    return { d, sc: name.startsWith(q) ? 0 : name.includes(q) ? 1 : hay.includes(q) ? 2 : 9 };
+  }).filter(x => x.sc < 9).sort((a, b) => a.sc - b.sc).map(x => x.d);
+}
+const tierNet = d => S.tier === 'standard' ? { n: d.region ? d.note : STD_NET, g5: 0 } : { n: d.region ? d.note : netOf(d).n, g5: netOf(d).g5 };
+const esimCard = d => { const t = S.tier === 'standard' ? 'standard' : 'premium', nt = tierNet(d), sim = S.kind === 'sim'; return `<button class="erow" data-act="dest" data-id="${d.code}" aria-label="${d.name} ${sim ? 'physical SIM' : 'eSIM'} plans"><span class="rflag">${flagR(d.code)}</span><span class="rname"><b>${d.name}</b><small>${nt.n}</small><span class="pv ${sim ? '' : t === 'standard' ? 'sv' : 'gd'}">${(sim ? planListFor(d).filter((p, i) => [0, 2, 3].includes(i)) : t === 'premium' ? tierPlans(d, t).slice(0, 3) : [...esimPlans(d, 'unl').slice(0, 1), ...esimPlans(d, 'fixed').slice(0, 2)]).map(p => `<i>${p.big} · ${fmt(p.price)}</i>`).join('')}</span></span><span class="rgen">${sim ? '<span class="gen on">SIM</span>' : ''}<span class="gen on">4G</span><span class="gen ${nt.g5 ? 'on g5' : 'off'}">5G</span></span><span class="from">From ${fmt(lowest(sim ? planListFor(d) : tierPlans(d, t)))}<i>${CUR}</i></span><span class="rgo" aria-hidden="true">›</span></button>`; };
+function renderEgrid() {
+  const g = $('#egrid'); if (!g) return;
+  const sim = S.kind === 'sim', q = (S.eq || '').trim(), res = esimMatches(q), tab = S.etab || 'local';
+  const tabs = $('.etabs.lr'); if (tabs) tabs.hidden = !!q;
+  const sc = $('.sclear'); if (sc) sc.hidden = !q;
+  const list = res || (sim ? poolFor() : tab === 'regional' ? REGIONS : DESTS);
+  const label = res ? `<p class="rcount" role="status">${res.length} result${res.length === 1 ? '' : 's'} for “${esc(q)}”</p>` : sim ? `<p class="rcount">Physical SIM cards are available in ${list.length} countries</p>` : '';
+  g.innerHTML = label + (list.length ? `<div class="elist">${list.map(esimCard).join('')}</div>` : `<div class="enone"><b>No destination matches “${esc(q)}”</b><span>${sim ? 'Physical SIMs are only sold in the countries listed on this page.' : 'Check the spelling, or try a city or region such as Tokyo, Bali or Europe.'}</span><button class="btn" data-act="eclear">Clear search</button></div>`);
+}
+/* ---------- state ---------- */
+const S = {
+  view: 'auth', authTab: 'in', pending: null, user: null,
+  service: null, dest: 'US', kind: 'esim', tier: 'premium', ptype: 'data', ptab: 'orders', alertsOpen: false, tu: null, cart: store.get('lp_cart', {}), cartOpen: false,
+  step: 1, details: { fn: '', ln: '', name: '', email: '', phone: '', country: 'India', a1: '', a2: '', city: '', state: '', zip: '' }, promo: null, fails: 0, lockUntil: 0, order: null
+};
+let users = store.get('lp_users', {});
+const saveUsers = () => store.set('lp_users', users);
+const saveCart = () => store.set('lp_cart', S.cart);
+let otpTimer = null;
+
+/* ---------- cart ---------- */
+const cartCount = () => Object.values(S.cart).reduce((n, l) => n + l.qty, 0);
+const subtotal = () => Object.values(S.cart).reduce((n, l) => n + l.plan.price * l.qty, 0);
+const discount = () => S.promo ? subtotal() * S.promo.pct : 0;
+const total = () => Math.max(0, subtotal() - discount());
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 1800); }
+function cartAdd(id) {
+  const p = REG[id]; if (!p) return;
+  if (S.cart[id]) S.cart[id].qty++; else S.cart[id] = { plan: { id: p.id, title: p.title || `${p.label} ${p.big}`, sub: p.sub, price: p.price, per: p.per, svc: p.svc || '', phys: !!p.phys, tier: p.tier || '', code: p.code || '', net: p.net || '', g5: !!p.g5, days: p.days || 0, big: p.big || '' }, qty: 1 };
+  saveCart(); afterCart(); toast('Added to cart');
+}
+function cartSet(id, d) {
+  const l = S.cart[id]; if (!l) return;
+  l.qty += d; if (l.qty <= 0) delete S.cart[id];
+  saveCart(); afterCart();
+}
+function afterCart() { renderHeader(); renderCart(); const pl = $('#plans'); if (pl) renderPlans(); const so = $('#simorder'); if (so) { if ($('#so-a1') && hasSim()) $('#so-lines').innerHTML = simLines(); else so.innerHTML = simOrderInner(); } if (S.view === 'checkout') renderCheckout(); }
+
+const skinLabel = () => S.skin === 'bright' ? 'Classic look' : 'Bright look';
+
+/* ---------- header ---------- */
+function renderHeader() {
+  const h = $('#hdr');
+  if (!S.user) { h.innerHTML = ''; return; }
+  const n = cartCount();
+  h.innerHTML = `<header class="top gut"><div class="in wrap">
+    <button class="brand" data-act="home" aria-label="Linkport home">${LOGO}<span>Linkport</span></button>
+    <span class="grow"></span>
+    <button class="btn skin" data-act="skin" aria-label="Switch between bright and classic look"><span class="swatch"></span><span class="skin-lbl hide-sm">${skinLabel()}</span></button>
+    <button class="btn btn-icon cartbtn" data-act="cart-open" aria-label="Open cart, ${n} items"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON.bag.slice(ICON.bag.indexOf('>') + 1, -6)}</svg>${n ? `<span class="count">${n}</span>` : ''}</button>
+    <button class="btn" data-act="acct" data-id="wallet" aria-label="Wallet balance"><b class="mono">${fmt(W().bal)}</b><span class="hide-sm">&nbsp;Wallet</span></button><button class="chip" data-act="acct" data-id="profile" aria-label="Profile and orders"><span class="avatar">${esc(S.user[0])}</span><span class="hide-sm">${esc(S.user)}</span></button>
+    <button class="btn" data-act="logout">Sign out</button>
+  </div></header>${dockHtml()}`;
+}
+
+/* ---------- views ---------- */
+function go(view, extra) {
+  Object.assign(S, { view }, extra || {});
+  clearInterval(otpTimer);
+  renderHeader(); renderMain(); window.scrollTo(0, 0);
+}
+function renderMain() {
+  const m = $('#main');
+  document.documentElement.classList.toggle('plain', S.view === 'country' || (S.view === 'service' && S.service === 'esim'));
+  m.classList.toggle('gut', S.view !== 'auth');
+  m.style.padding = S.view === 'auth' ? '0' : '';
+  ({ auth: viewAuth, home: viewHome, service: viewService, checkout: viewCheckout, country: viewCountry, account: viewAccount })[S.view](m);
+  paintGlobes();
+}
+
+/* --- auth --- */
+function viewAuth(m) {
+  const left = `<section class="auth-brand">
+    <div class="brand">${LOGO}<span>Linkport</span></div>
+    <div><h1>One account for every line you carry.</h1><p class="lead">Buy travel eSIMs, phone numbers, SMS packs, VPN and mobile plans from a single place.</p></div>
+    <div class="facts"><div class="fact"><b>12</b>eSIM destinations, countries and regions</div><div class="fact"><b>2FA</b>Every sign-in needs a 6-digit code</div><div class="fact"><b>9</b>services under one cart</div></div>
+    <canvas class="globe rings" width="480" height="480" aria-hidden="true"></canvas>
+  </section>`;
+  let body;
+  const p = S.pending;
+  if (p && p.mode === 'setup') body = authSetup(p);
+  else if (p && p.mode === 'verify') body = authVerify(p);
+  else if (S.authTab === 'up') body = authSignUp();
+  else body = authSignIn();
+  m.innerHTML = `<div class="auth"><button class="btn skin-fab" data-act="skin" aria-label="Switch between bright and classic look"><span class="swatch"></span><span class="skin-lbl">${skinLabel()}</span></button>${left}<section class="auth-form"><div class="auth-card">${body}</div></section></div>`;
+  bindAuth();
+}
+const tabsHtml = () => `<div class="tabs" role="tablist"><button role="tab" aria-selected="${S.authTab === 'in'}" data-act="tab-in">Sign in</button><button role="tab" aria-selected="${S.authTab === 'up'}" data-act="tab-up">Create account</button></div>`;
+const pwField = (id, label, auto) => `<div class="field"><label for="${id}">${label}</label><div class="pw"><input class="input" id="${id}" type="password" autocomplete="${auto}"><button type="button" data-act="toggle-pw" data-for="${id}">Show</button></div></div>`;
+function authSignIn() {
+  return `${tabsHtml()}<h2>Welcome back</h2><p class="sub">Sign in with your username and password. You will be asked for a 2FA code next.</p>
+  <div id="f-in" novalidate>
+    <div class="field"><label for="u">Username</label><input class="input" id="u" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
+    ${pwField('pw', 'Password', 'current-password')}
+    <p class="msg" id="msg" role="alert"></p>
+    <button class="btn btn-primary btn-block" id="go">Continue</button>
+  </div>${DEMO_MODE ? `<div class="demo">Demo login: <b class="mono">demo</b> / <b class="mono">Demo@1234</b> <button type="button" class="btn-link" data-act="fill-demo" style="margin-left:6px">Fill in</button></div>` : ''}`;
+}
+function authSignUp() {
+  return `${tabsHtml()}<h2>Create your account</h2><p class="sub">Choose a username and password. Next you will link an authenticator app for 2FA.</p>
+  <div id="f-up" novalidate>
+    <div class="field"><label for="u">Username</label><input class="input" id="u" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="3 to 20 letters, numbers, . or _"></div>
+    ${pwField('pw', 'Password', 'new-password')}
+    <div class="meter" id="meter" data-s="0"><i></i><i></i><i></i><i></i></div>
+    <p class="hint" style="margin:6px 0 16px">At least 8 characters. Mix letters, numbers and symbols.</p>
+    ${pwField('pw2', 'Confirm password', 'new-password')}
+    <p class="msg" id="msg" role="alert"></p>
+    <button class="btn btn-primary btn-block" id="go">Create account</button>
+  </div>`;
+}
+function otpHtml() { return `<div class="otp" id="otp">${[1,2,3,4,5,6].map(i => `<input inputmode="numeric" autocomplete="${i === 1 ? 'one-time-code' : 'off'}" maxlength="1" aria-label="Digit ${i}">`).join('')}</div>`; }
+const demoBox = () => DEMO_MODE ? `<div class="demo" id="demo">Demo mode: this prototype has no server, so your current code is <b class="code" id="democode">······</b> <button type="button" class="btn-link" data-act="fill-code" style="margin-left:6px">Fill in</button></div>` : '';
+function authVerify(p) {
+  return `<h2>Two-factor check</h2><p class="sub">Open your authenticator app and enter the 6-digit code for <b>${esc(p.username)}</b>.</p>
+  ${otpHtml()}<p class="msg" id="msg" role="alert"></p>
+  <button class="btn btn-primary btn-block" id="go">Verify and sign in</button>
+  <p style="text-align:center;margin-top:14px"><button class="btn-link" data-act="auth-back">Use a different account</button></p>${demoBox()}`;
+}
+function authSetup(p) {
+  return `<h2>Turn on 2FA</h2><p class="sub">Scan this code with Google Authenticator, Authy, 1Password or any TOTP app, then enter the 6-digit code it shows.</p>
+  <div class="setup"><div id="qr"></div><div><b style="font-size:13px">Can't scan? Enter this key</b><div class="secret" id="secret">${p.secret.replace(/(.{4})/g, '$1 ').trim()}</div><button class="btn-link" data-act="copy-secret" style="font-size:13px">Copy key</button></div></div>
+  ${otpHtml()}<p class="msg" id="msg" role="alert"></p>
+  <button class="btn btn-primary btn-block" id="go">Activate 2FA</button>
+  <p style="text-align:center;margin-top:14px"><button class="btn-link" data-act="auth-back">Cancel</button></p>${demoBox()}`;
+}
+/* Forms are plain divs: sandboxed previews block <form> submission, so wire the primary button and Enter key by hand. */
+function onSubmit(el, fn) {
+  el.querySelectorAll('.btn-primary').forEach(b => { b.type = 'button'; b.addEventListener('click', e => fn(e)); });
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName === 'INPUT') fn(e); });
+}
+let otp = null;
+function setMsg(t, ok) { const el = $('#msg'); if (el) { el.textContent = t || ''; el.classList.toggle('ok', !!ok); } }
+function setBusy(b, label) { const g = $('#go'); if (!g) return; g.disabled = b; g.innerHTML = b ? '<span class="spin"></span>Please wait' : label; }
+function mountOtp(root, onDone) {
+  const ins = [...root.querySelectorAll('input')];
+  const val = () => ins.map(i => i.value).join('');
+  ins.forEach((inp, i) => {
+    inp.addEventListener('input', () => { inp.value = inp.value.replace(/\D/g, '').slice(-1); if (inp.value && i < 5) ins[i + 1].focus(); if (val().length === 6) onDone(val()); });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) { ins[i - 1].focus(); ins[i - 1].value = ''; }
+      else if (e.key === 'ArrowLeft' && i > 0) ins[i - 1].focus();
+      else if (e.key === 'ArrowRight' && i < 5) ins[i + 1].focus();
+    });
+    inp.addEventListener('paste', e => {
+      const t = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6); if (!t) return;
+      e.preventDefault(); t.split('').forEach((c, k) => ins[k].value = c); ins[Math.min(t.length, 5)].focus(); if (t.length === 6) onDone(t);
+    });
+  });
+  return { val, clear() { ins.forEach(i => i.value = ''); ins[0].focus(); }, shake() { root.classList.remove('shake'); void root.offsetWidth; root.classList.add('shake'); } };
+}
+function strength(pw) {
+  let s = 0; if (pw.length >= 8) s++; if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) s++; if (/\d/.test(pw)) s++; if (/[^A-Za-z0-9]/.test(pw) && pw.length >= 10) s++;
+  return pw.length < 8 ? Math.min(s, 1) : Math.max(s, 1);
+}
+function locked() { const left = Math.ceil((S.lockUntil - Date.now()) / 1000); if (left > 0) { setMsg(`Too many attempts. Try again in ${left}s.`); return true; } return false; }
+function failed() { if (++S.fails >= 5) { S.lockUntil = Date.now() + 30000; S.fails = 0; } }
+
+function bindAuth() {
+  otp = null; const p = S.pending;
+  const otpEl = $('#otp');
+  if (otpEl) {
+    const act = p.mode === 'setup' ? submitSetup : submitVerify;
+    otp = mountOtp(otpEl, act);
+    otp.ins = otpEl.querySelector('input'); otpEl.querySelector('input').focus();
+    $('#go').addEventListener('click', () => { const v = otp.val(); if (v.length < 6) { setMsg('Enter all 6 digits.'); otp.shake(); } else act(v); });
+    if (p.mode === 'setup' && typeof QRCode !== 'undefined') {
+      const uri = `otpauth://totp/${encodeURIComponent(ISSUER)}:${encodeURIComponent(p.username)}?secret=${p.secret}&issuer=${encodeURIComponent(ISSUER)}&algorithm=SHA1&digits=6&period=30`;
+      new QRCode($('#qr'), { text: uri, width: 168, height: 168, colorDark: '#0F1F27', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    } else if (p.mode === 'setup') { $('#qr').textContent = 'Use the key'; }
+    if (DEMO_MODE) {
+      const secret = p.mode === 'setup' ? p.secret : (users[p.username] || {}).secret;
+      const tick = async () => { const el = $('#democode'); if (el && secret) { const c = await totpNow(secret); el.textContent = c.slice(0, 3) + ' ' + c.slice(3); } };
+      tick(); otpTimer = setInterval(tick, 1000);
+    }
+    return;
+  }
+  const f = $('#f-in') || $('#f-up');
+  if ($('#u')) $('#u').focus();
+  if ($('#f-in')) onSubmit(f, e => { e.preventDefault(); submitSignIn(); });
+  if ($('#f-up')) {
+    onSubmit(f, e => { e.preventDefault(); submitSignUp(); });
+    $('#pw').addEventListener('input', e => { $('#meter').dataset.s = e.target.value ? strength(e.target.value) : 0; });
+  }
+}
+async function submitSignIn() {
+  setMsg(''); if (locked()) return; try { await window.demoReady; } catch (e) {}
+  const u = $('#u').value.trim().toLowerCase(), pw = $('#pw').value;
+  if (!u || !pw) return setMsg('Enter your username and password.');
+  setBusy(true);
+  try {
+    const rec = users[u];
+    const ok = rec && await hashPw(pw, rec.salt) === rec.hash;
+    if (!ok) { failed(); setBusy(false, 'Continue'); return setMsg('Username or password is incorrect.'); }
+    S.fails = 0; S.pending = { mode: 'verify', username: u }; renderMain();
+  } catch (e) { setBusy(false, 'Continue'); setMsg('Sign-in failed: ' + (e && e.message ? e.message : e)); }
+}
+async function submitSignUp() {
+  setMsg('');
+  const u = $('#u').value.trim().toLowerCase(), pw = $('#pw').value, pw2 = $('#pw2').value;
+  if (!/^[a-z0-9._]{3,20}$/.test(u)) return setMsg('Username must be 3 to 20 letters, numbers, dots or underscores.');
+  if (users[u]) return setMsg('That username is taken. Pick another.');
+  if (pw.length < 8) return setMsg('Password needs at least 8 characters.');
+  if (pw !== pw2) return setMsg('Passwords do not match.');
+  setBusy(true);
+  try {
+    const salt = randB64(16), hash = await hashPw(pw, salt), secret = b32enc(crypto.getRandomValues(new Uint8Array(20)));
+    S.pending = { mode: 'setup', username: u, salt, hash, secret }; renderMain();
+  } catch (e) { setBusy(false, 'Create account'); setMsg('Could not create account: ' + (e && e.message ? e.message : e)); }
+}
+async function submitSetup(code) {
+  if (locked()) return; const p = S.pending;
+  if (await verifyTotp(p.secret, code)) {
+    users[p.username] = { salt: p.salt, hash: p.hash, secret: p.secret, created: Date.now() }; saveUsers();
+    S.pending = null; S.user = p.username; S.fails = 0; toast('2FA is on. Welcome to Linkport.'); go('home');
+  } else { failed(); setMsg('That code did not match. Wait for the next one and try again.'); otp.shake(); otp.clear(); }
+}
+async function submitVerify(code) {
+  if (locked()) return; const p = S.pending, rec = users[p.username];
+  if (rec && await verifyTotp(rec.secret, code)) { S.pending = null; S.user = p.username; S.fails = 0; go('home'); }
+  else { failed(); setMsg('That code did not match. Try the latest one.'); otp.shake(); otp.clear(); }
+}
+
+/* --- home --- */
+function viewHome(m) {
+  const h = new Date().getHours(), g = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+  const cards = SERVICES.map(s => `<button class="svc" style="--tone:${s.tone}" data-act="open" data-id="${s.id}">
+      <span class="tile">${ICON[s.icon]}</span>
+      <div><h3>${s.name}</h3><p style="margin-top:6px">${s.desc}</p></div>
+      <span class="foot"><span>From <b>${fmt(s.from())}</b></span><span class="go">${ICON.arrow.replace('<svg', '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"')}</span></span>
+    </button>`).join('');
+  const blank = [1, 2].map(() => `<div class="svc blank" aria-label="Empty slot"><span class="tile">${ICON.plus}</span><div><h3>Coming soon</h3><p style="margin-top:6px">This slot is reserved for a new service.</p></div></div>`).join('');
+  m.innerHTML = `<div class="wrap"><div class="hello"><div><h1>${g}, ${esc(S.user)}</h1><p>Pick a service to see plans and prices.</p></div></div><div class="grid-svc">${cards}</div></div>`;
+}
+
+
+/* ---------- Country banner (scenic art, sample social proof) ---------- */
+const PROOF = { US: ['4.2', '50,456', '500K+'], GB: ['4.4', '31,208', '300K+'], IN: ['4.3', '22,940', '180K+'], AE: ['4.5', '27,615', '240K+'], JP: ['4.6', '38,102', '350K+'], TH: ['4.4', '29,877', '260K+'], SG: ['4.5', '18,334', '150K+'], TR: ['4.2', '15,420', '120K+'], AU: ['4.4', '19,760', '170K+'], ID: ['4.3', '21,085', '190K+'], EU: ['4.5', '44,310', '420K+'], AP: ['4.4', '26,590', '230K+'] };
+function skyline(x0, x1, seed, lo, hi, cls) {
+  let x = x0, r = seed, out = '';
+  while (x < x1) { r = (r * 9301 + 49297) % 233280; const w = 22 + (r % 26), h = lo + ((r >> 3) % (hi - lo)); out += `<rect x="${x}" y="${320 - h}" width="${w}" height="${h}"/>`; x += w + 2 + (r % 4); }
+  return `<g class="${cls}">${out}</g>`;
+}
+const LM = {
+  US: '<path d="M600 312h80v-12h-80zM610 300h60v-40h-60zM618 262l8-92h28l8 92z"/><circle cx="640" cy="158" r="12"/><path d="M628 152l-14-9M634 147l-8-15M640 145v-19M646 147l8-15M652 152l14-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M652 188l20-68 8 2-18 70zM668 118h16l-3-14h-10zM676 102c-6-8 0-14 0-22 6 6 6 14 0 22z"/><rect x="610" y="190" width="14" height="24" rx="2"/><path d="M840 320V160h16l4-34h4l4 34h16v160z"/>',
+  GB: '<rect x="618" y="120" width="44" height="192"/><path d="M613 120h54l-27-62z"/><path d="M640 58v-22" stroke="currentColor" stroke-width="3"/><circle class="lt" cx="640" cy="150" r="13"/><rect class="lt" x="630" y="190" width="6" height="22" rx="3"/><rect class="lt" x="644" y="190" width="6" height="22" rx="3"/><rect x="470" y="236" width="145" height="76"/><path d="M490 236l7-30 7 30zM540 236l7-38 7 38zM585 236l7-26 7 26z"/><circle cx="810" cy="236" r="70" fill="none" stroke="currentColor" stroke-width="4"/><path d="M810 166v140M740 236h140M760 186l100 100M860 186l-100 100" stroke="currentColor" stroke-width="1.5"/>',
+  IN: '<rect x="540" y="252" width="200" height="60"/><path d="M596 252c0-52 16-90 44-90s44 38 44 90z"/><path d="M640 162v-28" stroke="currentColor" stroke-width="3"/><circle cx="640" cy="130" r="4"/><circle cx="574" cy="236" r="16"/><circle cx="706" cy="236" r="16"/><rect x="520" y="168" width="12" height="144"/><rect x="748" y="168" width="12" height="144"/><circle cx="526" cy="162" r="9"/><circle cx="754" cy="162" r="9"/><path class="lt" d="M624 312v-36a16 16 0 0 1 32 0v36z"/>',
+  AE: '<path d="M640 14L643 98 651 98 654 166 663 166 667 240 679 240 683 320 597 320 601 240 613 240 617 166 626 166 629 98 637 98Z"/><rect x="470" y="190" width="40" height="130"/><rect x="520" y="150" width="36" height="170"/><rect x="740" y="170" width="38" height="150"/><path d="M790 320V120l36 40v160z"/>',
+  JP: '<path d="M440 320L640 96 840 320z"/><path class="lt" d="M596 146l44-50 44 50-14-8-14 12-16-12-16 12z"/><g transform="translate(900 0)"><rect x="-8" y="140" width="16" height="20"/><path d="M-40 176h80l-12-18h-56zM-34 214h68l-10-16h-48zM-44 254h88l-12-20h-64zM-52 296h104l-14-22h-76z"/><rect x="-26" y="176" width="52" height="120" opacity=".5"/></g><circle class="pk" cx="520" cy="300" r="20"/><circle class="pk" cx="548" cy="290" r="16"/>',
+  TH: '<path d="M640 36L651 110 662 110 670 176 684 176 694 242 706 242 712 312 568 312 574 242 586 242 596 176 610 176 618 110 629 110Z"/><path d="M500 312v-70l30-26 30 26v70zM720 312v-70l30-26 30 26v70z" opacity=".75"/><path d="M470 244l60-48 60 48z M750 244l60-48 60 48z" opacity=".6"/>',
+  SG: '<path d="M560 312L572 128h44l-10 184zM620 312l6-184h48l6 184zM688 312L678 128h44l12 184z"/><path d="M528 110h224l-28 20H556z"/><ellipse class="lt" cx="640" cy="106" rx="60" ry="4"/><g opacity=".85"><path d="M820 312l6-110M870 312l-2-140M920 312l8-120" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><ellipse cx="826" cy="196" rx="30" ry="12"/><ellipse cx="868" cy="166" rx="34" ry="14"/><ellipse cx="928" cy="186" rx="30" ry="12"/></g>',
+  TR: '<rect x="500" y="244" width="280" height="68"/><path d="M570 244a70 62 0 0 1 140 0z"/><circle cx="535" cy="240" r="34"/><circle cx="745" cy="240" r="34"/><rect x="476" y="110" width="12" height="202"/><path d="M472 110l10-34 10 34z"/><rect x="792" y="110" width="12" height="202"/><path d="M788 110l10-34 10 34z"/><path class="lt" d="M600 312v-30a12 12 0 0 1 24 0v30zM656 312v-30a12 12 0 0 1 24 0v30z"/>',
+  AU: '<path d="M490 312C490 240 520 190 580 176 566 214 554 260 556 312zM560 312C560 250 590 202 650 190 636 226 626 266 628 312zM632 312C632 262 660 220 710 210 698 240 690 276 692 312zM696 312C696 270 716 240 750 232 742 254 738 282 740 312z"/><path d="M780 312Q890 150 1000 312" fill="none" stroke="currentColor" stroke-width="8"/><path d="M810 262v50M850 220v92M890 200v112M930 220v92M970 262v50" stroke="currentColor" stroke-width="3"/>',
+  ID: '<path d="M430 320L590 130H640L760 320z"/><path class="lt" d="M572 168l18-38h50l18 38-16-6-14 10-16-10-16 10z"/><g transform="translate(870 0)"><path d="M-46 312l8-24h76l8 24zM-36 288l6-22h60l6 22zM-26 266l4-20h44l4 20zM-18 246l3-18h30l3 18zM-10 228l2-16h16l2 16z"/></g><path d="M500 312c-6-60 8-100 30-120M520 190c-24-6-40 4-50 20M524 192c16-18 36-18 52-6M526 194c-4-20 4-34 20-44" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round"/>',
+  EU: '<path d="M640 20L648 96 656 96 666 190 684 190 702 312 676 312 664 268Q640 240 616 268L604 312 578 312 596 190 614 190 624 96 632 96Z"/><path class="lt" d="M600 242h80M612 190h56M624 96h32" stroke="currentColor" stroke-width="2" fill="none" opacity=".6"/><rect x="470" y="240" width="60" height="72"/><path d="M470 240l30-30 30 30z"/><rect x="760" y="226" width="80" height="86"/><path d="M760 226l40-34 40 34z"/>',
+  AP: '<path d="M430 320L560 170 640 250 740 130 880 320z" opacity=".7"/><path d="M640 20v200" stroke="currentColor" stroke-width="6"/><circle cx="640" cy="90" r="22"/><circle cx="640" cy="170" r="30"/><circle cx="640" cy="22" r="6"/><path d="M590 320l12-120h12l6 120zM664 320l6-90h12l10 90z"/>'
+};
+function countryArt(code) {
+  return `<svg class="cb-art" viewBox="0 0 1000 320" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">
+    <defs><linearGradient id="lmg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4aa3c4"/><stop offset="1" stop-color="#2b7fa6"/></linearGradient></defs>
+    <g class="cl"><ellipse cx="170" cy="70" rx="90" ry="22"/><ellipse cx="240" cy="84" rx="70" ry="18"/><ellipse cx="760" cy="52" rx="80" ry="18"/><ellipse cx="930" cy="96" rx="64" ry="16"/></g>
+    ${skyline(380, 1000, 7 + code.charCodeAt(0), 40, 120, 'sk1')}${skyline(400, 1000, 31 + code.charCodeAt(1), 24, 70, 'sk2')}
+    <g class="lmk" fill="url(#lmg)" color="#2f86ab" transform="translate(-30 0)">${LM[code] || ''}</g>
+    <rect class="sea" x="0" y="296" width="1000" height="24"/></svg>`;
+}
+const IC = {
+  star: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#F5B301" d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2 6.4 20.2l1.1-6.3L3 9.5l6.3-.9z"/></svg>',
+  bolt: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#8B4DE0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/><path d="M4 7l5 5" opacity=".5"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#F5A300" d="M12 2l8 3v6c0 5-3.4 9-8 11-4.6-2-8-6-8-11V5z"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  ok: c => `<svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="${c}"/><path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  sh: c => `<svg viewBox="0 0 24 24" width="22" height="22"><path fill="${c}" d="M12 1.5l9 3.4v6.6c0 5.4-3.8 9.6-9 11.5-5.2-1.9-9-6.1-9-11.5V4.9z"/><path d="M8 12l3 3 5-6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  pin: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  coin: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5c.6-1 1.5-1.4 2.5-1.4 1.4 0 2.4.7 2.4 1.8 0 2.2-4.9 1.2-4.9 3.7 0 1.1 1 1.8 2.5 1.8 1.1 0 2-.4 2.5-1.4M12 6.5v1.6M12 15.9v1.6" stroke-linecap="round"/></svg>'
+};
+function countryBanner(d) {
+  const pr = PROOF[d.code] || ['4.4', '10,000', '100K+'];
+  const sel = Object.keys(CURS).map(k => `<option value="${k}" ${k === CUR ? 'selected' : ''}>${CURS[k].n}</option>`).join('');
+  return `<section class="cbanner" aria-label="${d.name} eSIM plans">
+    ${countryArt(d.code)}
+    <div class="cb-main">
+      <div class="cb-title"><span class="cb-flag" role="img" aria-label="${d.name} ${d.region ? 'emblem' : 'flag'}">${flagR(d.code)}</span><h1><em>${d.name}</em> ${S.kind === 'sim' ? 'Physical SIM' : 'eSIM'} Plans</h1></div>
+
+    </div>
+    <div class="cb-card">
+      <div class="cb-search"><input id="csearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search country or region..." aria-label="Search for a country or region"><span class="cb-pin">${IC.pin}</span><div class="cb-sug" id="csug" hidden></div></div>
+      <label class="cb-lab" for="cursel">Currency</label>
+      <div class="cb-sel"><span class="cb-coin">${IC.coin}</span><select id="cursel" aria-label="Currency">${sel}</select><span class="cb-chev">${IC.chev}</span></div>
+    </div>
+  </section>`;
+}
+function bindBanner() {
+  const i = $('#csearch'), sg = $('#csug'), cs = $('#cursel');
+  if (cs) cs.addEventListener('change', () => setCur(cs.value));
+  if (!i) return;
+  const show = () => {
+    const r = esimMatches(i.value);
+    if (!r) { sg.hidden = true; sg.innerHTML = ''; return; }
+    sg.hidden = false;
+    sg.innerHTML = r.length ? r.slice(0, 6).map(x => `<button type="button" data-act="dest" data-id="${x.code}"><span class="rf">${flagR(x.code)}</span>${x.name}</button>`).join('') : '<div class="none">No match</div>';
+  };
+  i.addEventListener('input', show);
+  i.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const r = esimMatches(i.value); if (r && r.length) { e.preventDefault(); S.service = 'esim'; S.dest = r[0].code; S.filter = 'all'; S.ptype = defPtype(); go('country'); } }
+    else if (e.key === 'Escape') { i.value = ''; sg.hidden = true; }
+  });
+  sg.addEventListener('mousedown', e => e.preventDefault());
+  i.addEventListener('blur', () => setTimeout(() => { sg.hidden = true; }, 150));
+}
+
+/* --- country page --- */
+const countryHead = d => `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin:8px 0 16px"><div class="cb-title"><span class="cb-flag" role="img" aria-label="${d.name} ${d.region ? 'emblem' : 'flag'}">${flagR(d.code)}</span><h1><em>${d.name}</em> ${S.kind === 'sim' ? 'Physical SIM' : 'eSIM'} Plans</h1></div><label class="kindsel" style="margin:0">Currency<select id="cursel" aria-label="Currency">${Object.keys(CURS).map(k => `<option value="${k}" ${k === CUR ? 'selected' : ''}>${CURS[k].n}</option>`).join('')}</select></label></div>`;
+function viewCountry(m) {
+  const d = [...DESTS, ...REGIONS].find(x => x.code === S.dest), ci = CINFO[d.code], pl = esimPlans(d);
+  const minP = Math.min(...pl.map(p => p.price));
+  const stats = [['From', fmt(minP)], ['Plans', pl.length + VTIERS.length], ['Data', '1 to 50 GB'], ['Validity', '7 to 30 days']];
+  m.innerHTML = `<div class="wrap">
+    <button class="back" data-act="back-esim">← All ${S.kind === 'sim' ? 'physical SIM countries' : 'eSIM destinations'}</button>
+    ${countryBanner(d)}
+    <div class="stats">${stats.map(([k, v]) => `<div class="stat"><small>${k}</small><b>${v}</b></div>`).join('')}</div>
+    ${typeSw()}${tierSwHtml()}<div id="plans"></div>${S.kind === 'sim' ? simOrder() : ''}
+    <section class="how"><div class="sec-title"><h2>How it works</h2><span>Takes about two minutes</span></div>
+      <ol><li><b>Pick a plan</b><span>Add it to your cart and pay.</span></li><li><b>Scan the QR code</b><span>In your phone settings, choose Add eSIM.</span></li><li><b>Connect</b><span>Turn on data roaming when you land.</span></li></ol></section>
+    <div class="sec-title"><h2>More destinations</h2><span>Jump straight to another plan list</span></div>
+    <div class="strip">${[...DESTS, ...REGIONS].filter(x => x.code !== d.code).map(x => `<button class="mini" data-act="dest" data-id="${x.code}"><span class="flag sm">${flag(x.code)}</span>${x.name}</button>`).join('')}</div>
+  </div>`;
+  renderPlans(); bindBanner();
+}
+
+/* --- service --- */
+function viewService(m) {
+  const s = SERVICES.find(x => x.id === S.service);
+  const ex = EXPLAIN[s.id];
+  let dest = '';
+  if (s.id === 'esim') {
+    const tab = S.etab || 'local';
+    const pin = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>';
+    const book = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5l6-1.5 6 1.5 6-1.5v14l-6 1.5-6-1.5-6 1.5z"/><path d="M9 4v14M15 5.5v14"/></svg>';
+    const mag = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>';
+    dest = typeSw() + tierSwHtml() + `<div class="esearch"><p class="etag">${S.kind === 'sim' ? 'Physical SIM cards are delivered to your door. Only the countries listed below are available.' : 'Search by country or region. Instant activation, no physical SIM.'}</p>
+      <div class="sbox"><span class="sico">${mag}</span><input id="esearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search for a country or region..." aria-label="Search for a country or region" value="${esc(S.eq || '')}"><button class="sclear" type="button" data-act="eclear" aria-label="Clear search" hidden>✕</button><span class="spin-pin">${pin}</span></div></div>
+      <div class="etabs lr" role="tablist"><button class="etab" role="tab" aria-selected="${tab === 'local'}" data-act="etab" data-id="local">${pin}Local</button><button class="etab" role="tab" aria-selected="${tab === 'regional'}" data-act="etab" data-id="regional">${book}Regional</button></div><div id="egrid"></div>`;
+  }
+  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button>
+    <div class="svc-head" style="--tone:${s.tone}"><span class="tile">${ICON[s.icon]}</span><div><h1>${s.name}</h1><p>${s.desc}</p></div></div>
+    ${ex ? `<div class="explain"><h3>${ex[0]}</h3><p>${ex[1]}</p></div>` : ''}
+    ${dest}${s.id === 'esim' ? '' : '<div id="plans"></div>'}</div>`;
+  if (s.id !== 'esim') renderPlans(); else bindEsearch();
+}
+function bindEsearch() {
+  renderEgrid();
+  const i = $('#esearch'); if (!i) return;
+  i.addEventListener('input', () => { S.eq = i.value; renderEgrid(); });
+  i.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { const r = esimMatches(i.value); if (r && r.length) { e.preventDefault(); S.service = 'esim'; S.dest = r[0].code; S.filter = 'all'; go('country'); } }
+    else if (e.key === 'Escape' && i.value) { e.stopPropagation(); S.eq = ''; i.value = ''; renderEgrid(); }
+  });
+}
+const CHEV = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+function pdetHtml(p) {
+  if (!p.code) return '';
+  const d = [...DESTS, ...REGIONS].find(x => x.code === p.code); if (!d) return '';
+  const open = !!(S.pd && S.pd[p.id]);
+  const list = d.region ? COVER[d.code] || [] : [d.name];
+  const body = `<div class="pdet" id="pd-${esc(p.id)}"><b>${d.region ? `Supported countries (${list.length})` : 'Coverage'}</b>
+    <div class="clist">${list.map(c => `<span>${esc(c)}</span>`).join('')}</div>
+    <ul class="pmeta"><li>Data: ${esc(p.big)}</li><li>Type: ${p.phys ? 'Physical SIM card' : 'eSIM (QR code)'}${p.tier ? ' · ' + esc(p.tier) : ''}</li>${p.phys ? '<li>Delivery: 5 to 10 business days, free shipping</li>' : ''}${p.voice ? `<li>Calls: ${p.min} minutes · SMS: ${p.sms}</li><li>Includes a local phone number</li>` : ''}<li>Validity: ${p.days} days from first connection</li><li>${d.region ? 'One eSIM works in every country listed' : `Network: ${esc(p.net || 'Local partner network')}`}</li></ul></div>`;
+  return `<div class="pd"><button type="button" class="pdbtn" data-act="pdet" data-id="${esc(p.id)}" aria-expanded="${open}" aria-controls="pd-${esc(p.id)}">View details<span class="chev ${open ? 'up' : ''}">${CHEV}</span></button>${open ? body : ''}</div>`;
+}
+const SIG = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 19v-3M10 19v-6M15 19V9M20 19V5"/></svg>';
+const netRow = p => p.net ? `<div class="netrow"><span class="netname">${SIG}<span><small>Network</small><b>${esc(p.net)}</b></span></span><span class="gens"><span class="gen on" title="4G LTE included">${SIG}4G</span><span class="gen ${p.g5 ? 'on g5' : 'off'}" title="${p.g5 ? '5G where available' : '5G not available'}">${SIG}5G</span></span></div>` : '';
+function renderPlans() {
+  const s = SERVICES.find(x => x.id === S.service); if (s.id === 'did') return renderDid(); let list, head, note, chips = '', ptype = '';
+  if (s.id === 'esim') {
+    const d = [...DESTS, ...REGIONS].find(x => x.code === S.dest), f = S.filter || 'all';
+    const sim = S.kind === 'sim', tr = S.tier === 'standard' ? 'standard' : 'premium', ks = SUBS[tr];
+    const kind = ks.some(k => k[0] === S.ptype) ? S.ptype : ks[0][0]; S.ptype = kind;
+    list = sim ? planListFor(d) : esimPlans(d, kind);
+    if (f === 'short') list = list.filter(p => p.days <= 15); else if (f === 'month') list = list.filter(p => p.days >= 30);
+    head = kind === 'voice' ? `${d.name} data + voice plans` : `${d.name} data plans`;
+    note = kind === 'voice' ? 'Data plus calling minutes, SMS and a local number. Install by scanning a QR code.' : (d.region ? `One eSIM that covers ${d.note}. Data only, no phone number.` : 'Data-only eSIM, no phone number. Install by scanning a QR code.');
+    const nd = TIERS.length, nv = VTIERS.length;
+    ptype = `<div class="ptype" role="tablist" aria-label="Plan type"><button class="ptbtn" role="tab" aria-selected="${kind === 'data'}" data-act="ptype" data-id="data"><b>Data only</b><small>${nd} plans · internet only</small></button><button class="ptbtn" role="tab" aria-selected="${kind === 'voice'}" data-act="ptype" data-id="voice"><b>Data + Voice</b><small>${nv} plans · calls, SMS and data</small></button></div>`;
+    ptype = sim ? '' : `<div class="etabs" role="tablist" aria-label="Plan type">${ks.map(k => `<button class="etab" role="tab" aria-selected="${kind === k[0]}" data-act="ptype" data-id="${k[0]}">${k[1]}</button>`).join('')}</div>`;
+    head = sim ? `${d.name} physical SIM plans` : `${d.name} ${TIER_INFO[tr].name} eSIM plans`; note = sim ? 'SIMs with calls, SMS and data, or data only. Delivered to your address.' : TIER_INFO[tr].esim + ' Install by scanning a QR code.';
+    chips = `<div class="filters" role="group" aria-label="Filter plans">${[['all', 'All plans'], ['short', 'Short trips'], ['month', '30 days']].map(([k, t]) => `<button class="fchip" aria-pressed="${f === k}" data-act="filter" data-id="${k}">${t}</button>`).join('')}</div>`;
+  } else { list = STATIC[s.id]; head = `${s.name} plans`; note = 'Prices shown in US dollars.'; }
+  $('#plans').innerHTML = `${ptype}<div class="plans-head"><div><h2>${head}</h2><p>${note}</p></div>${chips}</div><div class="plans">${list.map(p => {
+    const l = S.cart[p.id];
+    const act = l ? `<span class="stepper"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></span>` : `<button class="btn btn-primary" data-act="add" data-id="${p.id}">Add to cart</button>`;
+    return `<article class="plan ${p.pop ? 'pop' : ''}${p.tier === 'Premium' ? ' t-gold' : p.tier === 'Standard' ? ' t-silver' : ''}"><div class="lab"><span class="lab-l">${p.code ? `<span class="flag sm">${flag(p.code)}</span>` : ''}${p.label}</span>${p.badge ? `<span class="badge">${p.badge}</span>` : ''}</div>
+      <div class="big">${p.big}</div><div class="sub">${p.sub}</div>
+      ${netRow(p)}
+      <ul>${p.feats.map(f => `<li>${f}</li>`).join('')}</ul>
+      ${pdetHtml(p)}<div class="buy"><div class="price">${fmt(p.price)}<small>${p.per}</small></div>${act}</div></article>`;
+  }).join('')}</div>`;
+}
+
+/* --- cart drawer --- */
+function renderCart() {
+  const d = $('#drawer'), lines = Object.values(S.cart);
+  const body = lines.length ? lines.map(l => `<div class="line"><b>${esc(l.plan.title)}</b><span class="amt">${fmt(l.plan.price * l.qty)}</span><small>${esc(l.plan.sub)} · ${esc(l.plan.per)}</small>
+      <div class="ctl"><span class="stepper"><button data-act="dec" data-id="${l.plan.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${l.plan.id}" aria-label="Add one">+</button></span><button class="btn-link" data-act="rm" data-id="${l.plan.id}" style="font-size:13px">Remove</button></div></div>`).join('')
+    : `<div class="empty">${ICON.bag}<b>Your cart is empty</b><span>Add a plan and it will show up here.</span></div>`;
+  d.innerHTML = `<header><h2>Your cart</h2><button class="btn btn-icon" data-act="cart-close" aria-label="Close cart">✕</button></header>
+    <div class="lines">${body}</div>
+    ${lines.length ? `<div class="sumbox">
+      ${S.promo ? `<div class="row"><span class="tag-ok">${S.promo.code} applied</span><span class="mono">−${fmt(discount())}</span></div>` : `<div class="promo"><input class="input" id="promo" placeholder="Promo code (try WELCOME10)" aria-label="Promo code"><button class="btn" data-act="promo">Apply</button></div>`}
+      <div class="row"><span>Subtotal</span><span class="mono">${fmt(subtotal())}</span></div>
+      <div class="row total"><span>Total</span><span class="mono">${fmt(total())}</span></div>
+      <button class="btn btn-primary btn-block" data-act="checkout">Checkout</button></div>` : ''}`;
+  d.classList.toggle('on', S.cartOpen); $('#scrim').classList.toggle('on', S.cartOpen); d.setAttribute('aria-hidden', String(!S.cartOpen));
+}
+function applyPromo() {
+  const c = ($('#promo').value || '').trim().toUpperCase();
+  if (c === 'WELCOME10') { S.promo = { code: c, pct: .1 }; renderCart(); if (S.view === 'checkout') renderCheckout(); toast('10% off applied'); }
+  else toast('That code is not valid');
+}
+
+/* --- checkout --- */
+const COUNTRIES = ['India', 'United States', 'United Kingdom', 'United Arab Emirates', 'Singapore', 'Australia', 'Canada', 'Germany', 'France', 'Japan', 'Other'];
+function viewCheckout(m) { m.innerHTML = '<div class="wrap" id="co"></div>'; renderCheckout(); }
+function stepsHtml() {
+  const st = ['Delivery', 'Payment', 'Done'];
+  return `<div class="steps">${st.map((t, i) => `<div class="step ${S.step === i + 1 ? 'on' : S.step > i + 1 ? 'done' : ''}"><i>${S.step > i + 1 ? '✓' : i + 1}</i><span>${t}</span></div>${i < 2 ? '<span class="step-sep"></span>' : ''}`).join('')}</div>`;
+}
+function summaryHtml() {
+  const lines = Object.values(S.cart);
+  return `<aside class="panel side"><h2 style="font-size:20px;margin-bottom:6px">Order summary</h2>
+    ${lines.map(l => `<div class="item"><span>${esc(l.plan.title)}<small>${esc(l.plan.sub)} · Qty ${l.qty}</small></span><span class="mono">${fmt(l.plan.price * l.qty)}</span></div>`).join('')}
+    <div style="display:grid;gap:8px;padding-top:14px"><div class="row"><span>Subtotal</span><span class="mono">${fmt(subtotal())}</span></div>
+    ${S.promo ? `<div class="row"><span class="tag-ok">${S.promo.code}</span><span class="mono">−${fmt(discount())}</span></div>` : ''}
+    <div class="row total"><span>Total</span><span class="mono">${fmt(total())}</span></div></div></aside>`;
+}
+function renderCheckout() {
+  const co = $('#co'); if (!co) return;
+  if (S.step === 3) return renderDone(co);
+  if (!cartCount()) { co.innerHTML = `<button class="back" data-act="home">← All services</button><div class="panel empty"><b>Your cart is empty</b><span>Add a plan before checking out.</span><button class="btn btn-primary" data-act="home">Browse services</button></div>`; return; }
+  const dt = S.details;
+  const form = S.step === 1 ? `<div class="panel"><h2>Delivery address</h2>
+      <div id="f-det" novalidate>${detFields(dt)}
+        <p class="hint" style="margin-bottom:12px">Your physical SIM will be delivered to this address.</p>
+        <p class="msg" id="msg" role="alert"></p>
+        <button class="btn btn-primary btn-block">Continue to payment</button></div></div>`
+    : payPanel();
+  co.innerHTML = `<button class="back" data-act="home">← Keep shopping</button>${stepsHtml()}<div class="co">${form}${summaryHtml()}</div>`;
+  if (S.step === 1) {
+    onSubmit($('#f-det'), e => {
+      e.preventDefault();
+      const g = i => (($('#' + i) || {}).value || '').trim(), fn = S.user, ln = '', n = S.user, em = '';
+      
+      
+      if (hasSim() && (!g('d-a1') || !g('d-city') || !g('d-zip') || g('d-phone').length < 6)) return setMsg('Enter your delivery address, city, postcode and a phone number.');
+      S.details = { fn, ln, name: n, email: em, phone: g('d-phone'), country: $('#d-country').value, a1: g('d-a1'), a2: g('d-a2'), city: g('d-city'), state: g('d-state'), zip: g('d-zip') }; S.step = 2; renderCheckout(); window.scrollTo(0, 0);
+    });
+  } else bindPay();
+}
+const luhn = n => { let s = 0, alt = false; for (let i = n.length - 1; i >= 0; i--) { let d = +n[i]; if (alt) { d *= 2; if (d > 9) d -= 9; } s += d; alt = !alt; } return s % 10 === 0; };
+const brandOf = n => /^4/.test(n) ? 'VISA' : /^(5[1-5]|2[2-7])/.test(n) ? 'MC' : /^3[47]/.test(n) ? 'AMEX' : /^(60|65|81|82)/.test(n) ? 'RUPAY' : '';
+/* ---------- wallet, orders, my eSIMs (demo storage in localStorage; move to your server for production) ---------- */
+const WK = () => 'lp_w_' + S.user;
+const W = () => { const w = store.get(WK(), null); if (w) return w; const n = { bal: 100, tx: [{ t: Date.now(), d: 'Welcome credit (demo)', a: 100 }], orders: [], esims: [], alerts: [] }; store.set(WK(), n); return n; };
+const WS = w => store.set(WK(), w);
+const fd = t => new Date(t).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+const hasSim = () => Object.values(S.cart).some(l => l.plan.id.startsWith('sim:'));
+function alertAdd(m) { const w = W(); w.alerts.unshift({ t: Date.now(), m }); w.alerts = w.alerts.slice(0, 30); WS(w); toast(m); }
+function topup(a) { if (!(a >= 1 && a <= 5000)) return toast('Enter an amount from 1 to 5000 (USD)'); const w = W(); w.bal += a; w.tx.unshift({ t: Date.now(), d: 'Wallet top-up', a }); WS(w); alertAdd('Wallet topped up with ' + fmt(a)); renderHeader(); renderMain(); }
+const typeSwOld = () => `<div class="tiersw" role="tablist" aria-label="SIM type">${[['esim', 'eSIM', 'Instant QR activation'], ['sim', 'Physical SIM', 'Delivered to your door']].map(([k, n, t]) => `<button class="tbtn" role="tab" aria-selected="${S.kind === k}" data-act="kind" data-id="${k}"><span class="tn">${n}</span><small>${t}</small></button>`).join('')}</div>`;
+const typeSw = () => `<label class="kindsel">Choose type<select data-sel="kind" aria-label="SIM type"><option value="esim"${S.kind === 'esim' ? ' selected' : ''}>eSIM (instant, QR code)</option><option value="sim"${S.kind === 'sim' ? ' selected' : ''}>Physical SIM (delivered to you)</option></select></label>`;
+const simLines = () => { const L = Object.values(S.cart).filter(l => l.plan.id.startsWith('sim:')); return L.map(l => `<div class="arow" style="align-items:center"><span>${esc(l.plan.title)}<br><small style="color:var(--ink-2)">${esc(l.plan.sub)}</small></span><span class="stepper"><button data-act="dec" data-id="${l.plan.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${l.plan.id}" aria-label="Add one">+</button></span><span class="mono">${fmt(l.plan.price * l.qty)}</span></div>`).join('') + `<div class="arow"><b>SIMs total</b><b class="mono">${fmt(L.reduce((n, l) => n + l.plan.price * l.qty, 0))}</b></div>`; };
+function simOrderInner() {
+  const dt = S.details, f = (i, l, v, x = '') => `<div class="field"><label for="${i}">${l}</label><input class="input" id="${i}" value="${esc(v || '')}" ${x}></div>`;
+  if (!hasSim()) return `<section class="panel" style="margin-top:18px"><h2>Physical SIM delivery</h2><p class="hint">Add a plan above with Add to cart. Then set the quantity and enter your delivery address here.</p></section>`;
+  return `<section class="panel" style="margin-top:18px"><h2>Quantity and delivery address</h2><p class="hint" style="margin-bottom:8px">Change how many SIMs you want, then tell us where to deliver them.</p><div id="so-lines">${simLines()}</div>
+    <div style="height:12px"></div>${f('so-phone', 'Phone number', dt.phone, 'type="tel"')}${f('so-a1', 'Address line 1', dt.a1)}${f('so-a2', 'Address line 2 (optional)', dt.a2)}<div class="two">${f('so-city', 'City', dt.city)}${f('so-state', 'State / region', dt.state)}</div>${f('so-zip', 'Postcode', dt.zip)}
+    <p class="msg" id="so-msg" role="alert"></p><button class="btn btn-primary btn-block" data-act="simorder">Continue to payment</button></section>`;
+}
+const simOrder = () => `<div id="simorder">${simOrderInner()}</div>`;
+function simOrderOld() {
+  const d = [...DESTS, ...REGIONS].find(x => x.code === S.dest), tr = S.tier === 'standard' ? 'standard' : 'premium', dt = S.details;
+  const f = (i, l, v, x = '') => `<div class="field"><label for="${i}">${l}</label><input class="input" id="${i}" value="${esc(v || '')}" ${x}></div>`;
+  return `<section class="panel" style="margin-top:18px"><h2>Order your ${d.name} physical SIM</h2><p class="hint" style="margin-bottom:12px">Choose a plan, how many SIMs you need and where to deliver them.</p>
+    <div class="two"><div class="field"><label for="so-plan">Plan (${TIER_INFO[tr].name})</label><select class="input" id="so-plan">${simPlans(d, tr).map(p => `<option value="${p.id}">${esc(p.title)} · ${fmt(p.price)}</option>`).join('')}</select></div>${f('so-qty', 'Quantity', 1, 'type="number" min="1" max="20"')}</div>
+    ${f('so-phone', 'Phone number', dt.phone, 'type="tel"')}
+    ${f('so-a1', 'Address line 1', dt.a1)}${f('so-a2', 'Address line 2 (optional)', dt.a2)}<div class="two">${f('so-city', 'City', dt.city)}${f('so-state', 'State / region', dt.state)}</div>${f('so-zip', 'Postcode', dt.zip)}
+    <p class="msg" id="so-msg" role="alert"></p><button class="btn btn-primary btn-block" data-act="simorder">Continue to payment</button></section>`;
+}
+function simOrderGo() {
+  const g = i => (($('#' + i) || {}).value || '').trim(), msg = t => { $('#so-msg').textContent = t; };
+  const fn = S.user, ln = '', em = '';
+  
+  
+  if (!g('so-a1') || !g('so-city') || !g('so-zip') || g('so-phone').length < 6) return msg('Enter your phone number, address, city and postcode.');
+  S.details = { fn, ln, name: fn + ' ' + ln, email: em, phone: g('so-phone'), country: S.details.country || 'India', a1: g('so-a1'), a2: g('so-a2'), city: g('so-city'), state: g('so-state'), zip: g('so-zip') };
+  
+  S.cartOpen = false; S.step = 2; go('checkout'); renderCart();
+}
+const dockHtml = () => { const n = cartCount(); return n && !['auth', 'checkout'].includes(S.view) && !(S.view === 'country' && S.kind === 'sim') ? `<div class="dock"><button class="btn btn-primary" data-act="checkout" aria-label="Continue to payment"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON.bag.slice(ICON.bag.indexOf('>') + 1, -6)}</svg><b class="mono">${n}</b><span>${fmt(total())}</span><span>Continue</span></button></div>` : ''; };
+const otype = l => l.type || (/Physical SIM/.test(l.title) ? 'sim' : /eSIM/.test(l.title) ? 'esim' : 'other');
+function ordersByType(w) {
+  return [['sim', 'Physical SIM orders'], ['esim', 'eSIM orders'], ['did', 'Phone number (DID) orders'], ['other', 'Other orders']].map(([k, n]) => {
+    const os = w.orders.map(o => ({ o, ls: o.lines.filter(l => otype(l) === k) })).filter(x => x.ls.length);
+    if (k === 'other' && !os.length) return '';
+    return `<h3 style="margin:18px 0 4px">${n} <small class="mono">(${os.length})</small></h3>` + (os.length ? os.map(({ o, ls }) => `<div class="arow" style="display:block"><div style="display:flex;justify-content:space-between"><label><input type="checkbox" data-pick="orders" value="${o.ref}"> <b class="mono">${o.ref}</b></label><span class="mono">${fmt(ls.reduce((a, l) => a + l.price * l.qty, 0))}</span></div><small style="color:var(--ink-2)">${fd(o.t)} · ${esc(o.status)}</small>${ls.map(l => `<div style="font-size:14px">${esc(l.title)} × ${l.qty}</div>`).join('')}${k === 'sim' && o.ship ? `<small style="color:var(--ink-2)">Ships to ${esc(o.ship.a1)}, ${esc(o.ship.city)} ${esc(o.ship.zip)}</small>` : ''}</div>`).join('') : '<p class="hint">None yet.</p>');
+  }).join('');
+}
+const DIDC = [['US', 'United States', '+1 415 555 01', 2], ['GB', 'United Kingdom', '+44 20 7946 01', 3], ['IN', 'India', '+91 80 4000 01', 2.5], ['AE', 'United Arab Emirates', '+971 4 555 01', 5], ['SG', 'Singapore', '+65 6123 01', 4]];
+function renderDid() {
+  const cc = S.didc || 'US', C1 = DIDC.find(x => x[0] === cc) || DIDC[0], types = ['Local', 'Local', 'Toll-free', 'Local', 'Mobile'];
+  const nums = reg(['11', '22', '33', '44', '55'].map((sfx, i) => ({ id: `did:${C1[0]}:${i + 1}`, svc: 'did', label: C1[1], big: C1[2] + sfx, sub: types[i] + ' number', price: C1[3] + (i === 2 ? 1.5 : i === 4 ? 1 : 0), per: 'per month' })));
+  $('#plans').innerHTML = `<div class="plans-head"><div><h2>Phone numbers (DID)</h2><p>Pick a country, then choose a number. These are sample numbers for the demo.</p></div></div>
+    <div class="filters" role="group" aria-label="Country" style="margin-bottom:12px">${DIDC.map(x => `<button class="fchip" aria-pressed="${x[0] === C1[0]}" data-act="didc" data-id="${x[0]}"><span class="flag sm">${flag(x[0])}</span> ${x[1]}</button>`).join('')}</div>
+    <div class="panel">${nums.map(p => `<div class="arow" style="align-items:center;flex-wrap:wrap"><span><b class="mono">${p.big}</b><br><small style="color:var(--ink-2)">${p.sub} · ${esc(p.label)}</small></span><span class="mono">${fmt(p.price)} <small>/ month</small></span><span class="pre" style="margin:0">${S.cart[p.id] ? `<button class="btn" data-act="rm" data-id="${p.id}">Remove from cart</button>` : `<button class="btn" data-act="add" data-id="${p.id}">Add to cart</button>`}<button class="btn btn-primary" data-act="buynow" data-id="${p.id}">Buy now</button></span></div>`).join('')}</div>`;
+}
+const GW = ['Stripe (test)', 'Razorpay (test)', 'PayU (test)', 'Adyen (test)', 'Cashfree (test)'];
+const gwPanel = () => `<div class="panel"><h2>Add money with a payment gateway</h2><p class="hint" style="margin-bottom:10px">Test mode with sample card data filled in. No real money moves. Use 4000 0000 0000 0002 to see a decline.</p>
+  <div class="two"><div class="field"><label for="gw-sel">Gateway</label><select class="input" id="gw-sel">${GW.map(x => `<option>${x}</option>`).join('')}</select></div><div class="field"><label for="gw-amt">Amount (USD)</label><input class="input" id="gw-amt" type="number" min="1" max="5000" value="50"></div></div>
+  <div class="pre">${[10, 25, 50, 100].map(a => `<button class="btn" data-act="gwamt" data-amt="${a}">$${a}</button>`).join('')}</div>
+  <div class="field"><label for="gw-name">Name on card</label><input class="input" id="gw-name" value="${esc(S.user)}"></div>
+  <div class="field"><label for="gw-num">Card number</label><input class="input mono" id="gw-num" inputmode="numeric" value="4242 4242 4242 4242"></div>
+  <div class="two"><div class="field"><label for="gw-exp">Expiry</label><input class="input mono" id="gw-exp" value="12 / 30"></div><div class="field"><label for="gw-cvc">CVC</label><input class="input mono" id="gw-cvc" value="123"></div></div>
+  <p class="msg" id="gw-msg" role="alert"></p><button class="btn btn-primary btn-block" id="gw-pay" data-act="gwpay">Pay and add to wallet</button></div>`;
+async function gwPay() {
+  const g = i => (($('#' + i) || {}).value || '').trim(), msg = t => { $('#gw-msg').textContent = t; };
+  const a = +g('gw-amt'), n = g('gw-num').replace(/\D/g, ''), ex = g('gw-exp').replace(/\D/g, ''), cv = g('gw-cvc'), mm = +ex.slice(0, 2), yy = 2000 + +ex.slice(2, 4);
+  if (!(a >= 1 && a <= 5000)) return msg('Enter an amount from 1 to 5000 (USD).');
+  if (n.length < 13 || !luhn(n)) return msg('That card number is not valid.');
+  if (ex.length < 4 || mm < 1 || mm > 12 || yy < new Date().getFullYear()) return msg('Check the expiry date.');
+  if (cv.length < 3) return msg('Check the security code.');
+  const b = $('#gw-pay'), gw = g('gw-sel'); b.disabled = true; b.textContent = 'Processing payment...';
+  try {
+    const r = await Gateway.charge({ amount: a, card: { number: n, exp: ex, cvc: cv, name: g('gw-name') } });
+    const w = W(); w.bal += a; w.tx.unshift({ t: Date.now(), d: 'Wallet top-up via ' + gw + ' (' + r.id + ')', a }); WS(w);
+    alertAdd('Wallet topped up with ' + fmt(a) + ' via ' + gw); renderHeader(); renderMain();
+  } catch (e) { b.disabled = false; b.textContent = 'Pay and add to wallet'; msg(e.message || 'Payment failed. Try again.'); }
+}
+const shareBar = k => `<div class="pre" style="align-items:center"><label><input type="checkbox" data-selall="${k}"> Select all</label><input class="input" id="sh-${k}" type="text" placeholder="email1@example.com, email2@example.com" style="flex:1;min-width:220px"><button class="btn btn-primary" data-act="share" data-id="${k}">Share selected by email</button></div><div id="shres-${k}"></div>`;
+function shareSel(k) {
+  const w = W(), ids = [...document.querySelectorAll('[data-pick="' + k + '"]:checked')].map(c => c.value), em = ((($('#sh-' + k) || {}).value) || '').split(/[,;\s]+/).filter(Boolean);
+  if (!ids.length) return toast('Select at least one item first');
+  if (!em.length || em.some(x => !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(x))) return toast('Enter valid email addresses, separated by commas');
+  const body = k === 'esims' ? w.esims.filter(e => ids.includes(e.id)).map(e => e.title + '\n' + e.sub + '\nActivation code: ' + e.lpa).join('\n\n') : w.orders.filter(o => ids.includes(o.ref)).map(o => 'Order ' + o.ref + ' (' + fd(o.t) + ')\n' + o.lines.map(l => l.title + ' x ' + l.qty).join('\n') + '\nTotal: ' + fmt(o.total)).join('\n\n');
+  const sub = k === 'esims' ? 'My Linkport eSIMs' : 'My Linkport orders', q = 'su=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body);
+  const gm = esc('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(em.join(',')) + '&' + q), ml = esc('mailto:' + em.join(',') + '?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(body));
+  $('#shres-' + k).innerHTML = `<div class="panel" style="background:var(--surface-2);margin-top:10px"><b>Message for ${esc(em.join(', '))}</b>
+    <textarea id="shmsg" class="input" readonly rows="8" style="width:100%;margin:8px 0">${esc(sub + '\n\n' + body)}</textarea>
+    <div class="pre"><button class="btn btn-primary" data-act="shcopy">Copy message</button><a class="btn" target="_blank" rel="noopener" href="${gm}">Open in Gmail</a><a class="btn" target="_blank" rel="noopener" href="${ml}">Open email app</a></div>
+    <p class="hint">Some viewers block links that open other apps. If nothing opens, tap Copy message and paste it into your email.</p></div>`;
+  toast('Message ready to share');
+}
+function detFields(dt) {
+  const f = (i, l, v, x = '') => `<div class="field"><label for="${i}">${l}</label><input class="input" id="${i}" value="${esc(v || '')}" ${x}></div>`;
+  return `${f('d-phone', 'Phone number', dt.phone, 'type="tel"')}<div class="field"><label for="d-country">Delivery country</label><select class="input" id="d-country">${COUNTRIES.map(c => `<option ${c === dt.country ? 'selected' : ''}>${c}</option>`).join('')}</select></div>${f('d-a1', 'Address line 1', dt.a1)}${f('d-a2', 'Address line 2 (optional)', dt.a2)}<div class="two">${f('d-city', 'City', dt.city)}${f('d-state', 'State / region', dt.state)}</div>${f('d-zip', 'Postcode', dt.zip)}`;
+}
+function detFieldsOld(dt) {
+  const f = (i, l, v, x = '') => `<div class="field"><label for="${i}">${l}</label><input class="input" id="${i}" value="${esc(v || '')}" ${x}></div>`;
+  return `<div class="two">${f('d-fn', 'First name', dt.fn, 'autocomplete="given-name"')}${f('d-ln', 'Last name', dt.ln, 'autocomplete="family-name"')}</div>
+    <div class="two">${f('d-email', 'Email', dt.email, 'type="email" placeholder="you@example.com"')}${f('d-phone', 'Phone', dt.phone, 'type="tel"')}</div>
+    <div class="field"><label for="d-country">Country</label><select class="input" id="d-country">${COUNTRIES.map(c => `<option ${c === dt.country ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+    ${hasSim() ? `<h3 style="margin:8px 0">Delivery address for your physical SIM</h3>${f('d-a1', 'Address line 1', dt.a1)}${f('d-a2', 'Address line 2 (optional)', dt.a2)}<div class="two">${f('d-city', 'City', dt.city)}${f('d-state', 'State / region', dt.state)}</div>${f('d-zip', 'Postcode', dt.zip)}` : ''}`;
+}
+function payPanel() {
+  const w = W(), t = total(), ok = w.bal >= t, gap = Math.ceil(t - w.bal);
+  return `<div class="panel"><h2>Pay from wallet</h2>
+    <div class="wbox"><span>Wallet balance</span><b class="mono">${fmt(w.bal)}</b></div><div class="wbox"><span>Order total</span><b class="mono">${fmt(t)}</b></div>
+    <div class="wbox"><span>Balance after payment</span><b class="mono ${ok ? '' : 'bad'}">${ok ? fmt(w.bal - t) : 'Short by ' + fmt(t - w.bal)}</b></div>
+    <p class="msg" id="msg" role="alert"></p>
+    ${ok ? `<button class="btn btn-primary btn-block" id="pay">Pay ${fmt(t)} from wallet</button>` : `<button class="btn btn-primary btn-block" data-act="topup" data-amt="${gap}">Add ${fmt(gap)} to wallet</button>`}
+    <p class="hint" style="margin-top:10px">The amount is deducted from your wallet balance. No card is used at checkout.</p></div>`;
+}
+function bindPay() {
+  const b = $('#pay'); if (!b) return;
+  b.onclick = () => {
+    const w = W(), t = total(); if (w.bal < t) return setMsg('Not enough wallet balance.');
+    const ref = 'LP-' + Math.random().toString(36).slice(2, 8).toUpperCase(), lines = Object.values(S.cart).map(l => ({ ...l })), ship = hasSim() ? { ...S.details } : null;
+    w.bal -= t; w.tx.unshift({ t: Date.now(), d: 'Order ' + ref, a: -t });
+    lines.forEach(l => { if (l.plan.id.startsWith('esim')) for (let i = 0; i < l.qty; i++) w.esims.unshift({ id: ref + '-' + (w.esims.length + 1), ref, title: l.plan.title, sub: l.plan.sub, lpa: 'LPA:1$smdp.linkport.example$' + Math.random().toString(36).slice(2, 12).toUpperCase(), t: Date.now() }); });
+    w.orders.unshift({ ref, t: Date.now(), total: t, ship, status: ship ? 'Preparing to ship' : 'Completed', lines: lines.map(l => ({ title: l.plan.title, qty: l.qty, price: l.plan.price, type: l.plan.id.startsWith('sim:') ? 'sim' : l.plan.id.startsWith('esim') ? 'esim' : l.plan.id.startsWith('did:') ? 'did' : 'other' })) });
+    WS(w); S.order = { ref, total: t, lines, email: S.details.email, ship }; S.cart = {}; S.promo = null; saveCart(); S.step = 3;
+    alertAdd(fmt(t) + ' paid from wallet for order ' + ref); if (w.bal - 0 < 5) alertAdd('Low wallet balance: ' + fmt(w.bal) + ' left. Add money to keep ordering.');
+    renderHeader(); renderCart(); renderCheckout(); window.scrollTo(0, 0);
+  };
+}
+function renderDone(co) {
+  const o = S.order;
+  co.innerHTML = `${stepsHtml()}<div class="panel done-card"><span class="tick">${ICON.check}</span><h2 style="margin:0">Paid from wallet</h2>
+    <p style="color:var(--ink-2)">Order <b class="mono">${o.ref}</b> is confirmed and ${fmt(o.total)} was deducted from your wallet.${o.ship ? ` Your SIM ships to ${esc(o.ship.a1)}, ${esc(o.ship.city)}.` : ''}</p>
+    <div class="receipt">${o.lines.map(l => `<div class="arow"><span>${esc(l.plan.title)} × ${l.qty}</span><span class="mono">${fmt(l.plan.price * l.qty)}</span></div>`).join('')}</div>
+    <div class="pre"><button class="btn btn-primary" data-act="acct" data-id="esims">My eSIMs and QR codes</button><button class="btn" data-act="home">Back to services</button></div></div>`;
+}
+function viewAccount(m) {
+  const w = W(), t = S.atab || 'profile';
+  const tabs = [['profile', 'Profile and orders'], ['wallet', 'Wallet'], ['esims', 'My eSIMs']].map(([k, n]) => `<button class="etab" role="tab" aria-selected="${t === k}" data-act="atab" data-id="${k}">${n}</button>`).join('');
+  let b = '';
+  if (t === 'profile') b = `<div class="panel"><h2>Profile</h2><p><b>${esc(S.user)}</b></p><p class="hint">Wallet balance ${fmt(w.bal)}</p></div>
+    <div class="panel"><h2>Order history</h2>${w.orders.length ? shareBar('orders') + ordersByType(w) : ''}${w.orders.length ? [].map(o => `<div class="arow" style="display:block"><div style="display:flex;justify-content:space-between"><label><input type="checkbox" data-pick="orders" value="${o.ref}"> <b class="mono">${o.ref}</b></label><span class="mono">${fmt(o.total)}</span></div><small style="color:var(--ink-2)">${fd(o.t)} · ${esc(o.status)}</small>${o.lines.map(l => `<div style="font-size:14px">${esc(l.title)} × ${l.qty}</div>`).join('')}${o.ship ? `<small style="color:var(--ink-2)">Ships to ${esc(o.ship.fn)} ${esc(o.ship.ln)}, ${esc(o.ship.a1)}, ${esc(o.ship.city)} ${esc(o.ship.zip)}</small>` : ''}</div>`).join('') : '<p class="hint">No orders yet.</p>'}</div>
+    <div class="panel"><h2>Alerts</h2>${w.alerts.length ? w.alerts.map(a => `<div class="arow"><span>${esc(a.m)}</span><small>${fd(a.t)}</small></div>`).join('') : '<p class="hint">No alerts yet.</p>'}</div>`;
+  else if (t === 'wallet') b = `<div class="panel"><h2>Wallet</h2><div class="wbox"><span>Balance</span><b class="mono">${fmt(w.bal)}</b></div>
+    <p class="hint" style="margin-top:10px">Quick demo top-up (USD, credited instantly). For the payment gateway option, use the panel below.</p>
+    <div class="pre">${[10, 25, 50, 100].map(a => `<button class="btn" data-act="topup" data-amt="${a}">+ $${a}</button>`).join('')}</div>
+    <div class="pre"><input class="input" id="tu-amt" type="number" min="1" max="5000" placeholder="Other amount" style="max-width:180px"><button class="btn btn-primary" data-act="topup">Add money</button></div></div>
+    ${gwPanel()}<div class="panel"><h2>Transactions</h2>${w.tx.map(x => `<div class="arow"><span>${esc(x.d)}<br><small style="color:var(--ink-2)">${fd(x.t)}</small></span><b class="mono ${x.a < 0 ? 'bad' : ''}">${x.a < 0 ? '−' : '+'}${fmt(Math.abs(x.a))}</b></div>`).join('')}</div>`;
+  else b = `<div class="panel"><h2>My eSIMs</h2><p class="hint">On your phone: Settings, Mobile data, Add eSIM, then scan the QR code.</p>${w.esims.length ? shareBar('esims') : ''}${w.esims.length ? w.esims.map(e => `<div class="qrbox"><input type="checkbox" data-pick="esims" value="${e.id}" aria-label="Select this eSIM"><div id="qr-${e.id}"></div><div><b>${esc(e.title)}</b><br><small>${esc(e.sub)} · ${esc(e.id)}</small><code>${esc(e.lpa)}</code></div></div>`).join('') : '<p class="hint">No eSIMs yet. Buy an eSIM and its QR code will appear here.</p>'}</div>`;
+  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button><h1 style="margin-top:8px">Your account</h1><div class="etabs" role="tablist" style="margin-top:12px">${tabs}</div><div class="acc">${b}</div></div>`;
+  if (t === 'esims' && typeof QRCode !== 'undefined') w.esims.forEach(e => { const el = document.getElementById('qr-' + e.id); if (el) new QRCode(el, { text: e.lpa, width: 132, height: 132 }); });
+}
+
+/* ---------- payment gateway hand-off ----------
+   This adapter is the single place to swap in a real gateway (Stripe, Razorpay, PayU, Adyen...).
+   In production: send {amount, currency, orderRef, customer} to YOUR server, create a payment session there with your secret key,
+   then redirect to the gateway's hosted page or mount its card element. Card numbers should go to the gateway, not through this page. */
+const Gateway = {
+  mode: 'test',
+  async charge({ amount, card }) {
+    await sleep(1700);
+    if (card.number === '4000000000000002') throw new Error('Your card was declined. Try a different card.');
+    if (card.number === '4000000000009995') throw new Error('Insufficient funds on this card.');
+    return { id: 'ch_test_' + Math.random().toString(36).slice(2, 12), status: 'succeeded', amount };
+  }
+};
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, id = el.dataset.id;
+  switch (a) {
+    case 'skin': S.skin = S.skin === 'bright' ? 'classic' : 'bright'; document.documentElement.dataset.skin = S.skin; store.set('lp_skin', S.skin); document.querySelectorAll('.skin-lbl').forEach(e => e.textContent = skinLabel()); break;
+    case 'fill-code': { const c = ($('#democode').textContent || '').replace(/\D/g, ''); if (c.length === 6) { const ins = [...document.querySelectorAll('#otp input')]; c.split('').forEach((ch, k) => ins[k].value = ch); ins[5].dispatchEvent(new Event('input', { bubbles: true })); } break; }
+    case 'fill-demo': $('#u').value = 'demo'; $('#pw').value = 'Demo@1234'; $('#pw').focus(); break;
+    case 'tab-in': S.authTab = 'in'; S.pending = null; renderMain(); break;
+    case 'tab-up': S.authTab = 'up'; S.pending = null; renderMain(); break;
+    case 'auth-back': S.pending = null; clearInterval(otpTimer); renderMain(); break;
+    case 'toggle-pw': { const i = document.getElementById(el.dataset.for); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; el.textContent = show ? 'Hide' : 'Show'; break; }
+    case 'copy-secret': { const t = S.pending.secret; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Key copied')).catch(() => { const r = document.createRange(); r.selectNodeContents($('#secret')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Key selected. Press copy.'); }); break; }
+    case 'home': S.cartOpen = false; S.step = 1; if (S.view === 'checkout' && S.order) S.order = null; go('home'); renderCart(); break;
+    case 'open': S.service = id; S.dest = 'US'; S.eq = ''; go('service'); break;
+    case 'dest': S.service = 'esim'; S.dest = id; S.filter = 'all'; S.ptype = defPtype(); go('country'); break;
+    case 'chat-toggle': chatToggle(); break;
+    case 'chat-q': chatSend(el.dataset.q); break;
+    case 'ptype': S.ptype = id; renderPlans(); break;
+    case 'pdet': S.pd = S.pd || {}; S.pd[id] = !S.pd[id]; renderPlans(); break;
+    case 'etab': S.etab = id; S.eq = ''; renderMain(); break;
+    case 'eclear': S.eq = ''; renderMain(); { const i = $('#esearch'); if (i) i.focus(); } break;
+    case 'back-esim': S.service = 'esim'; go('service'); break;
+    case 'filter': S.filter = id; renderPlans(); break;
+    case 'add': cartAdd(id); break;
+    case 'inc': cartSet(id, 1); break;
+    case 'dec': cartSet(id, -1); break;
+    case 'rm': { const l = S.cart[id]; if (l) cartSet(id, -l.qty); break; }
+    case 'cart-open': S.cartOpen = true; renderCart(); break;
+    case 'cart-close': S.cartOpen = false; renderCart(); break;
+    case 'promo': applyPromo(); break;
+    case 'checkout': S.cartOpen = false; S.step = hasSim() ? 1 : 2; go('checkout'); renderCart(); break;
+    case 'step-1': S.step = 1; renderCheckout(); break;
+    case 'kind': S.kind = id; S.etab = 'local'; S.eq = ''; if (S.view === 'country' && id === 'sim' && !SIM_CODES.includes(S.dest)) S.dest = 'US'; renderMain(); break;
+    case 'tier': S.tier = id; S.ptype = defPtype(); renderMain(); break;
+    case 'acct': S.atab = id || 'profile'; S.cartOpen = false; go('account'); renderCart(); break;
+    case 'atab': S.atab = id; renderMain(); break;
+    case 'simorder': simOrderGo(); break;
+    case 'share': shareSel(id); break;
+    case 'gwamt': $('#gw-amt').value = el.dataset.amt; break;
+    case 'gwpay': gwPay(); break;
+    case 'didc': S.didc = id; renderPlans(); break;
+    case 'buynow': if (!S.cart[id]) cartAdd(id); S.cartOpen = false; S.step = 2; go('checkout'); renderCart(); break;
+    case 'shcopy': { const t = $('#shmsg'); t.select(); (navigator.clipboard ? navigator.clipboard.writeText(t.value) : Promise.reject()).then(() => toast('Message copied')).catch(() => { try { document.execCommand('copy'); } catch (e) {} toast('Message selected. Press copy.'); }); break; }
+    case 'topup': topup(+el.dataset.amt || +(($('#tu-amt') || {}).value)); break;
+    case 'logout': S.user = null; S.pending = null; S.cartOpen = false; S.authTab = 'in'; S.order = null; S.step = 1; go('auth'); renderCart(); break;
+  }
+});
+document.addEventListener('change', e => { const sa = e.target.closest('[data-selall]'); if (sa) { document.querySelectorAll('[data-pick="' + sa.dataset.selall + '"]').forEach(c => c.checked = sa.checked); return; } const el = e.target.closest('[data-sel="kind"]'); if (!el) return; S.kind = el.value; S.etab = 'local'; S.eq = ''; if (S.view === 'country' && S.kind === 'sim' && !SIM_CODES.includes(S.dest)) S.dest = 'US'; renderMain(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (S.cartOpen) { S.cartOpen = false; renderCart(); } else if (CHAT.open) chatToggle(false); } });
+
+/* ---------- blue-marble globe (drawn once with noise, no image files) ---------- */
+let globeSrc = null, globeWait = false;
+function renderGlobe(N) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = N;
+  const ctx = cv.getContext('2d'), img = ctx.createImageData(N, N), d = img.data;
+  const hash = (x, y, z) => { const h = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return h - Math.floor(h); };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const noise = (x, y, z) => {
+    const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z), xf = x - xi, yf = y - yi, zf = z - zi;
+    const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf), w = zf * zf * (3 - 2 * zf);
+    return lerp(
+      lerp(lerp(hash(xi, yi, zi), hash(xi + 1, yi, zi), u), lerp(hash(xi, yi + 1, zi), hash(xi + 1, yi + 1, zi), u), v),
+      lerp(lerp(hash(xi, yi, zi + 1), hash(xi + 1, yi, zi + 1), u), lerp(hash(xi, yi + 1, zi + 1), hash(xi + 1, yi + 1, zi + 1), u), v), w);
+  };
+  const fbm = (x, y, z, o) => { let s = 0, a = .5, f = 1; for (let i = 0; i < o; i++) { s += a * noise(x * f, y * f, z * f); f *= 2; a *= .5; } return s; };
+  const ss = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const rot = .9, cr = Math.cos(rot), sr = Math.sin(rot);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const nx = (x + .5) / N * 2 - 1, ny = (y + .5) / N * 2 - 1, r2 = nx * nx + ny * ny, i = (y * N + x) * 4;
+    if (r2 > 1) continue;
+    const nz = Math.sqrt(1 - r2);
+    const px = nx * cr + nz * sr, pz = -nx * sr + nz * cr, py = ny;
+    const h = fbm(px * 1.7 + 3.1, py * 1.7 + 1.3, pz * 1.7 + 5.7, 5);
+    let R, G, B;
+    if (h > .52) {
+      const e = ss(.52, .72, h), dry = ss(.35, .75, fbm(px * 3 + 9, py * 3, pz * 3, 3));
+      R = lerp(lerp(46, 140, dry), 170, e * e); G = lerp(lerp(112, 120, dry), 150, e * e); B = lerp(lerp(58, 70, dry), 120, e * e);
+    } else {
+      const dp = ss(.2, .52, h); R = lerp(8, 34, dp); G = lerp(40, 118, dp); B = lerp(110, 196, dp);
+    }
+    const ice = ss(.82, .95, Math.abs(py) + (fbm(px * 4, py * 4, pz * 4, 3) - .5) * .25);
+    R = lerp(R, 240, ice); G = lerp(G, 246, ice); B = lerp(B, 250, ice);
+    const c = ss(.5, .74, fbm(px * 2.6 + 7 + py * .6, py * 5.5 + 2, pz * 2.6 - 4, 5)) * .88;
+    R = lerp(R, 255, c); G = lerp(G, 255, c); B = lerp(B, 255, c);
+    const lit = Math.max(0, nx * -.45 + ny * -.45 + nz * .77), sh = .22 + .95 * lit, rim = Math.pow(1 - nz, 2.6);
+    d[i] = Math.min(255, R * sh + 90 * rim); d[i + 1] = Math.min(255, G * sh + 160 * rim); d[i + 2] = Math.min(255, B * sh + 255 * rim);
+    d[i + 3] = 255 * (r2 > .985 ? Math.max(0, (1 - r2) / .015) : 1);
+  }
+  ctx.putImageData(img, 0, 0); return cv;
+}
+function paintGlobes() {
+  if (!document.querySelector('canvas.globe')) return;
+  const blit = () => document.querySelectorAll('canvas.globe').forEach(c => {
+    const x = c.getContext('2d'); x.clearRect(0, 0, c.width, c.height); x.drawImage(globeSrc, 0, 0, c.width, c.height); c.classList.add('on');
+  });
+  if (globeSrc) return blit();
+  if (globeWait) return; globeWait = true;
+  setTimeout(() => { try { globeSrc = renderGlobe(400); blit(); } catch (e) {} }, 60);
+}
+
+/* ---------- demo account (only while DEMO_MODE is on) ---------- */
+async function seedDemo() {
+  if (!DEMO_MODE) return;
+  try {
+    const salt = randB64(16);
+    users.demo = { salt, hash: await hashPw('Demo@1234', salt), secret: 'JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP', created: Date.now() };
+    saveUsers();
+  } catch (e) {}
+}
+
+
+/* ---------- support chat ---------- */
+const CHAT = { open: false, typing: false, seen: false, msgs: [{ f: 'b', t: "Hi! I'm the Linkport assistant. What can I help you with?" }], chips: ['How do I install an eSIM?', 'Payment problem', 'Sign-in and 2FA', 'Talk to a person'] };
+const KB = [
+  [/promo|coupon|discount|welcome10/i, "Open your cart and enter a promo code in the box above the subtotal. Try WELCOME10 for 10% off."],
+  [/person|human|agent|someone|contact/i, "I can't connect you to a live agent in this demo. In a live version this button would open your support inbox or phone line."],
+  [/pay|card|charge|declin|refund|money/i, "Card payments run in test mode here, so no real money moves. If a card is declined, try another card or check the number, expiry and CVC. For refunds, send us your order number (it starts with LP-)."],
+  [/2fa|otp|sign.?in|log.?in|password|authenticat|verification|6.?digit/i, "Sign-in needs your password and a 6-digit code from your authenticator app. Codes change every 30 seconds, so enter the latest one. If your phone clock is off, codes can fail."],
+  [/install|qr|scan|activate|esim/i, "To install an eSIM: open Settings on your phone, choose Add eSIM, scan the QR code from your order, then turn on data roaming when you land. The plan starts on first connection."],
+  [/\bdid\b|phone number|toll/i, "A DID is a real phone number in another country that rings on your mobile, app or office phone. Pick a country and type on the DID page and add it to your cart."],
+  [/vpn/i, "VPN plans are billed once for the term and cover up to 10 devices. Longer terms cost less per month."],
+  [/sms|text message/i, "SMS packs are valid for 12 months and can be sent from the dashboard or by API. Pick a pack size on the SMS page."],
+  [/order|status|receipt|invoice/i, "After payment you get an order number starting with LP-. A receipt goes to the email you gave at checkout."],
+  [/^\s*(hi|hello|hey|thanks?|thank you)\b/i, "Happy to help. Ask me about eSIMs, numbers, SMS, VPN, mobile plans, payments or sign-in."]
+];
+function chatReply(q) { const hit = KB.find(k => k[0].test(q)); return hit ? hit[1] : "I'm not sure about that one. Try asking about eSIM setup, payments, sign-in, promo codes or a specific service."; }
+function renderChat() {
+  const b = $('#chat-body'); if (!b) return;
+  b.innerHTML = CHAT.msgs.map(m => `<div class="${m.f === 'u' ? 'msg-u' : 'msg-b'}">${esc(m.t)}</div>`).join('')
+    + (CHAT.typing ? '<div class="msg-b typing" aria-label="Typing"><i></i><i></i><i></i></div>' : '')
+    + (CHAT.chips.length && !CHAT.typing ? `<div class="qr">${CHAT.chips.map(c => `<button type="button" data-act="chat-q" data-q="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : '');
+  b.scrollTop = b.scrollHeight;
+}
+function chatSend(text) {
+  text = (text || '').trim(); if (!text || CHAT.typing) return;
+  CHAT.msgs.push({ f: 'u', t: text }); CHAT.chips = []; CHAT.typing = true; renderChat();
+  setTimeout(() => { CHAT.typing = false; CHAT.msgs.push({ f: 'b', t: chatReply(text) }); CHAT.chips = ['Payment problem', 'Promo code', 'Talk to a person']; renderChat(); }, 650);
+}
+function chatToggle(force) {
+  CHAT.open = typeof force === 'boolean' ? force : !CHAT.open; CHAT.seen = true;
+  $('#chat').classList.toggle('on', CHAT.open); $('#chat').setAttribute('aria-hidden', String(!CHAT.open));
+  const f = $('#chat-fab'); f.classList.toggle('on', CHAT.open); f.classList.add('seen'); f.setAttribute('aria-expanded', String(CHAT.open)); f.setAttribute('aria-label', CHAT.open ? 'Close support chat' : 'Open support chat');
+  if (CHAT.open) { renderChat(); setTimeout(() => $('#chat-in').focus(), 200); }
+}
+$('#chat-send').addEventListener('click', () => { const i = $('#chat-in'); chatSend(i.value); i.value = ''; });
+$('#chat-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); chatSend(e.target.value); e.target.value = ''; } });
+
+/* ---------- boot ---------- */
+S.skin = store.get('lp_skin', 'bright'); document.documentElement.dataset.skin = S.skin;
+window.demoReady = seedDemo();
+renderHeader(); renderCart(); renderMain();
+</script>
+
+</body></html>

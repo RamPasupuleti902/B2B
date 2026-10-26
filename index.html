@@ -1,61 +1,191 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style>
-
-/* Responsive sidebar refinements: desktop rail, compact tablet rail, mobile bottom navigation. */
-.app-sidebar{min-width:0}
-html.has-sidebar body{overflow-x:hidden}
-html.has-sidebar main{min-width:0}
-@media (min-width:701px) and (max-width:980px){
-  .app-sidebar{width:190px;padding:12px 8px}
-  html.has-sidebar .top{margin-left:190px;width:calc(100% - 190px)}
-  html.has-sidebar main{margin-left:190px;width:calc(100% - 190px)}
-  main{padding-top:22px}
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* V7: logged-in branding, compact selection and visible plan results */
+.top .in{height:48px!important;gap:8px!important}
+.top .header-brand{flex:none;max-width:145px;overflow:hidden}
+.top .header-brand .logo{height:30px!important;max-width:135px;object-fit:contain;padding:2px 5px}
+.svc-head{padding:8px 12px!important;margin-bottom:6px!important;min-height:0!important}
+.svc-head .tile{width:32px!important;height:32px!important}
+.svc-head h1{font-size:20px!important}.svc-head p{font-size:12px!important;line-height:1.25!important;margin-top:1px!important}
+.esearch{margin:2px auto 5px!important}.etag{display:none!important}
+.etabs{margin:3px 0 6px!important;padding:3px!important;border-radius:11px!important}
+.etab{padding:5px 8px!important}.sbox{min-height:34px!important}
+#egrid{margin-top:3px!important}.back{margin-bottom:2px!important}
+main{padding-top:8px!important}
+@media(max-width:700px){.top .in{height:42px!important}.top .header-brand .logo{height:27px!important}.svc-head{padding:6px 9px!important}.svc-head h1{font-size:18px!important}.svc-head p{font-size:11px!important}.esearch{margin:0 auto 3px!important}.etabs{margin:2px 0 4px!important}.wrap{min-width:0}.top .header-brand{max-width:125px}}
+</style><style>
+/* Mobile-first layout correction */
+html,body{width:100%;max-width:100%;overflow-x:clip}main,.wrap,.hero,.svc-head,.dest-wrap,.plans,.grid-svc{min-width:0;max-width:100%}
+.grid-svc{grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr))}
+.plans,.plans.pcs{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+.svc,.plan,.pcw{min-width:0;overflow-wrap:anywhere}
+.input,select{max-width:100%;min-width:0;padding:9px 11px;font-size:14px}
+.field{margin-bottom:10px;gap:4px}.field label{font-size:12px}
+.pc{min-width:0}.pc-top,.pc-body{padding:12px!important}
+.holiday-slider{margin:0 0 16px;overflow:hidden;border-radius:13px;background:linear-gradient(100deg,#124c40,#146e65);color:#fff;position:relative}
+.holiday-track{display:flex;animation:holidayMove 15s infinite}.holiday-slide{flex:0 0 100%;min-width:0;padding:12px 16px;text-align:center;font-size:14px;font-weight:700}
+@keyframes holidayMove{0%,28%{transform:translateX(0)}33%,61%{transform:translateX(-100%)}66%,94%{transform:translateX(-200%)}100%{transform:translateX(0)}}
+.service-guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;margin:0 0 16px}
+.service-guide article{background:var(--glass-strong);border:1px solid var(--glass-line);border-radius:13px;padding:13px}
+.service-guide h3{font-size:16px;margin-bottom:5px}.service-guide p{font-size:13px;color:var(--ink-2)}
+.preview-head{font-size:18px;margin:12px 0}.preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.preview-card{min-width:0;text-align:left;border:1px solid var(--glass-line);background:var(--glass-strong);border-radius:13px;padding:12px;color:var(--ink);display:grid;gap:5px}
+.preview-card strong{font-size:20px}.preview-card small{color:var(--ink-2);font-size:11px}.preview-card b{color:var(--accent)}
+@media(max-width:700px){
+ html.has-sidebar .top,html.has-sidebar main{margin-left:0!important;width:100%!important}
+ .app-sidebar{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;height:58px!important;padding:5px 12px env(safe-area-inset-bottom,0px)!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;overflow:visible!important}
+ .app-sidebar .side-brand,.app-sidebar .side-balance{display:none!important}
+ .side-nav{display:flex!important;justify-content:space-evenly!important;align-items:center!important;width:100%!important;border:0!important;padding:0!important}
+ .side-link{width:48%;justify-content:center!important;gap:8px!important;padding:7px!important}.side-link>span:not(.side-icon){display:inline!important;font-size:12px}.side-icon{font-size:21px}
+ html.has-sidebar main{padding-bottom:110px}.top .in{height:54px;gap:7px}.top .btn{padding:8px;font-size:12px}.top .btn-icon{width:36px;height:36px}
+ .wrap{width:100%}.gut{padding-left:12px;padding-right:12px}.hello h1{font-size:25px}.hello{margin-bottom:14px}
+ .grid-svc{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.svc{padding:12px;min-height:160px;gap:9px;border-radius:13px}.svc h3{font-size:16px}.svc p{font-size:12px}.svc .tile{width:35px;height:35px}.svc .tile svg{width:21px;height:21px}.svc .foot{font-size:11px}
+ .svc-head{padding:13px;gap:10px;border-radius:15px}.svc-head h1{font-size:23px}.svc-head p{font-size:12px}
+ .explain{padding:12px;margin-bottom:12px}.dest-wrap{padding:10px}.dests{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .plans,.plans.pcs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.plan{padding:10px;gap:8px;border-radius:12px}.plan .big{font-size:23px}.plan .sub,.plan ul{font-size:11px}.plan .buy{flex-wrap:wrap}.price{font-size:16px}
+ .preview-grid{gap:6px}.preview-card{padding:9px 6px}.preview-card strong{font-size:16px}.preview-card small{font-size:10px}
+ .auth-form{padding:14px}.auth-brand{padding:20px}.auth-brand h1{font-size:26px}.auth-card{padding:16px}
+ .hero,.chero,.cbanner{padding:14px!important;max-width:100%;overflow:hidden}.hero h1{font-size:28px}
+ .drawer{max-width:100vw}
 }
-@media (max-width:700px){
-  .app-sidebar{
-    top:auto;left:0;right:0;bottom:0;width:100%;height:auto;max-height:none;
-    padding:7px max(6px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom,0px));
-    border-right:0;border-top:1px solid var(--glass-line);gap:0;overflow:visible;
-    display:flex;flex-direction:row;align-items:stretch;justify-content:space-around;
-    background:var(--glass-strong);box-shadow:0 -8px 28px rgba(0,0,0,.14)
-  }
-  .side-brand,.side-balance{display:none!important}
-  .side-nav{
-    width:80%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;
-    padding:0;border:0;align-items:stretch
-  }
-  .side-link{
-    min-width:0;min-height:49px;padding:5px 1px;gap:3px;border-radius:9px;
-    display:flex;flex-direction:column;justify-content:center;align-items:center;
-    font-size:10px;line-height:1.1;text-align:center;white-space:nowrap
-  }
-  .side-link>span:not(.side-icon){display:block!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-  .side-link small{display:none!important}
-  .side-icon{display:block!important;flex:none;width:auto;font-size:18px;line-height:1.1}
-  .app-sidebar>div{display:contents!important}
-  .app-sidebar>div>.side-link{flex:0 0 20%;}
-  html.has-sidebar .top,html.has-sidebar main{margin-left:0!important;width:100%!important}
-  html.has-sidebar .top{top:0}
-  html.has-sidebar main{padding-bottom:calc(105px + env(safe-area-inset-bottom,0px));padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
-  .top .in{height:58px;gap:8px}
-  .skinsw{max-width:calc(100vw - 110px)}
-  .skinsw button{padding:7px 9px}
-  .drawer{width:100%;max-width:100%;}
-  .chat-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px))!important;right:14px!important}
-  .dock{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
-  .toast{bottom:calc(82px + env(safe-area-inset-bottom,0px))}
-  .grid-svc,.plans{grid-template-columns:minmax(0,1fr)!important}
-  .panel,.dest-wrap{padding:15px}
-  .hello{align-items:flex-start}
-}
-@media (max-width:380px){
-  .side-link{font-size:9px}
-  .side-icon{font-size:17px}
-  .top .in{height:54px}
-  .skinsw button{padding:6px 7px}
-  html.has-sidebar main{padding-left:12px;padding-right:12px}
-}
+@media(max-width:360px){.grid-svc{grid-template-columns:1fr 1fr}.svc{padding:9px}.svc h3{font-size:14px}.preview-grid{grid-template-columns:1fr 1fr}.plans,.plans.pcs{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){.holiday-track{animation:none}}
+/* V6: remove unused full-width theme toolbar; keep compact cart access */
+html.has-sidebar .top .in{height:44px;min-height:44px;justify-content:flex-end}
+html.has-sidebar .top{border-bottom:0;box-shadow:none}
+html.has-sidebar main{padding-top:8px}
+@media(max-width:700px){html.has-sidebar .top .in{height:40px;min-height:40px}}
+/* V8: sidebar logo sized to available space */
+.app-sidebar .side-brand{display:flex;justify-content:center;align-items:center;padding:10px 8px 16px;width:100%;min-height:56px}
+.app-sidebar .side-brand .logo{display:block;width:100%;max-width:175px;height:auto;max-height:54px;object-fit:contain}
+@media(max-width:700px){.app-sidebar .side-brand{padding:8px 3px 12px;min-height:48px}.app-sidebar .side-brand .logo{max-width:55px;max-height:40px;padding:2px}}
 </style>
-</head><body>
+<style id="mobile-navigation-and-fold">
+.side-nav{min-width:0}.side-link{min-width:0}
+.sim-above-fold{margin:0 0 12px}.sim-above-fold .service-guide{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 9px}.sim-above-fold .service-guide article{padding:9px;border-radius:11px}.sim-above-fold .service-guide h3{font-size:13px;margin:0 0 3px}.sim-above-fold .service-guide p{font-size:11px;line-height:1.3}.sim-above-fold .preview-head{font-size:15px;margin:5px 0 7px}.sim-above-fold .preview-grid{margin:0;gap:7px}.sim-above-fold .preview-card{padding:9px 7px;gap:3px}.sim-above-fold .preview-card strong{font-size:17px}
+@media(max-width:700px){
+.app-sidebar{height:66px!important;padding:4px 3px max(5px,env(safe-area-inset-bottom,0px))!important}
+.app-sidebar .side-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:0!important;width:100%}
+.app-sidebar .side-link{width:100%!important;min-width:0;display:flex!important;flex-direction:column!important;gap:0!important;padding:3px 1px!important;font-size:10px!important;line-height:1.2}
+.app-sidebar .side-link>span:not(.side-icon){font-size:10px!important;white-space:nowrap;display:inline!important}
+.app-sidebar .side-icon{font-size:20px!important;line-height:1.1}
+main{padding-top:10px!important;padding-bottom:100px!important}
+main .back{margin-bottom:5px!important;font-size:12px}
+main .svc-head{padding:8px 10px!important;margin-bottom:8px!important;gap:8px!important}
+main .svc-head .tile{width:33px;height:33px;flex:none}
+main .svc-head h1{font-size:19px!important}
+main .svc-head p{font-size:11px!important;line-height:1.25}
+.sim-above-fold .service-guide article{padding:7px}
+.sim-above-fold .service-guide p{font-size:10px}
+.sim-above-fold .preview-card strong{font-size:15px}
+.sim-above-fold .preview-card small{font-size:9px}
+.sim-above-fold .preview-card b{font-size:12px}
+}
+@media(max-width:360px){.sim-above-fold .preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.app-sidebar .side-link>span:not(.side-icon){font-size:9px!important}}
+</style><style>/* Compact service descriptions and destination-first mobile layout */
+.compact-explain{padding:9px 13px!important;margin:0 0 10px!important;border-radius:12px!important;gap:0!important}
+.compact-explain p{font-size:13px!important;line-height:1.4!important;max-width:none!important}
+@media(max-width:600px){.svc-head{padding:12px!important;margin-bottom:9px!important;gap:9px!important;border-radius:14px!important}.svc-head h1{font-size:21px!important}.svc-head p{font-size:12px!important;margin-top:2px!important}.back{margin-bottom:6px!important}.esearch{margin-top:6px!important}.etag{font-size:12px!important}.wrap{min-width:0!important}.elist{gap:7px!important}}
+</style><style id="responsive-v4">
+/* One consistent desktop sidebar, one fixed mobile navigation. */
+html,body{overflow-x:hidden!important} .app-sidebar{position:fixed!important;left:0;top:0;bottom:0;overflow-y:auto}
+.app-sidebar .side-brand{display:none!important}
+.svc-head{padding:12px 16px!important;margin-bottom:9px!important;border-radius:14px!important;gap:10px!important}
+.svc-head .tile{width:38px;height:38px;flex:none}.svc-head h1{font-size:clamp(21px,2.8vw,29px)!important}
+.svc-head p{font-size:13px!important;line-height:1.35!important;margin-top:3px!important;max-width:none!important}
+.back{margin-bottom:6px!important}.compact-country-title{padding:8px 0 10px}.compact-country-title h1{font-size:clamp(23px,4vw,32px)}.compact-country-title p{font-size:12px;color:var(--ink-2)}
+.kindsel{margin:3px 0 6px!important}.kindsel select{padding:7px 10px!important;max-width:330px!important}
+.etabs{margin:5px 0!important;gap:5px!important}.etab{padding:7px 10px!important;font-size:12px!important}
+.esearch{margin-top:5px!important}.etag{margin:2px 0 5px!important;font-size:11px!important}.sbox{min-height:38px!important}
+main{padding-top:10px!important}.elist{gap:8px!important}
+@media(max-width:700px){
+ html.has-sidebar .top,html.has-sidebar main{margin-left:0!important;width:100%!important}
+ .app-sidebar{position:fixed!important;top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;height:calc(62px + env(safe-area-inset-bottom,0px))!important;overflow:hidden!important;z-index:65!important}
+ .app-sidebar .side-brand,.app-sidebar .side-balance{display:none!important}
+ .app-sidebar .side-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important}
+ .app-sidebar .side-link{width:100%!important;min-width:0!important;padding:4px 1px!important;gap:2px!important}
+ .app-sidebar .side-link>span:not(.side-icon){font-size:10px!important;display:inline!important;white-space:nowrap!important}
+ .top .in{height:46px!important}.svc-head{padding:8px 10px!important;margin-bottom:6px!important}
+ .svc-head h1{font-size:19px!important}.svc-head p{font-size:11px!important;line-height:1.25!important}
+ .svc-head .tile{width:31px;height:31px}.back{font-size:11px!important;margin-bottom:3px!important}
+ .kindsel{display:flex!important;align-items:center!important;gap:8px!important;font-size:11px!important}
+ .kindsel select{width:min(100%,255px)!important;font-size:12px!important;padding:5px 7px!important}
+ .etab{padding:6px 8px!important;font-size:11px!important}
+ .compact-country-title{padding:3px 0 7px}.compact-country-title h1{font-size:21px!important}
+ .compact-country-title p{font-size:11px!important}
+ .plans,.plans.pcs{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+ .plan{padding:9px!important;gap:7px!important}.plan .big{font-size:22px!important}
+ main{padding-bottom:calc(95px + env(safe-area-inset-bottom,0px))!important}
+}
+</style><style id="v9-final-layout">
+/* Brand belongs to the navigation sidebar, not the page header. */
+.app-sidebar .side-brand{display:flex!important;align-items:center;justify-content:center}
+.app-sidebar .side-brand .logo{width:100%;height:auto;max-width:155px;max-height:52px;object-fit:contain}
+.top[hidden]{display:none!important}
+/* The data/voice choice is intentionally deferred to the country plan listing. */
+@media(max-width:700px){.app-sidebar .side-brand{display:none!important}}
+</style><style id="v10-compact-esim-search">
+/* Compact country search without changing its filtering behavior */
+.esearch{width:100%!important;max-width:520px!important;margin:2px 0 6px!important;text-align:left!important}
+.esearch .sbox{height:40px!important;min-height:40px!important;padding:0 11px!important;gap:8px!important;border-radius:11px!important;box-shadow:none!important}
+.esearch .sbox input{font-size:13px!important;height:38px!important;min-width:0!important}
+.esearch .sbox svg{width:17px!important;height:17px!important}
+.esearch .sico,.esearch .spin-pin{flex:0 0 auto!important}
+@media(max-width:700px){.esearch{max-width:100%!important;margin:2px 0 5px!important}.esearch .sbox{height:36px!important;min-height:36px!important;padding:0 9px!important}.esearch .sbox input{height:34px!important;font-size:12px!important}}
+</style><style id="reference-list-layout">
+/* Compact horizontal destination rows based on supplied reference */
+html,body{max-width:100%;overflow-x:hidden}
+.svc-head{padding:10px 14px!important;margin-bottom:8px!important;border-radius:11px!important}
+.svc-head h1{font-size:24px!important}.svc-head p{font-size:12px!important}
+.esearch{max-width:none!important;flex:1!important;margin:0!important}
+.esearch .sbox{height:40px!important;min-height:40px!important}
+.elist{gap:5px!important;margin:7px 0 18px!important}
+.erow{grid-template-columns:42px minmax(135px,1fr) minmax(170px,1.6fr) auto minmax(120px,auto) 16px!important;gap:12px!important;min-height:52px!important;padding:5px 12px!important;border-radius:10px!important;background:var(--surface)!important}
+.erow .rflag{width:36px!important;height:36px!important}
+.erow .rname{display:contents!important}
+.erow .rname>b{grid-column:2;grid-row:1;align-self:start;font-size:14px!important;line-height:18px}
+.erow .rname>small{grid-column:2;grid-row:1;align-self:end;font-size:11px!important;line-height:15px}
+.erow .pv{grid-column:3;grid-row:1;display:flex!important;flex-wrap:wrap;gap:6px;align-items:center;margin:0!important}
+.erow .pv i{font-size:11px!important;padding:4px 10px!important;border-radius:999px!important;white-space:nowrap}
+.erow .rgen{grid-column:4;grid-row:1;display:flex!important;gap:5px}
+.erow .from{grid-column:5;grid-row:1;font-size:13px!important}
+.erow .rgo{grid-column:6;grid-row:1;display:block!important;font-size:21px}
+@media(max-width:850px){.erow{grid-template-columns:36px minmax(100px,1fr) minmax(140px,1.4fr) auto!important;gap:8px!important}.erow .pv{grid-column:3}.erow .rgen{display:none!important}.erow .from{grid-column:4}.erow .rgo{display:none!important}}
+@media(max-width:540px){.erow{grid-template-columns:34px minmax(0,1fr) auto!important;min-height:68px!important;padding:7px 9px!important;gap:6px 9px!important}.erow .rflag{width:32px!important;height:32px!important;grid-column:1;grid-row:1/3}.erow .rname>b,.erow .rname>small{grid-column:2;grid-row:1}.erow .rname>b{font-size:12px!important;align-self:start}.erow .rname>small{font-size:10px!important;align-self:end}.erow .pv{grid-column:2/4;grid-row:2;gap:4px!important}.erow .pv i{font-size:9px!important;padding:2px 5px!important}.erow .from{grid-column:3;grid-row:1;font-size:11px!important}.erow .from i{font-size:9px!important}.erow .rgen,.erow .rgo{display:none!important}}
+</style><style id="inline-tier-layout">.sim-controls-inline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:5px 0 8px}.sim-controls-inline .kindsel{margin:0!important;flex:0 1 auto}.sim-controls-inline .etabs:not(.lr){margin:0!important;display:flex;justify-content:flex-start;width:auto;flex:0 0 auto;padding:3px 5px;border-radius:12px}.sim-controls-inline .etab{padding:6px 11px!important}@media(max-width:560px){.sim-controls-inline{gap:6px}.sim-controls-inline .kindsel{flex:1 1 175px}.sim-controls-inline .kindsel select{max-width:180px}.sim-controls-inline .etabs:not(.lr){flex:0 0 auto}.sim-controls-inline .etab{padding:5px 7px!important;font-size:11px!important}}</style><style id="v13-alignment-fix">
+.sim-controls-inline{display:flex!important;align-items:flex-end!important;justify-content:flex-start!important;gap:12px!important;flex-wrap:wrap!important;margin:4px 0 10px!important}
+.sim-controls-inline .kindsel{display:flex!important;flex-direction:column!important;justify-content:flex-end!important;gap:5px!important;margin:0!important;flex:0 1 330px!important;min-width:0!important}
+.sim-controls-inline .kindsel select{height:44px!important;min-height:44px!important;width:100%!important;max-width:none!important;margin:0!important;box-sizing:border-box!important}
+.sim-controls-inline .etabs:not(.lr){height:44px!important;min-height:44px!important;align-self:flex-end!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;flex:0 0 auto!important;margin:0!important;padding:3px!important;box-sizing:border-box!important}
+.sim-controls-inline .etab{height:38px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;padding:5px 14px!important;white-space:nowrap!important}
+@media(max-width:600px){.sim-controls-inline{gap:8px!important}.sim-controls-inline .kindsel{flex:1 1 160px!important}.sim-controls-inline .etabs:not(.lr){flex:0 0 auto!important}.sim-controls-inline .etab{padding:5px 8px!important;font-size:12px!important}}
+@media(max-width:380px){.sim-controls-inline .kindsel{flex:1 1 100%!important}.sim-controls-inline .etabs:not(.lr){align-self:flex-start!important}}
+</style><style id="v14-compact-country-cards">
+/* Only the selected destination's plan listing is compact; other services retain their layouts. */
+#plans:has(.ptype) .ptype{display:flex;grid-template-columns:none;max-width:430px;gap:5px;padding:4px;margin:0 0 10px;border-radius:12px}
+#plans:has(.ptype) .ptbtn{flex:1;min-width:0;padding:8px 10px;border-radius:9px;gap:1px}
+#plans:has(.ptype) .ptbtn b{font-size:13px}
+#plans:has(.ptype) .ptbtn small{font-size:10px}
+#plans:has(.ptype) .plans-head{margin-bottom:9px;gap:8px}
+#plans:has(.ptype) .plans-head h2{font-size:clamp(19px,2.3vw,25px)}
+#plans:has(.ptype) .plans-head p{font-size:12px;line-height:1.3}
+#plans:has(.ptype) .plans.pcs{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#plans:has(.ptype) .pcw{gap:5px}
+#plans:has(.ptype) .pc-top{padding:9px 8px 10px!important;gap:2px;border-radius:0 0 12px 12px}
+#plans:has(.ptype) .pc-pill,#plans:has(.ptype) .pc-tag{font-size:10px;padding:2px 7px;margin:0 0 2px!important}
+#plans:has(.ptype) .pc-big{font-size:clamp(23px,2.8vw,30px);margin:0}
+#plans:has(.ptype) .pc-l{font-size:12px}
+#plans:has(.ptype) .pc-plus{font-size:12px}
+#plans:has(.ptype) .pc-body{padding:9px!important;gap:7px}
+#plans:has(.ptype) .pc-body .netrow{padding:6px 8px;gap:4px}
+#plans:has(.ptype) .pc-price b{font-size:26px}
+#plans:has(.ptype) .pc-price small{font-size:12px}
+#plans:has(.ptype) .pc-meta{font-size:11px}
+#plans:has(.ptype) .pc-btn{padding:9px 7px;font-size:12px}
+#plans:has(.ptype) .facts-h{padding:8px 10px}
+@media(max-width:780px){#plans:has(.ptype) .plans.pcs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){#plans:has(.ptype) .plans.pcs{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}#plans:has(.ptype) .pc-top{padding:8px 5px!important}#plans:has(.ptype) .pc-body{padding:7px!important}#plans:has(.ptype) .pc-price b{font-size:21px}#plans:has(.ptype) .pc-body .netrow{font-size:11px}#plans:has(.ptype) .ptbtn{padding:7px!important}}
+@media(max-width:340px){#plans:has(.ptype) .plans.pcs{grid-template-columns:1fr}}
+</style></head><body>
 <title>Gighub unified connectivity platform</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1013,6 +1143,26 @@ html:root[data-skin="calm"] .svc,html:root[data-skin="calm"] .panel,html:root[da
 
 
 
+<style>
+/* V5: classic skin, responsive MVNO cards, no overlapping badge strips */
+html{overflow-x:hidden}body{overflow-x:hidden}
+.plans{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.plans>*{min-width:0}
+.pcw,.pc{min-width:0;width:100%}
+.pc{border-width:1px;border-radius:16px}
+.pc-top{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:15px 12px 18px!important;border-radius:0 0 18px 18px;min-height:0}
+.pc-pill,.pc-tag{position:static!important;transform:none!important;inset:auto!important;display:inline-block;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.2;margin:0 0 4px!important;padding:3px 9px;font-size:11px}
+.pc-big{font-size:clamp(23px,2.6vw,34px);line-height:1.15;margin:3px 0 0;overflow-wrap:anywhere}
+.pc-l{font-size:clamp(13px,1.55vw,18px);line-height:1.25;margin:0}
+.pc-plus{font-size:16px;line-height:1;margin:0}
+.pc-body{padding:14px!important;gap:9px}
+.pc-price{white-space:normal;flex-wrap:wrap}
+.pc-price b{font-size:clamp(26px,3vw,36px)}
+.pc-btn{padding:10px;font-size:14px}
+.facts{min-width:0}
+@media(max-width:900px){.plans{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+@media(max-width:520px){.plans{grid-template-columns:1fr;gap:12px}.pc-top{padding:12px!important}.pc-body{padding:12px!important}.pc-big{font-size:29px}.pc-l{font-size:15px}.pcw{max-width:100%}}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 /* ---------- config ---------- */
@@ -1218,7 +1368,7 @@ function tierSwHtml() {
   const cur = S.tier === 'standard' ? 'standard' : 'premium', sim = S.kind === 'sim';
   if (sim) return '';
   const ic = { premium: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>', standard: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.5 3.5 5.4 3.5 8.5s-1 6-3.5 8.5c-2.5-2.5-3.5-5.4-3.5-8.5s1-6 3.5-8.5"/></svg>' };
-  return `<div class="etabs" role="tablist" aria-label="Plan tier" style="margin:14px 0 6px">${['premium', 'standard'].map(t => `<button class="etab ${t === 'premium' ? 'gold' : 'silver'}" role="tab" aria-selected="${cur === t}" data-act="tier" data-id="${t}">${ic[t]}${TIER_INFO[t].name}</button>`).join('')}</div><p class="hint" style="margin:0 0 12px">${TIER_INFO[cur][sim ? 'sim' : 'esim']}</p>`;
+  return `<div class="etabs" role="tablist" aria-label="Plan tier" style="margin:14px 0 6px">${['premium', 'standard'].map(t => `<button class="etab ${t === 'premium' ? 'gold' : 'silver'}" role="tab" aria-selected="${cur === t}" data-act="tier" data-id="${t}">${ic[t]}${TIER_INFO[t].name}</button>`).join('')}</div>`;
 }
 function tierSwHtmlOld() {
   const sim = S.kind === 'sim', cur = S.tier === 'standard' ? 'standard' : 'premium';
@@ -1416,21 +1566,21 @@ STATIC.pg.push(...reg([
     info: [['Card type', 'Reloadable prepaid'], ['Network', 'Visa or Mastercard'], ['Issuing fee', '$1.50 per card'], ['Loading', 'Bank transfer or API top-up'], ['KYC', 'Light KYC for low limits, full KYC for higher limits'], ['Go-live', '3 to 5 weeks']] }
 ]));
 const SERVICES = [
-  { id: 'esim', name: 'SIMs / eSIMs', tone: 'var(--t1)', icon: 'esim', desc: 'Premium and Standard travel eSIMs, plus physical SIMs delivered to your door.', from: () => lowest(DESTS.flatMap(d => esimPlans(d, 'fixed'))) },
-  { id: 'usmvno', name: 'US local MVNO', tone: 'var(--t5)', icon: 'us', desc: 'Monthly US mobile plans with calls, texts and 5G data.', from: () => lowest(STATIC.usmvno) },
-  { id: 'ukmvno', name: 'UK local MVNO', tone: 'var(--t6)', icon: 'uk', desc: 'Rolling UK mobile plans, with optional Europe roaming.', from: () => lowest(STATIC.ukmvno) },
-  { id: 'sms', name: 'SMS', tone: 'var(--t3)', icon: 'sms', desc: 'Message packs for alerts, codes and campaigns, sent by API or dashboard.', from: () => lowest(STATIC.sms) },
-  { id: 'did', name: 'DID', tone: 'var(--t2)', icon: 'did', desc: 'Real phone numbers in other countries that ring wherever you are.', from: () => lowest(STATIC.did) },
-  { id: 'vpn', name: 'VPN', tone: 'var(--t4)', icon: 'vpn', desc: 'Private browsing on up to 10 devices, billed once for the term.', from: () => lowest(STATIC.vpn) },
-  { id: 'voip', name: 'VoIP / Call Recording', tone: 'var(--t7)', icon: 'voip', desc: 'Business calling lines with call recording, menus, voicemail and call groups.', from: () => lowest(STATIC.voip) },
-  { id: 'iot', name: 'IoT SIM', tone: 'var(--t2)', icon: 'esim', desc: 'Low-cost data SIMs for trackers, meters and connected devices.', from: () => lowest(STATIC.iot) },
-  { id: 'pg', name: 'Payment Gateway', tone: 'var(--t5)', icon: 'bag', desc: 'Accept crypto and card payments, and issue retail, business, virtual and prepaid cards.', from: () => lowest(STATIC.pg) },
-  { id: 'iptv', name: 'IPTV', tone: 'var(--t6)', icon: 'tv', desc: 'Live TV, catch-up and on-demand streaming on phones, smart TVs and set-top boxes.', from: () => lowest(STATIC.iptv) },
-  { id: 'mdm', name: 'MDM', tone: 'var(--t3)', icon: 'mdm', desc: 'Mobile device management: lock, wipe, track and control phones and tablets.', from: () => lowest(STATIC.mdm) },
-  { id: 'safety', name: 'Employee Safety Platform', tone: 'var(--t4)', icon: 'safe', desc: 'SOS, check-ins, lone worker protection and travel risk alerts for your people.', from: () => lowest(STATIC.safety) }
+  { id: 'esim', name: 'SIMs / eSIMs', tone: 'var(--t1)', icon: 'esim', desc: 'A SIM or eSIM connects your phone to a mobile network for data, calls and texts. An eSIM installs digitally; a physical SIM is inserted into your phone.', from: () => lowest(DESTS.flatMap(d => esimPlans(d, 'fixed'))) },
+  { id: 'usmvno', name: 'US local MVNO', tone: 'var(--t5)', icon: 'us', desc: 'A US mobile plan gives your phone mobile data, calling and texting on supported US networks, usually for a monthly fee.', from: () => lowest(STATIC.usmvno) },
+  { id: 'ukmvno', name: 'UK local MVNO', tone: 'var(--t6)', icon: 'uk', desc: 'A UK mobile plan provides mobile data, calls and texts on supported UK networks, with roaming available on selected plans.', from: () => lowest(STATIC.ukmvno) },
+  { id: 'sms', name: 'SMS', tone: 'var(--t3)', icon: 'sms', desc: 'An SMS plan lets you send text messages to mobile numbers. Buy message credits for notifications, verification codes and customer updates.', from: () => lowest(STATIC.sms) },
+  { id: 'did', name: 'DID', tone: 'var(--t2)', icon: 'did', desc: 'A DID plan gives you a virtual local phone number that forwards incoming calls to your mobile, app or business phone system.', from: () => lowest(STATIC.did) },
+  { id: 'vpn', name: 'VPN', tone: 'var(--t4)', icon: 'vpn', desc: 'A VPN plan creates an encrypted connection to help protect your internet traffic and privacy, especially on public Wi-Fi.', from: () => lowest(STATIC.vpn) },
+  { id: 'voip', name: 'VoIP / Call Recording', tone: 'var(--t7)', icon: 'voip', desc: 'A VoIP plan lets you make and receive calls over the internet instead of a traditional phone line, with business calling features.', from: () => lowest(STATIC.voip) },
+  { id: 'iot', name: 'IoT SIM', tone: 'var(--t2)', icon: 'esim', desc: 'An IoT SIM plan connects smart devices such as GPS trackers, meters and sensors to mobile data networks.', from: () => lowest(STATIC.iot) },
+  { id: 'pg', name: 'Payment Gateway', tone: 'var(--t5)', icon: 'bag', desc: 'A payment gateway plan helps businesses accept and process online payments securely, using supported payment methods.', from: () => lowest(STATIC.pg) },
+  { id: 'iptv', name: 'IPTV', tone: 'var(--t6)', icon: 'tv', desc: 'An IPTV plan delivers television channels and video content over the internet to compatible TVs, phones and streaming devices.', from: () => lowest(STATIC.iptv) },
+  { id: 'mdm', name: 'MDM', tone: 'var(--t3)', icon: 'mdm', desc: 'An MDM plan helps businesses manage and secure company phones and tablets remotely, including app controls and device policies.', from: () => lowest(STATIC.mdm) },
+  { id: 'safety', name: 'Employee Safety Platform', tone: 'var(--t4)', icon: 'safe', desc: 'An employee safety plan helps organizations protect staff with SOS alerts, scheduled check-ins and emergency notifications.', from: () => lowest(STATIC.safety) }
 ];
 const EXPLAIN = {
-  did: ['What is a DID?', 'DID stands for Direct Inward Dialing. It is an ordinary phone number in a country or city of your choice. When someone calls it, the call is forwarded to your mobile, an app or your office phone system. People use DIDs to give customers a local number abroad, or to run a business line without a second SIM.']
+  did: ['What is a DID?', 'A DID plan gives you a virtual local phone number. Incoming calls can be forwarded to your mobile, app or business phone system.']
 };
 
 /* ---------- flags (inline SVG, no image files) and destination info ---------- */
@@ -1545,22 +1695,22 @@ function renderHeader() {
   if (!S.user) { h.innerHTML = ''; return; }
   const n = cartCount();
   h.innerHTML = `<aside class="app-sidebar" aria-label="Main navigation">
-    <button class="side-brand" data-act="home" aria-label="Gighub home">${LOGO_TAG}<span>Gighub</span></button>
+    <button class="side-brand" data-act="home" aria-label="GigHub home">${LOGO_TAG}</button>
+    
     <button class="side-balance" data-act="acct" data-id="wallet"><small>WALLET BALANCE</small><b class="mono">${fmt(W().bal)}</b></button>
     <nav class="side-nav">
       <button class="side-link ${S.view === 'home' || S.view === 'service' || S.view === 'country' ? 'active' : ''}" data-act="home"><span class="side-icon">⌂</span><span>Services</span></button>
-      <button class="side-link ${S.view === 'account' && S.atab === 'wallet' ? 'active' : ''}" data-act="acct" data-id="wallet"><span class="side-icon">▣</span><span>Wallet</span></button>
-      <button class="side-link ${S.view === 'account' && S.atab === 'profile' ? 'active' : ''}" data-act="acct" data-id="profile"><span class="side-icon">♙</span><span>Profile</span></button>
-      <button class="side-link ${S.view === 'account' && S.atab === 'orders' ? 'active' : ''}" data-act="acct" data-id="orders"><span class="side-icon">▤</span><span>Orders</span></button>
+      <button class="side-link ${S.view === 'account' && S.atab === 'profile' ? 'active' : ''}" data-act="acct" data-id="profile"><span class="side-icon">▤</span><span>Orders</span></button>
+      <button class="side-link ${S.view === 'account' && S.atab === 'esims' ? 'active' : ''}" data-act="acct" data-id="esims"><span class="side-icon">▣</span><span>My eSIMs</span></button>
+      <button class="side-link ${S.view === 'account' && S.atab === 'wallet' ? 'active' : ''}" data-act="acct" data-id="wallet"><span class="side-icon">◈</span><span>Wallet</span></button>
+      <button class="side-link side-logout" data-act="logout"><span class="side-icon">⇥</span><span>Sign out</span></button>
     </nav>
-    <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--glass-line)">
-      <button class="side-link" data-act="logout"><span class="side-icon">⇥</span><span>Sign out</span></button>
-    </div>
   </aside>
-  <header class="top gut"><div class="in wrap">
+  <header class="top gut" ${n === 0 ? 'hidden' : ''}><div class="in wrap">
+    
     <span class="grow"></span>
-    ${skinSw()}
-    <button class="btn btn-icon cartbtn" data-act="cart-open" aria-label="Open cart, ${n} items"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON.bag.slice(ICON.bag.indexOf('>') + 1, -6)}</svg>${n ? `<span class="count">${n}</span>` : ''}</button>
+    ${n > 0 ? `<button class="btn btn-icon cartbtn" data-act="cart-open" aria-label="Open cart, ${n} items"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON.bag.slice(ICON.bag.indexOf('>') + 1, -6)}</svg>${n ? `<span class="count">${n}</span>` : ''}</button>` : ''}
+
   </div></header>${dockHtml()}`;
 }
 
@@ -1731,6 +1881,11 @@ async function submitVerify(code) {
   else { failed(); setMsg('That code did not match. Try the latest one.'); otp.shake(); otp.clear(); }
 }
 
+
+function holidayBanner(){return `<div class="holiday-slider" aria-label="Seasonal promotions"><div class="holiday-track"><div class="holiday-slide">🎄 Christmas special · 15% off with code XMAS15</div><div class="holiday-slide">✈️ Stay connected wherever you travel</div><div class="holiday-slide">🎁 Discover SIM and eSIM travel plans</div></div></div>`;}
+function simServiceGuide(){return `<div class="service-guide"><article><h3>📱 eSIM</h3><p>Digital SIM. Install on a compatible phone without a physical card.</p></article><article><h3>💳 Physical SIM</h3><p>Removable card delivered to you. Insert into your phone's SIM slot.</p></article></div>`;}
+function simPreview(){const d=DESTS.find(x=>x.code==='US')||DESTS[0];const ps=KP(d,'premium').slice(0,3);return `<h2 class="preview-head">3 featured ${esc(d.name)} eSIM plans</h2><div class="preview-grid">${ps.map(p=>`<button class="preview-card" data-act="dest" data-id="${d.code}"><small>${esc(d.name)} · eSIM</small><strong>${esc(p.big)}</strong><small>${dayWord(p.days)} validity</small><b>${fmt(p.price)} →</b></button>`).join('')}</div>`;}
+
 /* --- home --- */
 function viewHome(m) {
   const h = new Date().getHours(), g = h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
@@ -1740,7 +1895,7 @@ function viewHome(m) {
       <span class="foot"><span>From <b>${fmt(s.from())}</b></span><span class="go">${ICON.arrow.replace('<svg', '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"')}</span></span>
     </button>`).join('');
   const blank = [1, 2].map(() => `<div class="svc blank" aria-label="Empty slot"><span class="tile">${ICON.plus}</span><div><h3>Coming soon</h3><p style="margin-top:6px">This slot is reserved for a new service.</p></div></div>`).join('');
-  m.innerHTML = `<div class="wrap"><div class="hello"><div><h1>${g}, ${esc(S.user)}</h1><p>Pick a service to see plans and prices.</p></div></div><div class="grid-svc">${cards}</div></div>`;
+  m.innerHTML = `<div class="wrap">${holidayBanner()}<div class="hello"><div><h1>${g}, ${esc(S.user)}</h1><p>Pick a service to see plans and prices.</p></div></div><div class="grid-svc">${cards}</div></div>`;
 }
 
 
@@ -1826,9 +1981,8 @@ function viewCountry(m) {
   const stats = [['From', fmt(minP)], ['Plans', pl.length + VTIERS.length], ['Data', '1 to 50 GB'], ['Validity', '7 to 30 days']];
   m.innerHTML = `<div class="wrap">
     <button class="back" data-act="back-esim">← All ${S.kind === 'sim' ? 'physical SIM countries' : 'eSIM destinations'}</button>
-    ${countryBanner(d)}
-    <div class="stats">${stats.map(([k, v]) => `<div class="stat"><small>${k}</small><b>${v}</b></div>`).join('')}</div>
-    ${typeSw()}${tierSwHtml()}<div id="plans"></div>${S.kind === 'sim' ? simOrder() : ''}
+    <div class="compact-country-title"><h1>${d.name} ${S.kind === 'sim' ? 'Physical SIM' : 'eSIM'} plans</h1><p>Select a plan below. Compare data, validity and price.</p></div>
+    <div class="sim-controls-inline">${typeSw()}${tierSwHtml()}</div><div id="plans"></div>${S.kind === 'sim' ? simOrder() : ''}
     <section class="how"><div class="sec-title"><h2>How it works</h2><span>Takes about two minutes</span></div>
       <ol><li><b>Pick a plan</b><span>Add it to your cart and pay.</span></li><li><b>Scan the QR code</b><span>In your phone settings, choose Add eSIM.</span></li><li><b>Connect</b><span>Turn on data roaming when you land.</span></li></ol></section>
     <div class="sec-title"><h2>More destinations</h2><span>Jump straight to another plan list</span></div>
@@ -1847,13 +2001,13 @@ function viewService(m) {
     const pin = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>';
     const book = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5l6-1.5 6 1.5 6-1.5v14l-6 1.5-6-1.5-6 1.5z"/><path d="M9 4v14M15 5.5v14"/></svg>';
     const mag = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>';
-    dest = typeSw() + tierSwHtml() + subTabsHtml() + `<div class="esearch"><p class="etag">${S.kind === 'sim' ? 'Physical SIM cards are delivered to your door. Only the countries listed below are available.' : 'Search by country or region. Instant activation, no physical SIM.'}</p>
+    dest = `<div class="sim-controls-inline">${typeSw()}${tierSwHtml()}</div><div class="esearch"><p class="etag">${S.kind === 'sim' ? 'Physical SIM cards are delivered to your door. Only the countries listed below are available.' : 'Search by country or region. Instant activation, no physical SIM.'}</p>
       <div class="sbox"><span class="sico">${mag}</span><input id="esearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search for a country or region..." aria-label="Search for a country or region" value="${esc(S.eq || '')}"><button class="sclear" type="button" data-act="eclear" aria-label="Clear search" hidden>✕</button><span class="spin-pin">${pin}</span></div></div>
       <div class="etabs lr" role="tablist"><button class="etab" role="tab" aria-selected="${tab === 'local'}" data-act="etab" data-id="local">${pin}Local</button><button class="etab" role="tab" aria-selected="${tab === 'regional'}" data-act="etab" data-id="regional">${book}Regional</button></div><div id="egrid"></div>`;
   }
   m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button>
-    <div class="svc-head" style="--tone:${s.tone}"><span class="tile">${ICON[s.icon]}</span><div><h1>${s.name}</h1><p>${s.desc}</p></div></div>
-    ${ex ? `<div class="explain"><h3>${ex[0]}</h3><p>${ex[1]}</p></div>` : ''}
+    <div class="svc-head" style="--tone:${s.tone}"><span class="tile">${ICON[s.icon]}</span><div><h1>${s.name}</h1><p>${s.id === 'esim' ? (S.kind === 'sim' ? 'Physical SIM: a removable card delivered to you. Insert it into your phone.' : 'eSIM: a digital SIM installed using a QR code on compatible phones.') : (ex ? ex[1] : s.desc)}</p></div></div>
+    
     ${dest}${s.id === 'esim' ? '' : '<div id="plans"></div>'}</div>`;
   if (s.id !== 'esim') renderPlans(); else bindEsearch();
 }
@@ -1891,7 +2045,7 @@ function renderPlans() {
     note = kind === 'voice' ? 'Data plus calling minutes, SMS and a local number. Install by scanning a QR code.' : (d.region ? `One eSIM that covers ${d.note}. Data only, no phone number.` : 'Data-only eSIM, no phone number. Install by scanning a QR code.');
     const nd = TIERS.length, nv = VTIERS.length;
     ptype = `<div class="ptype" role="tablist" aria-label="Plan type"><button class="ptbtn" role="tab" aria-selected="${kind === 'data'}" data-act="ptype" data-id="data"><b>Data only</b><small>${nd} plans · internet only</small></button><button class="ptbtn" role="tab" aria-selected="${kind === 'voice'}" data-act="ptype" data-id="voice"><b>Data + Voice</b><small>${nv} plans · calls, SMS and data</small></button></div>`;
-    ptype = sim ? '' : `<div class="etabs" role="tablist" aria-label="Plan type">${ks.map(k => `<button class="etab" role="tab" aria-selected="${kind === k[0]}" data-act="ptype" data-id="${k[0]}">${k[1]}</button>`).join('')}</div>`;
+    if (sim || tr === 'standard') ptype = ''; // Voice/data tabs only where both choices exist.
     head = sim ? `${d.name} physical SIM plans` : `${d.name} ${TIER_INFO[tr].name} eSIM plans`; note = sim ? 'SIMs with calls, SMS and data, or data only. Delivered to your address.' : TIER_INFO[tr].esim + ' Install by scanning a QR code.';
     chips = `<div class="filters" role="group" aria-label="Filter plans">${[['all', 'All plans'], ['short', 'Short trips'], ['month', '30 days']].map(([k, t]) => `<button class="fchip" aria-pressed="${f === k}" data-act="filter" data-id="${k}">${t}</button>`).join('')}</div>`;
   } else { list = STATIC[s.id]; head = `${s.name} plans`; note = 'Prices shown in US dollars.'; if (s.id === 'usmvno') { note = 'No contract. Unlimited US talk and text on every plan, on a 5G network.'; after = buildHtml(); } if (s.id === 'pg') { ptype = pgButtons(); const sv = PGS.find(x => x.id === S.pgsvc); if (sv) { list = sv.ids.map(i => REG[i]).filter(Boolean); head = `${sv.name} plans`; note = sv.desc; } else { $('#plans').innerHTML = ptype + '<div class="pg-hint">Select a service above to see its plans and prices.</div>'; return; } } }
@@ -1925,7 +2079,7 @@ function renderCart() {
 }
 function applyPromo() {
   const c = ($('#promo').value || '').trim().toUpperCase();
-  if (c === 'WELCOME10') { S.promo = { code: c, pct: .1 }; renderCart(); if (S.view === 'checkout') renderCheckout(); toast('10% off applied'); }
+  if (c === 'WELCOME10' || c === 'XMAS15') { S.promo = { code: c, pct: c === 'XMAS15' ? .15 : .1 }; renderCart(); if (S.view === 'checkout') renderCheckout(); toast((S.promo.pct * 100) + '% off applied'); }
   else toast('That code is not valid');
 }
 
@@ -2113,18 +2267,19 @@ function renderDone(co) {
     <div class="pre"><button class="btn btn-primary" data-act="acct" data-id="esims">My eSIMs and QR codes</button><button class="btn" data-act="home">Back to services</button></div></div>`;
 }
 function viewAccount(m) {
-  const w = W(), t = S.atab || 'wallet';
+  const w = W(), t = 'wallet';
+  const tabs = [['profile', 'Profile and orders'], ['wallet', 'Wallet'], ['esims', 'My eSIMs']].map(([k, n]) => `<button class="etab" role="tab" aria-selected="${t === k}" data-act="atab" data-id="${k}">${n}</button>`).join('');
   let b = '';
   if (t === 'profile') b = `<div class="panel"><h2>Profile</h2><p><b>${esc(S.user)}</b></p><p class="hint">Wallet balance ${fmt(w.bal)}</p></div>
+    <div class="panel"><h2>Order history</h2>${w.orders.length ? shareBar('orders') + ordersByType(w) : ''}${w.orders.length ? [].map(o => `<div class="arow" style="display:block"><div style="display:flex;justify-content:space-between"><label><input type="checkbox" data-pick="orders" value="${o.ref}"> <b class="mono">${o.ref}</b></label><span class="mono">${fmt(o.total)}</span></div><small style="color:var(--ink-2)">${fd(o.t)} · ${esc(o.status)}</small>${o.lines.map(l => `<div style="font-size:14px">${esc(l.title)} × ${l.qty}</div>`).join('')}${o.ship ? `<small style="color:var(--ink-2)">Ships to ${esc(o.ship.fn)} ${esc(o.ship.ln)}, ${esc(o.ship.a1)}, ${esc(o.ship.city)} ${esc(o.ship.zip)}</small>` : ''}</div>`).join('') : '<p class="hint">No orders yet.</p>'}</div>
     <div class="panel"><h2>Alerts</h2>${w.alerts.length ? w.alerts.map(a => `<div class="arow"><span>${esc(a.m)}</span><small>${fd(a.t)}</small></div>`).join('') : '<p class="hint">No alerts yet.</p>'}</div>`;
-  else if (t === 'orders') b = `<div class="panel"><h2>Order history</h2>${w.orders.length ? shareBar('orders') + ordersByType(w) : '<p class="hint">No orders yet.</p>'}</div>`;
   else if (t === 'wallet') b = `<div class="panel"><h2>Wallet</h2><div class="wbox"><span>Money available</span><b class="mono">${fmt(w.bal)}</b></div>
     <p class="hint" style="margin-top:10px">Add money to your wallet.</p>
     <div class="pre">${[10, 25, 50, 100].map(a => `<button class="btn" data-act="topup" data-amt="${a}">+ $${a}</button>`).join('')}</div>
     <div class="pre"><input class="input" id="tu-amt" type="number" min="1" max="5000" placeholder="Other amount" style="max-width:180px"><button class="btn btn-primary" data-act="topup">Add money</button></div></div>
     ${gwPanel()}`;
   else b = `<div class="panel"><h2>My eSIMs</h2><p class="hint">On your phone: Settings, Mobile data, Add eSIM, then scan the QR code.</p>${w.esims.length ? shareBar('esims') : ''}${w.esims.length ? w.esims.map(e => `<div class="qrbox"><input type="checkbox" data-pick="esims" value="${e.id}" aria-label="Select this eSIM"><div id="qr-${e.id}"></div><div><b>${esc(e.title)}</b><br><small>${esc(e.sub)} · ${esc(e.id)}</small><code>${esc(e.lpa)}</code></div></div>`).join('') : '<p class="hint">No eSIMs yet. Buy an eSIM and its QR code will appear here.</p>'}</div>`;
-  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button><h1 style="margin-top:8px">${t === 'profile' ? 'Profile' : t === 'orders' ? 'Orders' : t === 'esims' ? 'My eSIMs' : 'Wallet'}</h1><div class="acc">${b}</div></div>`;
+  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button><h1 style="margin-top:8px">Wallet</h1><div class="acc">${b}</div></div>`;
   if (t === 'esims' && typeof QRCode !== 'undefined') w.esims.forEach(e => { const el = document.getElementById('qr-' + e.id); if (el) new QRCode(el, { text: e.lpa, width: 132, height: 132 }); });
 }
 
@@ -2294,7 +2449,7 @@ $('#chat-send').addEventListener('click', () => { const i = $('#chat-in'); chatS
 $('#chat-in').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); chatSend(e.target.value); e.target.value = ''; } });
 
 /* ---------- boot ---------- */
-S.skin = store.get('lp_skin', 'calm') === 'classic' ? 'classic' : 'calm'; document.documentElement.dataset.skin = S.skin;
+S.skin = 'classic'; document.documentElement.dataset.skin = S.skin;
 window.demoReady = seedDemo();
 renderHeader(); renderCart(); renderMain();
 </script>

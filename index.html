@@ -1,4 +1,61 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style>
+
+/* Responsive sidebar refinements: desktop rail, compact tablet rail, mobile bottom navigation. */
+.app-sidebar{min-width:0}
+html.has-sidebar body{overflow-x:hidden}
+html.has-sidebar main{min-width:0}
+@media (min-width:701px) and (max-width:980px){
+  .app-sidebar{width:190px;padding:12px 8px}
+  html.has-sidebar .top{margin-left:190px;width:calc(100% - 190px)}
+  html.has-sidebar main{margin-left:190px;width:calc(100% - 190px)}
+  main{padding-top:22px}
+}
+@media (max-width:700px){
+  .app-sidebar{
+    top:auto;left:0;right:0;bottom:0;width:100%;height:auto;max-height:none;
+    padding:7px max(6px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom,0px));
+    border-right:0;border-top:1px solid var(--glass-line);gap:0;overflow:visible;
+    display:flex;flex-direction:row;align-items:stretch;justify-content:space-around;
+    background:var(--glass-strong);box-shadow:0 -8px 28px rgba(0,0,0,.14)
+  }
+  .side-brand,.side-balance{display:none!important}
+  .side-nav{
+    width:80%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;
+    padding:0;border:0;align-items:stretch
+  }
+  .side-link{
+    min-width:0;min-height:49px;padding:5px 1px;gap:3px;border-radius:9px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    font-size:10px;line-height:1.1;text-align:center;white-space:nowrap
+  }
+  .side-link>span:not(.side-icon){display:block!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .side-link small{display:none!important}
+  .side-icon{display:block!important;flex:none;width:auto;font-size:18px;line-height:1.1}
+  .app-sidebar>div{display:contents!important}
+  .app-sidebar>div>.side-link{flex:0 0 20%;}
+  html.has-sidebar .top,html.has-sidebar main{margin-left:0!important;width:100%!important}
+  html.has-sidebar .top{top:0}
+  html.has-sidebar main{padding-bottom:calc(105px + env(safe-area-inset-bottom,0px));padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .top .in{height:58px;gap:8px}
+  .skinsw{max-width:calc(100vw - 110px)}
+  .skinsw button{padding:7px 9px}
+  .drawer{width:100%;max-width:100%;}
+  .chat-fab{bottom:calc(86px + env(safe-area-inset-bottom,0px))!important;right:14px!important}
+  .dock{bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(82px + env(safe-area-inset-bottom,0px))}
+  .grid-svc,.plans{grid-template-columns:minmax(0,1fr)!important}
+  .panel,.dest-wrap{padding:15px}
+  .hello{align-items:flex-start}
+}
+@media (max-width:380px){
+  .side-link{font-size:9px}
+  .side-icon{font-size:17px}
+  .top .in{height:54px}
+  .skinsw button{padding:6px 7px}
+  html.has-sidebar main{padding-left:12px;padding-right:12px}
+}
+</style>
+</head><body>
 <title>Gighub unified connectivity platform</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -744,6 +801,24 @@ html:root[data-skin="bright"] .msg-u{background:linear-gradient(135deg,#6D4AFF,#
 .cbanner::after{background:linear-gradient(90deg,rgba(226,239,255,.95) 0%,rgba(226,239,255,.86) 44%,rgba(226,239,255,0) 60%)}
 @media (max-width:900px){.cbanner{grid-template-columns:1fr}.cb-title h1{font-size:26px}}
 </style>
+
+<style>
+/* Added persistent left navigation; existing views and actions remain unchanged. */
+.app-sidebar{position:fixed;z-index:55;left:0;top:0;bottom:0;width:230px;padding:14px 10px;background:var(--glass-strong);border-right:1px solid var(--glass-line);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.side-brand{display:flex;align-items:center;gap:9px;width:100%;padding:4px 8px 12px;border:0;background:none;color:var(--ink);font-family:var(--f-display);font-weight:700;font-size:20px;text-align:left}
+.side-brand svg{width:25px;height:25px;color:var(--accent)}
+.side-balance{display:flex;flex-direction:column;align-items:flex-start;gap:3px;width:100%;padding:12px;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:13px;background:color-mix(in srgb,var(--accent) 18%,var(--glass-strong));color:var(--ink);text-align:left}
+.side-balance small{font-size:10px;letter-spacing:.06em;font-weight:700;color:var(--ink-2)}.side-balance b{font-size:18px}
+.side-nav{display:grid;gap:4px;padding-top:4px;border-top:1px solid var(--glass-line)}
+.side-link{display:flex;align-items:center;gap:10px;min-height:38px;padding:8px 10px;border:0;border-radius:9px;background:transparent;color:var(--ink);font:500 13px var(--f-body);text-align:left}
+.side-link:hover,.side-link.active{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.side-icon{display:inline-grid;place-items:center;flex:0 0 16px;width:16px;font-size:16px;line-height:1}
+.side-link small{margin-left:auto;color:var(--ink-2);font-size:11px}
+html.has-sidebar .top{margin-left:230px;width:calc(100% - 230px)}
+html.has-sidebar main{margin-left:230px;width:calc(100% - 230px)}
+@media(max-width:700px){.app-sidebar{width:66px;padding:12px 6px;align-items:center}.side-brand{justify-content:center;padding:4px 0 12px}.side-brand span,.side-balance small,.side-link>span:not(.side-icon),.side-link small{display:none}.side-balance{align-items:center;padding:10px 2px}.side-balance b{font-size:10px;writing-mode:vertical-rl;transform:rotate(180deg)}.side-nav{width:100%}.side-link{justify-content:center;padding:10px 0}.side-icon{font-size:19px}html.has-sidebar .top{margin-left:66px;width:calc(100% - 66px)}html.has-sidebar main{margin-left:66px;width:calc(100% - 66px)} }
+</style>
+
 <div id="bg" aria-hidden="true"></div>
 <div id="hdr"></div>
 <main id="main" class="gut"></main>
@@ -1466,15 +1541,26 @@ const skinLabel = () => S.skin === 'bright' ? 'Classic look' : 'Bright look';
 /* ---------- header ---------- */
 function renderHeader() {
   const h = $('#hdr');
+  document.documentElement.classList.toggle('has-sidebar', !!S.user);
   if (!S.user) { h.innerHTML = ''; return; }
   const n = cartCount();
-  h.innerHTML = `<header class="top gut"><div class="in wrap">
-    <button class="brand" data-act="home" aria-label="Gighub unified connectivity platform home">${LOGO_TAG}</button>
+  h.innerHTML = `<aside class="app-sidebar" aria-label="Main navigation">
+    <button class="side-brand" data-act="home" aria-label="Gighub home">${LOGO_TAG}<span>Gighub</span></button>
+    <button class="side-balance" data-act="acct" data-id="wallet"><small>WALLET BALANCE</small><b class="mono">${fmt(W().bal)}</b></button>
+    <nav class="side-nav">
+      <button class="side-link ${S.view === 'home' || S.view === 'service' || S.view === 'country' ? 'active' : ''}" data-act="home"><span class="side-icon">⌂</span><span>Services</span></button>
+      <button class="side-link ${S.view === 'account' && S.atab === 'wallet' ? 'active' : ''}" data-act="acct" data-id="wallet"><span class="side-icon">▣</span><span>Wallet</span></button>
+      <button class="side-link ${S.view === 'account' && S.atab === 'profile' ? 'active' : ''}" data-act="acct" data-id="profile"><span class="side-icon">♙</span><span>Profile</span></button>
+      <button class="side-link ${S.view === 'account' && S.atab === 'orders' ? 'active' : ''}" data-act="acct" data-id="orders"><span class="side-icon">▤</span><span>Orders</span></button>
+    </nav>
+    <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--glass-line)">
+      <button class="side-link" data-act="logout"><span class="side-icon">⇥</span><span>Sign out</span></button>
+    </div>
+  </aside>
+  <header class="top gut"><div class="in wrap">
     <span class="grow"></span>
     ${skinSw()}
     <button class="btn btn-icon cartbtn" data-act="cart-open" aria-label="Open cart, ${n} items"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON.bag.slice(ICON.bag.indexOf('>') + 1, -6)}</svg>${n ? `<span class="count">${n}</span>` : ''}</button>
-    <button class="btn" data-act="acct" data-id="wallet" aria-label="Wallet balance"><b class="mono">${fmt(W().bal)}</b><span class="hide-sm">&nbsp;Wallet</span></button><button class="chip" data-act="acct" data-id="profile" aria-label="Profile and orders"><span class="avatar">${esc(S.user[0])}</span><span class="hide-sm">${esc(S.user)}</span></button>
-    <button class="btn" data-act="logout">Sign out</button>
   </div></header>${dockHtml()}`;
 }
 
@@ -2027,19 +2113,18 @@ function renderDone(co) {
     <div class="pre"><button class="btn btn-primary" data-act="acct" data-id="esims">My eSIMs and QR codes</button><button class="btn" data-act="home">Back to services</button></div></div>`;
 }
 function viewAccount(m) {
-  const w = W(), t = S.atab || 'profile';
-  const tabs = [['profile', 'Profile and orders'], ['wallet', 'Wallet'], ['esims', 'My eSIMs']].map(([k, n]) => `<button class="etab" role="tab" aria-selected="${t === k}" data-act="atab" data-id="${k}">${n}</button>`).join('');
+  const w = W(), t = S.atab || 'wallet';
   let b = '';
   if (t === 'profile') b = `<div class="panel"><h2>Profile</h2><p><b>${esc(S.user)}</b></p><p class="hint">Wallet balance ${fmt(w.bal)}</p></div>
-    <div class="panel"><h2>Order history</h2>${w.orders.length ? shareBar('orders') + ordersByType(w) : ''}${w.orders.length ? [].map(o => `<div class="arow" style="display:block"><div style="display:flex;justify-content:space-between"><label><input type="checkbox" data-pick="orders" value="${o.ref}"> <b class="mono">${o.ref}</b></label><span class="mono">${fmt(o.total)}</span></div><small style="color:var(--ink-2)">${fd(o.t)} · ${esc(o.status)}</small>${o.lines.map(l => `<div style="font-size:14px">${esc(l.title)} × ${l.qty}</div>`).join('')}${o.ship ? `<small style="color:var(--ink-2)">Ships to ${esc(o.ship.fn)} ${esc(o.ship.ln)}, ${esc(o.ship.a1)}, ${esc(o.ship.city)} ${esc(o.ship.zip)}</small>` : ''}</div>`).join('') : '<p class="hint">No orders yet.</p>'}</div>
     <div class="panel"><h2>Alerts</h2>${w.alerts.length ? w.alerts.map(a => `<div class="arow"><span>${esc(a.m)}</span><small>${fd(a.t)}</small></div>`).join('') : '<p class="hint">No alerts yet.</p>'}</div>`;
-  else if (t === 'wallet') b = `<div class="panel"><h2>Wallet</h2><div class="wbox"><span>Balance</span><b class="mono">${fmt(w.bal)}</b></div>
-    <p class="hint" style="margin-top:10px">Quick demo top-up (USD, credited instantly). For the payment gateway option, use the panel below.</p>
+  else if (t === 'orders') b = `<div class="panel"><h2>Order history</h2>${w.orders.length ? shareBar('orders') + ordersByType(w) : '<p class="hint">No orders yet.</p>'}</div>`;
+  else if (t === 'wallet') b = `<div class="panel"><h2>Wallet</h2><div class="wbox"><span>Money available</span><b class="mono">${fmt(w.bal)}</b></div>
+    <p class="hint" style="margin-top:10px">Add money to your wallet.</p>
     <div class="pre">${[10, 25, 50, 100].map(a => `<button class="btn" data-act="topup" data-amt="${a}">+ $${a}</button>`).join('')}</div>
     <div class="pre"><input class="input" id="tu-amt" type="number" min="1" max="5000" placeholder="Other amount" style="max-width:180px"><button class="btn btn-primary" data-act="topup">Add money</button></div></div>
-    ${gwPanel()}<div class="panel"><h2>Transactions</h2>${w.tx.map(x => `<div class="arow"><span>${esc(x.d)}<br><small style="color:var(--ink-2)">${fd(x.t)}</small></span><b class="mono ${x.a < 0 ? 'bad' : ''}">${x.a < 0 ? '−' : '+'}${fmt(Math.abs(x.a))}</b></div>`).join('')}</div>`;
+    ${gwPanel()}`;
   else b = `<div class="panel"><h2>My eSIMs</h2><p class="hint">On your phone: Settings, Mobile data, Add eSIM, then scan the QR code.</p>${w.esims.length ? shareBar('esims') : ''}${w.esims.length ? w.esims.map(e => `<div class="qrbox"><input type="checkbox" data-pick="esims" value="${e.id}" aria-label="Select this eSIM"><div id="qr-${e.id}"></div><div><b>${esc(e.title)}</b><br><small>${esc(e.sub)} · ${esc(e.id)}</small><code>${esc(e.lpa)}</code></div></div>`).join('') : '<p class="hint">No eSIMs yet. Buy an eSIM and its QR code will appear here.</p>'}</div>`;
-  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button><h1 style="margin-top:8px">Your account</h1><div class="etabs" role="tablist" style="margin-top:12px">${tabs}</div><div class="acc">${b}</div></div>`;
+  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button><h1 style="margin-top:8px">${t === 'profile' ? 'Profile' : t === 'orders' ? 'Orders' : t === 'esims' ? 'My eSIMs' : 'Wallet'}</h1><div class="acc">${b}</div></div>`;
   if (t === 'esims' && typeof QRCode !== 'undefined') w.esims.forEach(e => { const el = document.getElementById('qr-' + e.id); if (el) new QRCode(el, { text: e.lpa, width: 132, height: 132 }); });
 }
 

@@ -22,7 +22,7 @@ html,body{width:100%;max-width:100%;overflow-x:clip}main,.wrap,.hero,.svc-head,.
 .field{margin-bottom:10px;gap:4px}.field label{font-size:12px}
 .pc{min-width:0}.pc-top,.pc-body{padding:12px!important}
 .holiday-slider{margin:0 0 16px;overflow:hidden;border-radius:13px;background:linear-gradient(100deg,#124c40,#146e65);color:#fff;position:relative}
-.holiday-track{display:flex;animation:holidayMove 15s infinite}.holiday-slide{flex:0 0 100%;min-width:0;padding:12px 16px;text-align:center;font-size:14px;font-weight:700}
+.holiday-track{display:flex;width:100%;animation:holidayMove 12s ease-in-out infinite}.holiday-slide{flex:0 0 100%;min-width:0;padding:12px 16px;text-align:center;font-size:14px;font-weight:700;white-space:normal;box-sizing:border-box}
 @keyframes holidayMove{0%,28%{transform:translateX(0)}33%,61%{transform:translateX(-100%)}66%,94%{transform:translateX(-200%)}100%{transform:translateX(0)}}
 .service-guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;margin:0 0 16px}
 .service-guide article{background:var(--glass-strong);border:1px solid var(--glass-line);border-radius:13px;padding:13px}
@@ -185,7 +185,22 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(max-width:780px){#plans:has(.ptype) .plans.pcs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){#plans:has(.ptype) .plans.pcs{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}#plans:has(.ptype) .pc-top{padding:8px 5px!important}#plans:has(.ptype) .pc-body{padding:7px!important}#plans:has(.ptype) .pc-price b{font-size:21px}#plans:has(.ptype) .pc-body .netrow{font-size:11px}#plans:has(.ptype) .ptbtn{padding:7px!important}}
 @media(max-width:340px){#plans:has(.ptype) .plans.pcs{grid-template-columns:1fr}}
-</style></head><body>
+</style>
+<style id="gighub-v16-fixes">
+/* Responsive DID country choices and every other filter group */
+#plans .filters {display:flex!important;flex-wrap:wrap!important;gap:7px!important;max-width:100%;min-width:0}
+#plans .filters .fchip {display:inline-flex;align-items:center;justify-content:center;gap:5px;max-width:100%;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:center}
+#plans .filters .flag {flex-shrink:0}
+@media(max-width:600px){#plans .filters .fchip{font-size:11px!important;padding:7px 9px!important;flex:1 1 calc(50% - 7px)}#plans .filters .fchip:last-child{flex-grow:0}}
+/* Chat button starts clear of fixed bottom navigation; drag vertically to reposition */
+@media(max-width:700px){.chat-fab{bottom:calc(110px + env(safe-area-inset-bottom,0px))!important;right:12px!important;width:48px!important;height:48px!important;touch-action:none;cursor:grab}.chat-fab:active{cursor:grabbing}}
+.login-offer-overlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px;background:rgba(0,0,0,.72)}
+.login-offer{position:relative;width:min(100%,440px);border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--ink);padding:27px 23px;box-shadow:0 25px 70px #0008}
+.login-offer h2{font-size:clamp(22px,5vw,30px);margin:8px 0}.login-offer p{color:var(--ink-2);line-height:1.5}.offer-kicker{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--accent)}
+.offer-close{position:absolute;right:12px;top:10px;border:0;background:transparent;color:inherit;font-size:29px;cursor:pointer}.offer-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+@media(prefers-reduced-motion:reduce){.holiday-track{animation:none}}
+</style>
+</head><body>
 <title>Gighub unified connectivity platform</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1714,11 +1729,28 @@ function renderHeader() {
   </div></header>${dockHtml()}`;
 }
 
+
+/* Login-only promotional dialog: no claim of a discount unless the code is supported. */
+function showLoginOffer() {
+  document.getElementById('login-offer')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'login-offer'; overlay.className = 'login-offer-overlay';
+  overlay.innerHTML = `<section class="login-offer" role="dialog" aria-modal="true" aria-label="Welcome offer"><button class="offer-close" aria-label="Close offer">×</button><div class="offer-kicker">NEW & FEATURED</div><h2>🇺🇸 Explore USA eSIM plans</h2><p>Stay connected on your next trip. Browse available data plans and current offers.</p><div class="offer-actions"><button class="btn btn-primary offer-explore">Explore USA plans</button><button class="btn offer-later">Maybe later</button></div></section>`;
+  const close = () => overlay.remove();
+  overlay.querySelector('.offer-close').addEventListener('click', close);
+  overlay.querySelector('.offer-later').addEventListener('click', close);
+  overlay.querySelector('.offer-explore').addEventListener('click', () => { close(); S.service='esim'; S.dest='US'; S.filter='all'; S.ptype=defPtype(); go('country'); });
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  document.body.appendChild(overlay);
+}
+
 /* ---------- views ---------- */
 function go(view, extra) {
+  const wasAuth = S.view === 'auth';
   Object.assign(S, { view }, extra || {});
   clearInterval(otpTimer);
   renderHeader(); renderMain(); window.scrollTo(0, 0);
+  if (wasAuth && view === 'home' && S.user) showLoginOffer();
 }
 function renderMain() {
   const m = $('#main');
@@ -1882,7 +1914,7 @@ async function submitVerify(code) {
 }
 
 
-function holidayBanner(){return `<div class="holiday-slider" aria-label="Seasonal promotions"><div class="holiday-track"><div class="holiday-slide">🎄 Christmas special · 15% off with code XMAS15</div><div class="holiday-slide">✈️ Stay connected wherever you travel</div><div class="holiday-slide">🎁 Discover SIM and eSIM travel plans</div></div></div>`;}
+function holidayBanner(){return `<div class="holiday-slider" aria-label="Seasonal promotions"><div class="holiday-track"><div class="holiday-slide">🎄 Christmas special · 15% off with code XMAS15</div><div class="holiday-slide">✈️ Stay connected wherever you travel</div><div class="holiday-slide">🇺🇸 Explore new USA eSIM plans and travel offers</div></div></div>`;}
 function simServiceGuide(){return `<div class="service-guide"><article><h3>📱 eSIM</h3><p>Digital SIM. Install on a compatible phone without a physical card.</p></article><article><h3>💳 Physical SIM</h3><p>Removable card delivered to you. Insert into your phone's SIM slot.</p></article></div>`;}
 function simPreview(){const d=DESTS.find(x=>x.code==='US')||DESTS[0];const ps=KP(d,'premium').slice(0,3);return `<h2 class="preview-head">3 featured ${esc(d.name)} eSIM plans</h2><div class="preview-grid">${ps.map(p=>`<button class="preview-card" data-act="dest" data-id="${d.code}"><small>${esc(d.name)} · eSIM</small><strong>${esc(p.big)}</strong><small>${dayWord(p.days)} validity</small><b>${fmt(p.price)} →</b></button>`).join('')}</div>`;}
 
@@ -2267,11 +2299,11 @@ function renderDone(co) {
     <div class="pre"><button class="btn btn-primary" data-act="acct" data-id="esims">My eSIMs and QR codes</button><button class="btn" data-act="home">Back to services</button></div></div>`;
 }
 function viewAccount(m) {
-  const w = W(), t = 'wallet';
+  const w = W(), t = S.atab || 'profile';
   const tabs = [['profile', 'Profile and orders'], ['wallet', 'Wallet'], ['esims', 'My eSIMs']].map(([k, n]) => `<button class="etab" role="tab" aria-selected="${t === k}" data-act="atab" data-id="${k}">${n}</button>`).join('');
   let b = '';
   if (t === 'profile') b = `<div class="panel"><h2>Profile</h2><p><b>${esc(S.user)}</b></p><p class="hint">Wallet balance ${fmt(w.bal)}</p></div>
-    <div class="panel"><h2>Order history</h2>${w.orders.length ? shareBar('orders') + ordersByType(w) : ''}${w.orders.length ? [].map(o => `<div class="arow" style="display:block"><div style="display:flex;justify-content:space-between"><label><input type="checkbox" data-pick="orders" value="${o.ref}"> <b class="mono">${o.ref}</b></label><span class="mono">${fmt(o.total)}</span></div><small style="color:var(--ink-2)">${fd(o.t)} · ${esc(o.status)}</small>${o.lines.map(l => `<div style="font-size:14px">${esc(l.title)} × ${l.qty}</div>`).join('')}${o.ship ? `<small style="color:var(--ink-2)">Ships to ${esc(o.ship.fn)} ${esc(o.ship.ln)}, ${esc(o.ship.a1)}, ${esc(o.ship.city)} ${esc(o.ship.zip)}</small>` : ''}</div>`).join('') : '<p class="hint">No orders yet.</p>'}</div>
+    <div class="panel"><h2>Order history</h2>${w.orders.length ? shareBar('orders') + ordersByType(w) : ''}${w.orders.length ? w.orders.map(o => `<div class="arow" style="display:block"><div style="display:flex;justify-content:space-between"><label><input type="checkbox" data-pick="orders" value="${o.ref}"> <b class="mono">${o.ref}</b></label><span class="mono">${fmt(o.total)}</span></div><small style="color:var(--ink-2)">${fd(o.t)} · ${esc(o.status)}</small>${o.lines.map(l => `<div style="font-size:14px">${esc(l.title)} × ${l.qty}</div>`).join('')}${o.ship ? `<small style="color:var(--ink-2)">Ships to ${esc(o.ship.fn)} ${esc(o.ship.ln)}, ${esc(o.ship.a1)}, ${esc(o.ship.city)} ${esc(o.ship.zip)}</small>` : ''}</div>`).join('') : '<p class="hint">No orders yet.</p>'}</div>
     <div class="panel"><h2>Alerts</h2>${w.alerts.length ? w.alerts.map(a => `<div class="arow"><span>${esc(a.m)}</span><small>${fd(a.t)}</small></div>`).join('') : '<p class="hint">No alerts yet.</p>'}</div>`;
   else if (t === 'wallet') b = `<div class="panel"><h2>Wallet</h2><div class="wbox"><span>Money available</span><b class="mono">${fmt(w.bal)}</b></div>
     <p class="hint" style="margin-top:10px">Add money to your wallet.</p>
@@ -2279,7 +2311,7 @@ function viewAccount(m) {
     <div class="pre"><input class="input" id="tu-amt" type="number" min="1" max="5000" placeholder="Other amount" style="max-width:180px"><button class="btn btn-primary" data-act="topup">Add money</button></div></div>
     ${gwPanel()}`;
   else b = `<div class="panel"><h2>My eSIMs</h2><p class="hint">On your phone: Settings, Mobile data, Add eSIM, then scan the QR code.</p>${w.esims.length ? shareBar('esims') : ''}${w.esims.length ? w.esims.map(e => `<div class="qrbox"><input type="checkbox" data-pick="esims" value="${e.id}" aria-label="Select this eSIM"><div id="qr-${e.id}"></div><div><b>${esc(e.title)}</b><br><small>${esc(e.sub)} · ${esc(e.id)}</small><code>${esc(e.lpa)}</code></div></div>`).join('') : '<p class="hint">No eSIMs yet. Buy an eSIM and its QR code will appear here.</p>'}</div>`;
-  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button><h1 style="margin-top:8px">Wallet</h1><div class="acc">${b}</div></div>`;
+  m.innerHTML = `<div class="wrap"><button class="back" data-act="home">← All services</button><h1 style="margin-top:8px">${t === 'esims' ? 'My eSIMs' : t === 'profile' ? 'Orders & Profile' : 'Wallet'}</h1><div class="acc">${b}</div></div>`;
   if (t === 'esims' && typeof QRCode !== 'undefined') w.esims.forEach(e => { const el = document.getElementById('qr-' + e.id); if (el) new QRCode(el, { text: e.lpa, width: 132, height: 132 }); });
 }
 
@@ -2345,7 +2377,7 @@ document.addEventListener('click', e => {
     case 'buynow': if (!S.cart[id]) cartAdd(id); S.cartOpen = false; S.step = 2; go('checkout'); renderCart(); break;
     case 'shcopy': { const t = $('#shmsg'); t.select(); (navigator.clipboard ? navigator.clipboard.writeText(t.value) : Promise.reject()).then(() => toast('Message copied')).catch(() => { try { document.execCommand('copy'); } catch (e) {} toast('Message selected. Press copy.'); }); break; }
     case 'topup': topup(+el.dataset.amt || +(($('#tu-amt') || {}).value)); break;
-    case 'logout': S.user = null; S.pending = null; S.cartOpen = false; S.authTab = 'in'; S.order = null; S.step = 1; go('auth'); renderCart(); break;
+    case 'logout': document.getElementById('login-offer')?.remove(); S.user = null; S.pending = null; S.cartOpen = false; S.authTab = 'in'; S.order = null; S.step = 1; go('auth'); renderCart(); break;
   }
 });
 document.addEventListener('change', e => { const sa = e.target.closest('[data-selall]'); if (sa) { document.querySelectorAll('[data-pick="' + sa.dataset.selall + '"]').forEach(c => c.checked = sa.checked); return; } const ot = e.target.closest('[data-sel="otype"]'); if (ot) { S.otype = ot.value; renderMain(); return; } const el = e.target.closest('[data-sel="kind"]'); if (!el) return; S.kind = el.value; S.etab = 'local'; S.eq = ''; if (S.view === 'country' && S.kind === 'sim' && !SIM_CODES.includes(S.dest)) S.dest = 'US'; renderMain(); });
@@ -2454,4 +2486,13 @@ window.demoReady = seedDemo();
 renderHeader(); renderCart(); renderMain();
 </script>
 
-</body></html>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+ const fab=document.getElementById('chat-fab'); if(!fab)return;
+ let y0=0, bottom0=0, dragging=false, moved=false;
+ fab.addEventListener('pointerdown', e=>{if(e.pointerType==='mouse' && e.button!==0)return; y0=e.clientY;bottom0=parseFloat(getComputedStyle(fab).bottom)||110;dragging=true;moved=false;fab.setPointerCapture(e.pointerId);});
+ fab.addEventListener('pointermove',e=>{if(!dragging)return;const delta=y0-e.clientY;if(Math.abs(delta)>7)moved=true;if(!moved)return;const min=window.innerWidth<=700?88:12;const max=Math.max(min,innerHeight-90);fab.style.setProperty('bottom',Math.min(max,Math.max(min,bottom0+delta))+'px','important');});
+ fab.addEventListener('pointerup',()=>{dragging=false;});
+ fab.addEventListener('click',e=>{if(moved){e.stopImmediatePropagation();e.preventDefault();moved=false;}},true);
+});
+</script></body></html>

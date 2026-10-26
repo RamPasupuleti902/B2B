@@ -872,6 +872,67 @@ html:root[data-skin="calm"] .svc:not(.blank):hover .go{background:var(--tone);co
 <style>
 @media (min-width:1100px){.plans.four{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
+<style>
+/* Sky theme: soft blue, white surfaces, one friendly accent */
+html:root[data-skin="calm"]{--bg:#EEF4FB;--surface:#FFFFFF;--surface-2:#F5F9FE;--ink:#0F2740;--ink-2:#5A7088;--line:#D8E4F2;--accent:#0B73C9;--accent-ink:#FFFFFF;--accent-soft:#E3F0FC;--shadow:0 1px 2px rgba(15,39,64,.05),0 8px 22px rgba(25,80,140,.08);--t1:#0E9384;--t2:#1570EF;--t3:#D9730D;--t4:#7A5AF8;--t5:#D6336C;--t6:#0E8FBF;--t7:#6C8F1E;--glass:#FFFFFF;--glass-strong:#FFFFFF;--glass-line:#D8E4F2}
+@media (prefers-color-scheme: dark){html:root[data-skin="calm"]:not([data-theme="light"]){--bg:#0C1826;--surface:#122234;--surface-2:#172A40;--ink:#E6EEF8;--ink-2:#93A9C0;--line:#23384F;--accent:#4DA3F0;--accent-ink:#06182B;--accent-soft:#16304D;--shadow:0 1px 2px rgba(0,0,0,.35),0 8px 22px rgba(0,0,0,.3);--t1:#3CCBB6;--t2:#7FB0FF;--t3:#F5A15B;--t4:#B7A0FF;--t5:#F27CA8;--t6:#62C4E6;--t7:#BFD65A;--glass:#122234;--glass-strong:#122234;--glass-line:#23384F}}
+html:root[data-skin="calm"] body{background:linear-gradient(180deg,#E6F0FB 0,var(--bg) 380px)}
+@media (prefers-color-scheme: dark){html:root[data-skin="calm"]:not([data-theme="light"]) body{background:var(--bg)}}
+html:root[data-skin="calm"] .auth-brand{background:linear-gradient(160deg,#0B4F8F,#0A3C6E)}
+html:root[data-skin="calm"] .top{border-bottom-color:var(--line)}
+html:root[data-skin="calm"] .btn,html:root[data-skin="calm"] .input{border-radius:12px}
+html:root[data-skin="calm"] .svc,html:root[data-skin="calm"] .panel,html:root[data-skin="calm"] .svc-head{border-radius:18px}
+.skinsw .sk-calm{background:#0B73C9}
+/* Plan cards */
+.plans.pcs{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;align-items:start}
+.pcw{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pc{display:flex;flex-direction:column;background:var(--surface);border:2px solid var(--accent);border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
+.pc.pop{box-shadow:0 0 0 3px var(--accent-soft),var(--shadow)}
+.pc-top{position:relative;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 82%,#000));color:var(--accent-ink);text-align:center;padding:46px 16px 58px;border-radius:0 0 50% 50%/0 0 40px 40px}
+.pc-pill{position:absolute;top:14px;left:50%;transform:translateX(-50%);padding:3px 16px;border:1.5px solid color-mix(in srgb,var(--accent-ink) 75%,transparent);border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.pc-tag{position:absolute;top:12px;right:12px;background:#fff;color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
+.pc-big{font-size:clamp(30px,3vw,38px);font-weight:800;line-height:1.1;letter-spacing:-.01em}
+.pc-l{font-size:21px;font-weight:600;line-height:1.3;margin-top:4px}
+.pc-big+.pc-l{margin-top:6px}
+.pc-plus{font-size:22px;line-height:1.1;margin-top:4px;opacity:.9}
+.pc-body{display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:18px 18px 20px;text-align:center}
+.pc-body .netrow{justify-content:space-between;text-align:left}
+.pc-meta{font-size:13px;color:var(--ink-2)}
+.pc-price{display:flex;align-items:baseline;justify-content:center;gap:5px;flex-wrap:wrap}
+.pc-price b{font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.pc-price small{font-size:17px;color:var(--ink-2)}
+.pc-then{margin-top:-8px;font-size:17px;color:var(--ink-2)}
+.pc-btn{width:100%;padding:14px 16px;font-size:16px;border-radius:12px}
+.pc-btn.offer{background:#F25A1E;border-color:#F25A1E;color:#fff}
+.pc-btn.offer:hover{filter:brightness(1.06)}
+.pc-step{justify-self:center}
+.facts{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.facts-h{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;border:0;background:none;color:var(--ink);font:inherit;padding:13px 16px;cursor:pointer}
+.facts-h b{display:block;font-size:16px}.facts-h small{display:block;font-size:13px;color:var(--ink-2)}
+.facts-b{padding:2px 16px 16px;display:grid;gap:12px;font-size:14px}
+.pc-feats{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pc-feats li{padding-left:22px;position:relative}
+.pc-feats li::before{content:"";position:absolute;left:3px;top:.55em;width:9px;height:5px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
+/* Build your own, same look */
+.bld{padding:0;border:2px solid var(--accent);border-radius:22px;overflow:hidden}
+.bld-h{position:relative;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 82%,#000));color:var(--accent-ink);text-align:center;padding:50px 20px 52px;border-radius:0 0 50% 50%/0 0 40px 40px;display:block}
+.bld-h h2{margin:0;font-size:clamp(22px,2.6vw,30px);font-weight:800}
+.bld-h p{margin:6px auto 0;max-width:520px;color:inherit;opacity:.92;font-size:15px}
+.bld-b{padding:22px 24px 24px}
+.bld-p .price small{display:inline;font-size:16px;margin-left:4px}
+</style>
+<style>
+.pc-tag{position:static;display:table;margin:2px auto 8px;top:auto;right:auto}
+.pc-body .netrow{flex-direction:column;align-items:flex-start;gap:8px;padding:10px 12px}
+.pc-body .netrow .gens{align-self:stretch}
+.pc-body .netname b{font-size:14px}
+</style>
+<style>
+.pc-price{flex-wrap:nowrap;white-space:nowrap}
+</style>
+
+
+
 
 
 
@@ -1089,6 +1150,35 @@ function tierSwHtmlOld() {
   return `<div class="tiersw" role="tablist" aria-label="Plan tier">${['premium', 'standard'].map(t => `<button class="tbtn ${t}" role="tab" aria-selected="${cur === t}" data-act="tier" data-id="${t}"><span class="tn">${TIER_INFO[t].name}</span><small>${TIER_INFO[t][sim ? 'sim' : 'esim']}</small></button>`).join('')}</div>`;
 }
 
+
+/* ---------- Plan cards: blue header, big data, price, button, facts panel ---------- */
+function cardLines(p, sid) {
+  if (p.cl) return p.cl;
+  if (sid === 'usmvno' || sid === 'ukmvno') return ['Data', '+', 'Unlimited Talk & Text'];
+  if (p.voice) return ['Data', '+', `${p.min} min + ${p.sms} SMS`];
+  if (p.phys && p.tier === 'Premium') return ['Data', '+', String(p.sub).split(' · ')[0]];
+  return ['Data'];
+}
+function esimFactsBody(p) {
+  const d = [...DESTS, ...REGIONS].find(x => x.code === p.code); if (!d) return `<ul class="pc-feats">${p.feats.map(f => `<li>${f}</li>`).join('')}</ul>`;
+  const list = d.region ? COVER[d.code] || [] : [d.name];
+  return `<ul class="pc-feats">${p.feats.map(f => `<li>${f}</li>`).join('')}</ul><div class="pdet"><b>${d.region ? `Supported countries (${list.length})` : 'Coverage'}</b><div class="clist">${list.map(c => `<span>${esc(c)}</span>`).join('')}</div><ul class="pmeta"><li>Data: ${esc(p.big)}</li><li>Type: ${p.phys ? 'Physical SIM card' : 'eSIM (QR code)'}${p.tier ? ' · ' + esc(p.tier) : ''}</li>${p.phys ? '<li>Delivery: 5 to 10 business days, free shipping</li>' : ''}${p.voice ? `<li>Calls: ${p.min} minutes · SMS: ${p.sms}</li><li>Includes a local phone number</li>` : ''}<li>Validity: ${p.days} days from first connection</li><li>${d.region ? 'One eSIM works in every country listed' : `Network: ${esc(p.net || 'Local partner network')}`}</li></ul></div>`;
+}
+const pf = v => fmt(v).replace(/\.00$/, '');
+function planCard(p, sid) {
+  const l = S.cart[p.id], mv = sid === 'usmvno' || sid === 'ukmvno', lines = cardLines(p, sid), promo = p.promo, open = !!(S.fx && S.fx[p.id]);
+  const pill = p.pill || (mv ? String(p.label).replace(/\s*\d+\s*GB$/, '') : `${p.tier || ''}${p.phys ? ' SIM' : ' eSIM'}`.trim());
+  const suffix = p.per === 'per month' ? '/mo' : ' ' + p.per;
+  const price = promo ? `<div class="pc-price"><b>${pf(p.price)}</b><small>/mo first ${promo.months} mo</small></div><div class="pc-then">${pf(promo.then)} going forward</div>` : `<div class="pc-price"><b>${pf(p.price)}</b><small>${suffix}</small></div>`;
+  const act = l ? `<span class="stepper pc-step"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></span>` : `<button class="btn btn-primary pc-btn${promo ? ' offer' : ''}" data-act="add" data-id="${p.id}">${promo ? 'Grab the Offer' : 'Get this plan'}</button>`;
+  const meta = mv ? '' : `<div class="pc-meta">${dayWord(p.days)} validity${p.phys ? ' · SIM card delivered' : ' · QR code in My eSIMs'}</div>`;
+  const fTitle = mv ? ['Broadband Facts', 'Mobile broadband consumer disclosure'] : ['Plan details', 'Coverage, network and features'];
+  const fBody = mv ? `<ul class="pc-feats">${p.feats.map(f => `<li>${f}</li>`).join('')}</ul>${p.info ? `<dl class="spec">${p.info.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>` : ''}` : esimFactsBody(p);
+  return `<div class="pcw"><article class="pc${p.pop ? ' pop' : ''}"><div class="pc-top"><span class="pc-pill">${esc(pill)}</span>${p.badge ? `<span class="pc-tag">${esc(p.badge)}</span>` : ''}<div class="pc-big">${p.big}</div>${lines.map(t => t === '+' ? '<div class="pc-plus">+</div>' : `<div class="pc-l">${t}</div>`).join('')}</div>
+    <div class="pc-body">${netRow(p)}${meta}${price}${act}</div></article>
+    <div class="facts${open ? ' open' : ''}"><button type="button" class="facts-h" data-act="facts" data-id="${esc(p.id)}" aria-expanded="${open}"><span><b>${fTitle[0]}</b><small>${fTitle[1]}</small></span><span class="chev ${open ? 'up' : ''}">${CHEV}</span></button>${open ? `<div class="facts-b">${fBody}</div>` : ''}</div></div>`;
+}
+
 /* ---------- US local MVNO: build your own plan ---------- */
 const BLD_MIN = [['100', '100 min', 5], ['500', '500 min', 6.5], ['unl', 'Unlimited', 8]];
 const BLD_GB = [[0, 'No data', 0], [1, '1 GB', 1], [2, '2 GB', 2], [5, '5 GB', 4], [10, '10 GB', 7], [20, '20 GB', 12]];
@@ -1101,11 +1191,11 @@ function buildPlan() {
 }
 function buildHtml() {
   const b = S.bld = S.bld || { min: '100', gb: 0 }, p = buildPlan(), l = S.cart[p.id];
-  const act = l ? `<span class="stepper"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></span>` : `<button class="btn btn-primary" data-act="add" data-id="${p.id}">Add to cart</button>`;
+  const act = l ? `<span class="stepper pc-step"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></span>` : `<button class="btn btn-primary pc-btn" data-act="add" data-id="${p.id}">Get this plan</button>`;
   const grp = (k, opts, cur) => opts.map(o => `<button type="button" class="bchip" aria-pressed="${String(o[0]) === String(cur)}" data-act="bld" data-id="${k}:${o[0]}">${o[1]}</button>`).join('');
-  return `<section class="bld" aria-label="Build your own plan"><div class="bld-h"><div><h2>Build your own plan</h2><p>Pick only what you need. Texting is always unlimited.</p></div><span class="badge">From ${fmt(5)} a month</span></div>
+  return `<section class="bld" aria-label="Build your own plan"><div class="bld-h"><span class="pc-pill">Build your own</span><h2>Pay only for what you use</h2><p>Pick talk time and data. Texting is always unlimited. From ${fmt(5)}/mo.</p></div>
     <div class="bld-b"><div class="bld-o"><div class="bld-l">Talk time</div><div class="bchips" role="group" aria-label="Talk time">${grp('min', BLD_MIN, b.min)}</div><div class="bld-l">Data</div><div class="bchips" role="group" aria-label="Data">${grp('gb', BLD_GB, b.gb)}</div></div>
-    <div class="bld-s"><small>Your plan</small><b>${p.sub}${b.gb ? ' + ' + p.big + ' data' : ', no data'}</b><div class="bld-p"><span class="price">${fmt(p.price)}<small>per month</small></span>${act}</div></div></div></section>`;
+    <div class="bld-s"><small>Your plan</small><b>${p.sub}${b.gb ? ' + ' + p.big + ' data' : ', no data'}</b><div class="bld-p"><span class="price">${fmt(p.price)}<small>/mo</small></span>${act}</div></div></div></section>`;
 }
 const STATIC = {
   did: reg([
@@ -1128,14 +1218,14 @@ const STATIC = {
     { id: 'vpn:24m', label: 'Two years', big: '24 months', sub: 'About $3.75 per month', price: 89.99, per: 'billed once', badge: 'Best value', feats: ['10 devices', 'All features', 'Priority support'] }
   ]),
   usmvno: reg([
-    { id: 'us:s2', label: 'Starter 2 GB', big: '2 GB', sub: 'High-speed data every 30 days', price: 10, per: 'per month', feats: ['Unlimited US talk and text', 'No contract, cancel anytime', 'Keep your number'],
+    { id: 'us:unl', pill: 'Max', title: 'US Max, Unlimited data', label: 'Max', big: 'Unlimited', sub: 'Unlimited data, 10 GB 5G hotspot', price: 25, per: 'per month', feats: ['Unlimited talk, text and data', '10 GB 5G hotspot', 'Wi-Fi calling'],
+      info: [['Network', 'T-Mobile 5G / 4G LTE'], ['High-speed data', 'Unlimited, may slow in busy areas after heavy use'], ['Talk and text', 'Unlimited in the US'], ['Hotspot', '10 GB of 5G hotspot per month'], ['Roaming abroad', 'Pay as you go: 5 cents a minute, 1 cent a MB'], ['Billing', '30 days, auto-renews, taxes and fees included'], ['SIM and activation', 'eSIM in minutes, or a physical SIM by mail. Bring your own unlocked phone'], ['Keep your number', 'Free port-in']] },
+    { id: 'us:s2', pill: 'Starter', title: 'US Starter, 2 GB', label: 'Starter 2 GB', big: '2 GB', sub: 'High-speed data every 30 days', price: 10, per: 'per month', feats: ['Unlimited US talk and text', 'No contract, cancel anytime', 'Keep your number'],
       info: [['Network', 'T-Mobile 5G / 4G LTE'], ['High-speed data', '2 GB, then reduced speed until renewal'], ['Talk and text', 'Unlimited in the US'], ['Hotspot', 'Uses your data balance'], ['Roaming abroad', 'Pay as you go: 5 cents a minute, 1 cent a MB'], ['Billing', '30 days, auto-renews, taxes and fees included'], ['SIM and activation', 'eSIM in minutes, or a physical SIM by mail. Bring your own unlocked phone'], ['Keep your number', 'Free port-in']] },
-    { id: 'us:s10', label: 'Essential 10 GB', big: '10 GB', sub: 'High-speed data every 30 days', price: 15, per: 'per month', pop: true, badge: 'Popular', feats: ['Unlimited US talk and text', 'Wi-Fi calling', 'Hotspot from your data'],
-      info: [['Network', 'T-Mobile 5G / 4G LTE'], ['High-speed data', '10 GB, then reduced speed until renewal'], ['Talk and text', 'Unlimited in the US'], ['Hotspot', 'Uses your data balance'], ['Roaming abroad', 'Pay as you go: 5 cents a minute, 1 cent a MB'], ['Billing', '30 days, auto-renews, taxes and fees included'], ['SIM and activation', 'eSIM in minutes, or a physical SIM by mail. Bring your own unlocked phone'], ['Keep your number', 'Free port-in']] },
-    { id: 'us:s20', label: 'Plus 20 GB', big: '20 GB', sub: 'High-speed data every 30 days', price: 20, per: 'per month', feats: ['Unlimited US talk and text', 'Wi-Fi calling', 'Hotspot from your data'],
-      info: [['Network', 'T-Mobile 5G / 4G LTE'], ['High-speed data', '20 GB, then reduced speed until renewal'], ['Talk and text', 'Unlimited in the US'], ['Hotspot', 'Uses your data balance'], ['Roaming abroad', 'Pay as you go: 5 cents a minute, 1 cent a MB'], ['Billing', '30 days, auto-renews, taxes and fees included'], ['SIM and activation', 'eSIM in minutes, or a physical SIM by mail. Bring your own unlocked phone'], ['Keep your number', 'Free port-in']] },
-    { id: 'us:unl', label: 'Unlimited', big: 'Unlimited', sub: 'Unlimited data, 10 GB 5G hotspot', price: 25, per: 'per month', badge: 'Best value', feats: ['Unlimited talk, text and data', '10 GB 5G hotspot', 'Wi-Fi calling'],
-      info: [['Network', 'T-Mobile 5G / 4G LTE'], ['High-speed data', 'Unlimited, may slow in busy areas after heavy use'], ['Talk and text', 'Unlimited in the US'], ['Hotspot', '10 GB of 5G hotspot per month'], ['Roaming abroad', 'Pay as you go: 5 cents a minute, 1 cent a MB'], ['Billing', '30 days, auto-renews, taxes and fees included'], ['SIM and activation', 'eSIM in minutes, or a physical SIM by mail. Bring your own unlocked phone'], ['Keep your number', 'Free port-in']] }
+    { id: 'us:s10', pill: 'Everyday', title: 'US Everyday, 10 GB', label: 'Everyday 10 GB', big: '10 GB', sub: 'High-speed data every 30 days', price: 10, per: 'per month', promo: { months: 3, then: 15 }, pop: true, feats: ['Unlimited US talk and text', 'Wi-Fi calling', 'Hotspot from your data'],
+      info: [['Network', 'T-Mobile 5G / 4G LTE'], ['Price', '$10 a month for the first 3 months, then $15 a month'], ['High-speed data', '10 GB, then reduced speed until renewal'], ['Talk and text', 'Unlimited in the US'], ['Hotspot', 'Uses your data balance'], ['Roaming abroad', 'Pay as you go: 5 cents a minute, 1 cent a MB'], ['Billing', '30 days, auto-renews, taxes and fees included'], ['SIM and activation', 'eSIM in minutes, or a physical SIM by mail. Bring your own unlocked phone'], ['Keep your number', 'Free port-in']] },
+    { id: 'us:s20', pill: 'Power', title: 'US Power, 20 GB', label: 'Power 20 GB', big: '20 GB', sub: 'High-speed data every 30 days', price: 20, per: 'per month', feats: ['Unlimited US talk and text', 'Wi-Fi calling', 'Hotspot from your data'],
+      info: [['Network', 'T-Mobile 5G / 4G LTE'], ['High-speed data', '20 GB, then reduced speed until renewal'], ['Talk and text', 'Unlimited in the US'], ['Hotspot', 'Uses your data balance'], ['Roaming abroad', 'Pay as you go: 5 cents a minute, 1 cent a MB'], ['Billing', '30 days, auto-renews, taxes and fees included'], ['SIM and activation', 'eSIM in minutes, or a physical SIM by mail. Bring your own unlocked phone'], ['Keep your number', 'Free port-in']] }
   ]),
   ukmvno: reg([
     { id: 'uk:lite', label: 'Lite 5 GB', big: '5 GB', sub: 'Data every 30 days', price: 10, per: 'per month', feats: ['Unlimited UK calls and texts', '30-day rolling plan', 'Free number transfer'],
@@ -1370,7 +1460,7 @@ function cartSet(id, d) {
 }
 function afterCart() { renderHeader(); renderCart(); const pl = $('#plans'); if (pl) renderPlans(); const so = $('#simorder'); if (so) { if ($('#so-a1') && hasSim()) $('#so-lines').innerHTML = simLines(); else so.innerHTML = simOrderInner(); } if (S.view === 'checkout') renderCheckout(); }
 
-const skinSw = fab => `<div class="skinsw${fab ? ' fab' : ''}" role="group" aria-label="Look">${[['calm', 'Calm'], ['classic', 'Classic']].map(([k, t]) => `<button type="button" data-act="skin" data-id="${k}" aria-pressed="${S.skin === k}" title="${t} look"><i class="sk-${k}"></i><span>${t}</span></button>`).join('')}</div>`;
+const skinSw = fab => `<div class="skinsw${fab ? ' fab' : ''}" role="group" aria-label="Look">${[['calm', 'Sky'], ['classic', 'Classic']].map(([k, t]) => `<button type="button" data-act="skin" data-id="${k}" aria-pressed="${S.skin === k}" title="${t} look"><i class="sk-${k}"></i><span>${t}</span></button>`).join('')}</div>`;
 const skinLabel = () => S.skin === 'bright' ? 'Classic look' : 'Bright look';
 
 /* ---------- header ---------- */
@@ -1719,7 +1809,9 @@ function renderPlans() {
     head = sim ? `${d.name} physical SIM plans` : `${d.name} ${TIER_INFO[tr].name} eSIM plans`; note = sim ? 'SIMs with calls, SMS and data, or data only. Delivered to your address.' : TIER_INFO[tr].esim + ' Install by scanning a QR code.';
     chips = `<div class="filters" role="group" aria-label="Filter plans">${[['all', 'All plans'], ['short', 'Short trips'], ['month', '30 days']].map(([k, t]) => `<button class="fchip" aria-pressed="${f === k}" data-act="filter" data-id="${k}">${t}</button>`).join('')}</div>`;
   } else { list = STATIC[s.id]; head = `${s.name} plans`; note = 'Prices shown in US dollars.'; if (s.id === 'usmvno') { note = 'No contract. Unlimited US talk and text on every plan, on a 5G network.'; after = buildHtml(); } if (s.id === 'pg') { ptype = pgButtons(); const sv = PGS.find(x => x.id === S.pgsvc); if (sv) { list = sv.ids.map(i => REG[i]).filter(Boolean); head = `${sv.name} plans`; note = sv.desc; } else { $('#plans').innerHTML = ptype + '<div class="pg-hint">Select a service above to see its plans and prices.</div>'; return; } } }
-  $('#plans').innerHTML = `${ptype}<div class="plans-head"><div><h2>${head}</h2><p>${note}</p></div>${chips}</div><div class="plans${list.length === 1 ? ' one' : list.length === 4 ? ' four' : ''}">${list.map(p => {
+  const pcs = ['usmvno', 'ukmvno', 'esim'].includes(s.id);
+  $('#plans').innerHTML = `${ptype}<div class="plans-head"><div><h2>${head}</h2><p>${note}</p></div>${chips}</div><div class="plans${list.length === 1 ? ' one' : list.length === 4 ? ' four' : ''}${pcs ? ' pcs' : ''}">${list.map(p => {
+    if (pcs) return planCard(p, s.id);
     const l = S.cart[p.id];
     const act = l ? `<span class="stepper"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></span>` : `<button class="btn btn-primary" data-act="add" data-id="${p.id}">Add to cart</button>`;
     return `<article class="plan ${p.pop ? 'pop' : ''}${p.tier === 'Premium' ? ' t-gold' : p.tier === 'Standard' ? ' t-silver' : ''}"><div class="lab"><span class="lab-l">${p.code ? `<span class="flag sm">${flag(p.code)}</span>` : ''}${p.label}</span>${p.badge ? `<span class="badge">${p.badge}</span>` : ''}</div>
@@ -1991,6 +2083,7 @@ document.addEventListener('click', e => {
     case 'pgsvc': S.pgsvc = S.pgsvc === id ? null : id; renderPlans(); if (S.pgsvc) { const h = document.querySelector('#plans .plans-head'); if (h) h.scrollIntoView({ behavior: 'smooth', block: 'start' }); } break;
     case 'filter': S.filter = id; renderPlans(); break;
     case 'add': cartAdd(id); break;
+    case 'facts': S.fx = S.fx || {}; S.fx[id] = !S.fx[id]; renderPlans(); break;
     case 'bld': { const [k, v] = id.split(':'); S.bld = S.bld || { min: '100', gb: 0 }; S.bld[k] = k === 'gb' ? +v : v; renderPlans(); break; }
     case 'inc': cartSet(id, 1); break;
     case 'dec': cartSet(id, -1); break;

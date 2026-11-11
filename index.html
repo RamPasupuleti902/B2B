@@ -1481,52 +1481,7 @@ function planCard(p, sid) {
     <div class="facts${open ? ' open' : ''}"><button type="button" class="facts-h" data-act="facts" data-id="${esc(p.id)}" aria-expanded="${open}"><span><b>${fTitle[0]}</b><small>${fTitle[1]}</small></span><span class="chev ${open ? 'up' : ''}">${CHEV}</span></button>${open ? `<div class="facts-b">${fBody}</div>` : ''}</div></div>`;
 }
 
-/* ---------- US local MVNO: build your own plan ---------- */
-const BLD_TALK = [['100', '100 minutes', 5], ['500', '500 minutes', 7], ['unl', 'Unlimited', 10]];
-const BLD_DATA = [[0, 'No data', 0], [2, '2 GB', 7], [5, '5 GB', 12], [10, '10 GB', 18], [20, '20 GB', 25], ['unl', 'Unlimited', 40]];
-const BLD_EXTRAS = [['canmx', 'Canada + Mexico pass', 'Calls, texts and 1 GB roaming data', 5, 8], ['intl', 'International calling', 'Calling to 10 supported destinations', 3, 5], ['topup', 'Extra 5 GB data', 'One-time high-speed data add-on', 7, 10]];
-function buildPlan() {
-  const b = S.bld = S.bld || { min: '500', gb: 5, term: '30', sim: 'esim', number: 'new', addons: [] };
-  b.addons = b.addons || []; b.term = String(b.term || '30'); b.sim = b.sim || 'esim'; b.number = b.number || 'new';
-  const talk = BLD_TALK.find(x => x[0] === b.min) || BLD_TALK[1], data = BLD_DATA.find(x => String(x[0]) === String(b.gb)) || BLD_DATA[2];
-  const days = b.term === '7' ? 7 : 30, factor = days === 7 ? .4 : 1;
-  const addons = BLD_EXTRAS.filter(x => b.addons.includes(x[0]));
-  const base = (talk[2] + data[2]) * factor;
-  const extras = addons.reduce((sum, x) => sum + (days === 7 ? x[3] : x[4]), 0);
-  const simFee = b.sim === 'physical' ? 5 : 0;
-  const price = Math.round((base + extras + simFee) * 100) / 100;
-  const talkLabel = talk[0] === 'unl' ? 'Unlimited US talk' : talk[1] + ' of US talk';
-  const dataLabel = data[0] === 'unl' ? 'Unlimited data' : data[0] ? data[1] + ' high-speed data' : 'No mobile data';
-  const id = ['us:bundle', talk[0], data[0], days, b.sim, b.number, ...addons.map(x => x[0])].join(':');
-  const p = { id, svc: 'usmvno', label: 'Custom bundle', pill: 'Your bundle', title: `US bundle, ${talkLabel}, ${dataLabel}, ${days} days`, big: data[0] === 'unl' ? 'Unlimited' : data[0] ? data[1] : 'Talk + text', sub: `${talkLabel} · unlimited US text`, price, per: `${days} days`, phys: b.sim === 'physical', days, feats: [talkLabel, 'Unlimited US text', dataLabel, b.sim === 'physical' ? 'Physical SIM · $5 one-time SIM fee included' : 'eSIM activation by QR code', b.number === 'port' ? 'Keep your existing number · transfer supported numbers' : 'New US number included', ...addons.map(x => x[1])], info: [['Plan length', `${days} days; prepaid for the selected term`], ['Renewal', 'No automatic renewal. Choose and pay for another bundle when this one ends.'], ['Network', 'Partner 5G / 4G LTE coverage; availability varies by location and device.'], ['Data', dataLabel + (data[0] ? '; speed may be reduced or data paused after allowance, depending on network terms.' : '.')], ['Hotspot', 'Uses the included high-speed data allowance; performance depends on device and network.'], ['Number', b.number === 'port' ? 'Number transfer eligibility and timing depend on the current carrier.' : 'New number assigned at activation.'], ['SIM', b.sim === 'physical' ? 'Physical SIM fee included in total; delivery options shown at checkout.' : 'eSIM requires an unlocked, compatible device.'], ['Extras', addons.length ? addons.map(x => `${x[1]} (+${fmt(days === 7 ? x[3] : x[4])})`).join('; ') : 'No optional extras selected.'], ['Total', 'Illustrative USD price before any taxes or fees shown at checkout.']] };
-  reg([p]); return p;
-}
-function buildHtml() {
-  const b = S.bld = S.bld || { min: '500', gb: 5, term: '30', sim: 'esim', number: 'new', addons: [] };
-  b.addons = b.addons || []; const p = buildPlan(), l = S.cart[p.id], step = Math.max(1, Math.min(5, Number(b.step || 1)));
-  const act = step < 5 ? '<small class="builder-review-hint">Review your selections in the final step before adding the bundle.</small>' : (l ? '<button class="btn btn-primary" data-act="cart-open">This bundle is in your cart · View cart</button>' : '<small class="builder-review-hint">Confirm the bundle with the Add bundle to cart button below.</small>');
-  const choices = (key, options, current) => options.map(o => '<button type="button" class="builder-choice' + (String(o[0]) === String(current) ? ' selected' : '') + '" aria-pressed="' + (String(o[0]) === String(current)) + '" data-act="bld" data-id="' + key + ':' + o[0] + '"><b>' + o[1] + '</b><small>' + o[2] + '</small></button>').join('');
-  const talk = BLD_TALK.map(x => [x[0], x[1], 'US calls · ' + fmt(x[2]) + ' / 30 days']);
-  const data = BLD_DATA.map(x => [x[0], x[1], x[0] === 'unl' ? 'See usage terms · ' + fmt(x[2]) + ' / 30 days' : (x[0] ? 'High-speed data · ' : 'Wi-Fi only · ') + fmt(x[2]) + ' / 30 days']);
-  const term = [['30','30-day plan','Best for ongoing US use'],['7','7-day pass','Short stay · prepaid once']];
-  const sim = [['esim','eSIM','Instant setup on compatible phones'],['physical','Physical SIM','Add $5 one-time SIM fee']];
-  const number = [['new','New number','Get a US number with activation'],['port','Keep my number','Transfer eligibility applies']];
-  const days = b.term === '7' ? 7 : 30;
-  const extrasHtml = BLD_EXTRAS.map(o => '<button type="button" class="builder-addon' + (b.addons.includes(o[0]) ? ' selected' : '') + '" aria-pressed="' + b.addons.includes(o[0]) + '" data-act="bldopt" data-id="' + o[0] + '"><span class="addon-check">' + (b.addons.includes(o[0]) ? '✓' : '+') + '</span><span><strong>' + o[1] + '</strong><small>' + o[2] + '</small></span><b>+' + fmt(days === 7 ? o[3] : o[4]) + '</b></button>').join('');
-  const dataName = p.big === 'Talk + text' ? 'Talk + text' : p.big + ' bundle';
-  const saved = store.get('lp_us_bundle_saved', []);
-  const savedHtml = saved.length ? `<section class="saved-bundles"><div class="saved-bundles-head"><div><span class="builder-eyebrow">YOUR LIBRARY</span><h3>Your saved bundles</h3><p>Each bundle you review is saved here so you can reuse it later.</p></div><span>${saved.length} saved</span></div><div class="saved-bundles-list">${saved.map((x, i) => { const c = x.config || {}, t = BLD_TALK.find(v => v[0] === c.min) || BLD_TALK[1], d = BLD_DATA.find(v => String(v[0]) === String(c.gb)) || BLD_DATA[2], days = c.term === '7' ? '7-day pass' : '30-day plan', extraNames = BLD_EXTRAS.filter(v => (c.addons || []).includes(v[0])).map(v => v[1]); return `<article class="saved-bundle-card"><div class="saved-bundle-main"><div class="saved-bundle-title"><b>Bundle ${saved.length - i}</b><span>Saved</span></div><h4>${esc(x.title)}</h4><div class="saved-bundle-tags"><span>${t[0] === 'unl' ? 'Unlimited US talk' : t[1] + ' US talk'}</span><span>${d[0] === 'unl' ? 'Unlimited data' : d[0] ? d[1] : 'Wi-Fi only'}</span><span>${days}</span></div><p>${c.sim === 'physical' ? 'Physical SIM' : 'eSIM'} · ${c.number === 'port' ? 'Number transfer' : 'New US number'}${extraNames.length ? ' · ' + esc(extraNames.join(', ')) : ''}</p></div><div class="saved-bundle-buy"><strong>${fmt(x.price)}</strong><small>${esc(x.per)}</small><button class="btn" data-act="bldrestore" data-id="${esc(x.id)}">Edit bundle</button><button class="btn btn-primary" data-act="bldaddsaved" data-id="${esc(x.id)}">Add to cart</button></div></article>`; }).join('')}</div></section>` : '';
-  const reviewRows = [['Talk', b.min === 'unl' ? 'Unlimited US talk' : (BLD_TALK.find(x => x[0] === b.min) || BLD_TALK[1])[1] + ' US talk'], ['Data', b.gb === 0 ? 'Wi-Fi only' : b.gb === 'unl' ? 'Unlimited data' : b.gb + ' GB high-speed data'], ['Term', days + ' days prepaid'], ['SIM', b.sim === 'physical' ? 'Physical SIM · $5 fee included' : 'eSIM activation'], ['Number', b.number === 'port' ? 'Transfer existing number' : 'New US number'], ['Extras', b.addons.length ? BLD_EXTRAS.filter(x => b.addons.includes(x[0])).map(x => x[1]).join(', ') : 'None']];
-  const reviewHtml = '<section class="builder-group bundle-review" data-builder-step="5"><div class="builder-group-head"><b>5</b><span><strong>Review your bundle</strong><small>Check the details and total before adding it to your cart</small></span></div><div class="bundle-review-list">' + reviewRows.map(([k,v]) => '<div><span>' + k + '</span><strong>' + v + '</strong></div>').join('') + '<div class="bundle-review-total"><span>Prepaid total</span><strong>' + fmt(p.price) + '</strong></div></div></section>';
-  return '<section class="custom-builder mvno-config" data-builder-current="' + step + '" aria-label="Create a US mobile bundle"><div class="builder-heading"><span class="builder-eyebrow">US LOCAL MOBILE</span><h2>Build a bundle around your needs</h2><p>Pick your allowance, choose how to activate, then add travel or data extras only if you need them.</p><nav class="bundle-progress" aria-label="Bundle setup progress"><span>1 <b>Usage</b></span><i></i><span>2 <b>Term</b></span><i></i><span>3 <b>SIM</b></span><i></i><span>4 <b>Extras</b></span><i></i><span>5 <b>Review</b></span></nav></div><div class="builder-layout"><div class="builder-options">' +
-  '<section class="builder-group" data-builder-step="1"><div class="builder-group-head"><b>1</b><span><strong>Talk time</strong><small>Unlimited US texts included in every bundle</small></span></div><div class="builder-choices">' + choices('min', talk, b.min) + '</div></section>' +
-  '<section class="builder-group" data-builder-step="1"><div class="builder-group-head"><b>1</b><span><strong>Data allowance</strong><small>Choose a monthly allowance or Wi-Fi-only</small></span></div><div class="builder-choices">' + choices('gb', data, b.gb) + '</div></section>' +
-  '<section class="builder-group" data-builder-step="2"><div class="builder-group-head"><b>2</b><span><strong>Plan length</strong><small>Prepaid plan · no automatic renewal</small></span></div><div class="builder-choices">' + choices('term', term, b.term) + '</div></section>' +
-  '<section class="builder-group" data-builder-step="3"><div class="builder-group-head"><b>3</b><span><strong>SIM and number</strong><small>Keep your number or start fresh</small></span></div><div class="builder-choices">' + choices('sim', sim, b.sim) + choices('number', number, b.number) + '</div></section>' +
-  '<section class="builder-group" data-builder-step="4"><div class="builder-group-head"><b>4</b><span><strong>Optional extras</strong><small>Prices update for your selected term</small></span></div><div class="builder-addons">' + extrasHtml + '</div></section>' + reviewHtml + '<div class="bundle-step-controls"><button type="button" class="btn bundle-back" data-act="bldstep" data-id="-1"' + (step === 1 ? ' disabled' : '') + '>Back</button><span>Step ' + step + ' of 5</span><button type="button" class="btn btn-primary bundle-next" data-act="' + (step === 5 ? (l ? 'cart-open' : 'bldadd') : 'bldstep') + '" data-id="' + (step === 5 ? (l ? '' : p.id) : '1') + '">' + (step === 4 ? 'Review bundle' : step === 5 ? (l ? 'Open cart' : 'Add bundle to cart') : 'Continue') + '</button></div></div>' +
-  '<aside class="builder-summary"><span class="builder-eyebrow">LIVE BUNDLE SUMMARY</span><h3>' + dataName + '</h3><p>' + (b.min === 'unl' ? 'Unlimited US talk' : (BLD_TALK.find(x => x[0] === b.min) || BLD_TALK[1])[1] + ' of US talk') + ' · ' + days + ' days</p><div class="builder-total"><small>Bundle total</small><strong>' + fmt(p.price) + '</strong><span>prepaid for ' + days + ' days</span></div><ul><li>Unlimited US text</li><li>' + (p.big === 'Talk + text' ? 'Wi-Fi only' : p.big + ' high-speed data') + '</li><li>' + (b.sim === 'physical' ? 'Physical SIM · $5 fee included' : 'eSIM activation') + '</li><li>' + (b.number === 'port' ? 'Number transfer requested' : 'New US number') + '</li>' + b.addons.map(k => '<li>' + (BLD_EXTRAS.find(x => x[0] === k) || [k,k])[1] + '</li>').join('') + '</ul>' + act + '<small class="builder-note">Example pricing in USD. Network availability, taxes and any activation or delivery charges are confirmed before checkout.</small></aside></div></section>' + savedHtml;
-}
-
+/* The previous custom bundle builder is replaced by the system rate plan request form. */
 const STATIC = {
   did: reg([
     { id: 'did:us-local', label: 'United States', big: 'Local number', sub: 'Pick any area code', price: 2.0, per: 'per month', feats: ['1 number, inbound calls', 'Forward to mobile or app', 'Caller ID shown to you'] },
@@ -1764,12 +1719,10 @@ function renderEgrid() {
 /* ---------- state ---------- */
 const S = {
   view: 'auth', authTab: 'in', pending: null, user: null,
-  service: null, mvnoMode: 'default', dest: 'US', kind: 'esim', tier: 'premium', ptype: 'data', ptab: 'orders', alertsOpen: false, tu: null, cart: store.get('lp_cart', {}), cartOpen: false,
+  service: null, dest: 'US', kind: 'esim', tier: 'premium', ptype: 'data', ptab: 'orders', alertsOpen: false, tu: null, cart: store.get('lp_cart', {}), cartOpen: false,
   step: 1, details: { fn: '', ln: '', name: '', email: '', phone: '', country: 'India', a1: '', a2: '', city: '', state: '', zip: '' }, promo: null, fails: 0, lockUntil: 0, order: null
 };
 S.bld = store.get('lp_us_bundle_draft', { min: '500', gb: 5, term: '30', sim: 'esim', number: 'new', addons: [], step: 1 });
-const saveBldDraft = () => store.set('lp_us_bundle_draft', { min: S.bld.min, gb: S.bld.gb, term: S.bld.term, sim: S.bld.sim, number: S.bld.number, addons: S.bld.addons || [], step: S.bld.step || 1 });
-function saveCreatedBundle(p) { const all = store.get('lp_us_bundle_saved', []), cfg = { min: S.bld.min, gb: S.bld.gb, term: S.bld.term, sim: S.bld.sim, number: S.bld.number, addons: [...(S.bld.addons || [])] }; const old = all.find(x => x.id === p.id); if (old) { old.lastSaved = Date.now(); old.price = p.price; old.title = p.title; old.config = cfg; } else all.unshift({ id: p.id, title: p.title, price: p.price, per: p.per, config: cfg, createdAt: Date.now(), lastSaved: Date.now() }); store.set('lp_us_bundle_saved', all); }
 function recoverBundlesFromCart() { const all = store.get('lp_us_bundle_saved', []), known = new Set(all.map(x => x.id)); Object.values(S.cart || {}).forEach(line => { const plan = line.plan || {}, id = plan.id || ''; if (!id.startsWith('us:bundle:') || known.has(id)) return; const parts = id.split(':'), gb = parts[3] === 'unl' ? 'unl' : Number(parts[3]); all.unshift({ id, title: plan.title || 'US custom bundle', price: plan.price || 0, per: plan.per || '30 days', config: { min: parts[2] || '500', gb, term: parts[4] === '7' ? '7' : '30', sim: parts[5] || 'esim', number: parts[6] || 'new', addons: parts.slice(7) }, createdAt: Date.now(), lastSaved: Date.now() }); known.add(id); }); store.set('lp_us_bundle_saved', all); }
 recoverBundlesFromCart();
 let users = store.get('lp_users', {});
@@ -2176,7 +2129,7 @@ function renderPlans() {
     if (sim || tr === 'standard') ptype = ''; // Voice/data tabs only where both choices exist.
     head = sim ? `${d.name} physical SIM plans` : `${d.name} ${TIER_INFO[tr].name} eSIM plans`; note = sim ? 'SIMs with calls, SMS and data, or data only. Delivered to your address.' : TIER_INFO[tr].esim + ' Install by scanning a QR code.';
     chips = `<div class="filters" role="group" aria-label="Filter plans">${[['all', 'All plans'], ['short', 'Short trips'], ['month', '30 days']].map(([k, t]) => `<button class="fchip" aria-pressed="${f === k}" data-act="filter" data-id="${k}">${t}</button>`).join('')}</div>`;
-  } else { list = STATIC[s.id]; head = `${s.name} plans`; note = 'Prices shown in US dollars.'; if (s.id === 'usmvno') { note = 'Compare the ready-made plans or build a prepaid 7-day pass or 30-day bundle with your choice of data, talk, SIM type and travel extras.'; after = buildHtml(); } if (s.id === 'pg') { ptype = pgButtons(); const sv = PGS.find(x => x.id === S.pgsvc); if (sv) { list = sv.ids.map(i => REG[i]).filter(Boolean); head = `${sv.name} plans`; note = sv.desc; } else { $('#plans').innerHTML = ptype + '<div class="pg-hint">Select a service above to see its plans and prices.</div>'; return; } } }
+  } else { list = STATIC[s.id]; head = `${s.name} plans`; note = 'Prices shown in US dollars.'; if (s.id === 'usmvno') { note = 'Choose a ready-made US local plan or create a custom system rate plan request.'; after = ''; } if (s.id === 'pg') { ptype = pgButtons(); const sv = PGS.find(x => x.id === S.pgsvc); if (sv) { list = sv.ids.map(i => REG[i]).filter(Boolean); head = `${sv.name} plans`; note = sv.desc; } else { $('#plans').innerHTML = ptype + '<div class="pg-hint">Select a service above to see its plans and prices.</div>'; return; } } }
   const pcs = ['usmvno', 'ukmvno', 'esim'].includes(s.id);
   $('#plans').innerHTML = `${ptype}<div class="plans-head"><div><h2>${head}</h2><p>${note}</p></div>${chips}</div><div class="plans${list.length === 1 ? ' one' : list.length === 4 ? ' four' : ''}${pcs ? ' pcs' : ''}">${list.map(p => {
     if (pcs) return planCard(p, s.id);
@@ -2189,21 +2142,20 @@ function renderPlans() {
       ${pdetHtml(p)}<div class="buy"><div class="price">${fmt(p.price)}<small>${p.per}</small></div>${act}</div></article>`;
   }).join('')}</div>${after}`;
   if (s.id === 'usmvno') {
-    const host = document.getElementById('plans'), planGrid = host.querySelector('.plans'), custom = host.querySelector('.custom-builder'), mode = S.mvnoMode || 'default';
-    const ready = document.createElement('section'); ready.className = 'mvno-ready'; ready.hidden = mode === 'custom';
+    const host = document.getElementById('plans'), planGrid = host.querySelector('.plans');
+    const ready = document.createElement('section'); ready.className = 'mvno-ready';
     const readyTitle = document.createElement('h3'); readyTitle.className = 'mvno-panel-title'; readyTitle.textContent = 'Default plans';
     ready.append(readyTitle, planGrid);
     const start = document.createElement('section'); start.className = 'mvno-start panel';
-    start.innerHTML = '<span class="builder-eyebrow">NEED A DIFFERENT MIX?</span><h3>Create your own bundle</h3><p>Choose your data, talk time and validity, then add optional extras.</p><button type="button" class="btn btn-primary" data-act="mvnomode" data-id="custom">Create your own bundle</button>';
-    const customWrap = document.createElement('section'); customWrap.className = 'mvno-custom'; customWrap.hidden = mode !== 'custom';
-    const customTitle = document.createElement('div'); customTitle.className = 'mvno-custom-head';
-    customTitle.innerHTML = '<h3 class="mvno-panel-title">Create your own bundle</h3><button type="button" class="btn-link" data-act="mvnomode" data-id="default">Back to default plans</button>';
-    customWrap.append(customTitle, custom);
-    start.hidden = mode === 'custom';
+    start.innerHTML = '<span class="builder-eyebrow">CUSTOM SYSTEM PLAN</span><h3>Create your own bundle</h3><p>Configure billing, allowance caps, carrier SLOs, feature flags, throttle tiers, and tethering.</p><button type="button" class="btn btn-primary" data-act="uscfg-open">Create your own bundle</button>';
     const columns = document.createElement('div'); columns.className = 'mvno-columns';
-    if (mode === 'custom') { customWrap.hidden = false; columns.append(customWrap); }
-    else { ready.hidden = false; start.hidden = false; customWrap.remove(); columns.append(ready, start); }
+    columns.append(ready, start);
     const heading = host.querySelector('.plans-head'); heading.after(columns);
+    const networkConfig = document.createElement('section');
+    networkConfig.className = 'uscfg-launch';
+    networkConfig.innerHTML = '<div><span class="uscfg-eyebrow">ADVANCED CARRIER CONFIGURATION</span><h3>Configure a custom system rate plan</h3><p>Set billing, allowance caps, carrier buckets, feature flags, throttling rules, and tethering options.</p></div><button type="button" class="btn btn-primary" data-act="uscfg-open">Configure network request</button>';
+    columns.after(networkConfig);
+    installUsMvnoConfigStyles();
   }
 }
 
@@ -2462,6 +2414,124 @@ const Gateway = {
   }
 };
 
+/* ---------- US local MVNO: carrier network request form ---------- */
+const US_MVNO_SLOS = [
+  ['NC_VIR_B', 'Base voice bucket for international roaming', 'Prepaid plan only'],
+  ['NC_VOILD_B', 'Base voice bucket for on-net including ILD', 'Both pooled and prepaid'],
+  ['NC_VODRILD_B', 'Base voice bucket for on-net and domestic roaming including ILD', 'Both prepaid and pooled'],
+  ['NC_SOIRILD_B', 'Base SMS bucket for on-net, international roaming, and ILD', 'Prepaid plan only'],
+  ['NC_SILD_B', 'Base SMS bucket for international long distance (ILD)', 'Prepaid plan only'],
+  ['NC_DODRIR_B', 'Base data bucket for on-net, US domestic, and international roaming', 'Prepaid plan only'],
+  ['NC_DODRIR_TETH1', 'Tethering data bucket for on-net, US domestic, and international roaming', 'Prepaid plan only'],
+  ['NC_SONILD_B', 'Base SMS bucket for on-net and international long distance (ILD)', 'Both pooled and prepaid']
+];
+
+function installUsMvnoConfigStyles() {
+  if (document.getElementById('us-mvno-config-styles')) return;
+  const style = document.createElement('style');
+  style.id = 'us-mvno-config-styles';
+  style.textContent = `
+    .uscfg-launch{display:flex;justify-content:space-between;align-items:center;gap:18px;margin:14px 0 22px;padding:20px;border:1px solid #244438;border-radius:16px;background:#10221b;color:#f6faf8}
+    .uscfg-launch h3{font-size:18px;margin:5px 0}.uscfg-launch p{color:#b9c9c1;margin:0;font-size:13px;line-height:1.5}.uscfg-eyebrow{font-size:10px;font-weight:800;letter-spacing:.12em;color:#31bb75}
+    .uscfg-open{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:18px}.uscfg-open[hidden]{display:none!important}.uscfg-backdrop{position:absolute;inset:0;background:#000b;backdrop-filter:blur(5px)}
+    .uscfg-dialog{position:relative;z-index:1;width:min(1260px,100%);height:min(92vh,900px);display:flex;flex-direction:column;background:#0f1e18;color:#f5f8f6;border:1px solid #234336;border-radius:18px;box-shadow:0 24px 80px #0008;overflow:hidden}
+    .uscfg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 22px;border-bottom:1px solid #244438;background:#0a1712}.uscfg-head h2{font-size:20px;margin:0}.uscfg-close{border:0;background:transparent;color:#e8f2ed;font-size:24px;cursor:pointer}.uscfg-dialog form{display:flex;flex-direction:column;min-height:0;flex:1}.uscfg-scroll{overflow:auto;padding:20px 22px 28px;flex:1;min-height:0}.uscfg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 22px}.uscfg-field{display:grid;gap:6px;min-width:0}.uscfg-field label,.uscfg-section-title{font-size:12px;text-transform:uppercase;letter-spacing:.035em;font-weight:800;color:#f4f8f6}.uscfg-field input,.uscfg-field select,.uscfg-slo-card input[type=number],.uscfg-throttle input,.uscfg-throttle select{width:100%;min-width:0;min-height:48px;border:1px solid #244438;border-radius:8px;background:#1a2c24;color:#f6faf8;padding:10px 12px;font:500 15px "DM Sans",sans-serif}.uscfg-field input::placeholder,.uscfg-slo-card input::placeholder,.uscfg-throttle input::placeholder{color:#95a9a0}.uscfg-field select option,.uscfg-throttle select option{background:#15271f;color:#fff}
+    .uscfg-separator{border:0;border-top:1px solid #244438;margin:22px 0}.uscfg-panel-head{position:relative;padding:5px 175px 12px 0}.uscfg-panel-head h3{font-size:22px;margin:6px 0}.uscfg-db{position:absolute;right:0;top:6px;padding:12px 16px;border-radius:7px;background:#eff6ff;color:#2864df;font-size:11px;font-weight:900}.uscfg-slos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.uscfg-slo-card{display:flex;flex-direction:column;gap:11px;min-width:0;padding:15px;border:1px solid #244438;border-radius:16px;background:#10221b;position:relative;overflow:hidden}.uscfg-slo-card:before{content:'';height:5px;position:absolute;inset:0 0 auto;background:#d6e0dc}.uscfg-slo-card:nth-child(3n+2):before{background:#438bff}.uscfg-slo-title{font-size:13px;font-weight:800;line-height:1.45;text-transform:uppercase;color:#377dff;min-height:56px;padding-top:4px}.uscfg-slo-code{font:600 11px ui-monospace,monospace;color:#a9b8c0}.uscfg-eligibility{font-size:12px;color:#ffc629;font-weight:700;min-height:34px}.uscfg-renew{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:800}.uscfg-renew input,.uscfg-flags input{accent-color:#1685ff;width:18px;height:18px}
+    .uscfg-flags{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 18px}.uscfg-check{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:700}.uscfg-throttle{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.uscfg-tier{padding:15px;border:1px solid #244438;border-radius:13px;background:#10221b}.uscfg-tier h4{margin:0 0 13px;font-size:13px;text-transform:uppercase}.uscfg-tier .uscfg-field{margin-bottom:12px}.uscfg-tier .uscfg-field:last-child{margin-bottom:0}.uscfg-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}.uscfg-result{display:none;margin-top:16px;border:1px solid #2b8c5a;background:#10291d;border-radius:12px;padding:14px;color:#e7f8ee}.uscfg-result.show{display:block}.uscfg-result pre{white-space:pre-wrap;overflow:auto;max-height:220px;color:#cce2d5;font-size:11px}
+    .uscfg-footer{display:flex;justify-content:flex-end;gap:12px;padding:14px 22px;border-top:1px solid #244438;background:#0a1712}.uscfg-footer .btn{min-width:112px;min-height:46px}.uscfg-footer .btn-primary{min-width:270px;background:#20ad62;border-color:#20ad62;color:#fff;font-weight:800}
+    @media(max-width:850px){.uscfg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.uscfg-slos{grid-template-columns:repeat(2,minmax(0,1fr))}.uscfg-flags{grid-template-columns:repeat(2,minmax(0,1fr))}.uscfg-throttle{grid-template-columns:1fr}}
+    @media(max-width:600px){.uscfg-open{padding:0}.uscfg-dialog{height:100dvh;width:100%;border-radius:0}.uscfg-head{padding:13px 15px}.uscfg-head h2{font-size:16px}.uscfg-scroll{padding:14px 13px 20px}.uscfg-grid{grid-template-columns:1fr 1fr;gap:12px}.uscfg-slos{grid-template-columns:1fr 1fr;gap:8px}.uscfg-slo-card{padding:11px}.uscfg-slo-title{font-size:11px;min-height:70px}.uscfg-eligibility{font-size:10px;min-height:30px}.uscfg-flags{gap:11px 8px}.uscfg-check{font-size:11px}.uscfg-footer{padding:10px 12px max(10px,env(safe-area-inset-bottom));gap:8px}.uscfg-footer .btn{min-width:0;min-height:44px}.uscfg-footer .btn-primary{min-width:0;flex:1}.uscfg-launch{align-items:flex-start;flex-direction:column;padding:15px}.uscfg-row{grid-template-columns:1fr}.uscfg-panel-head{padding-right:0}.uscfg-panel-head h3{font-size:18px}.uscfg-db{position:static;display:inline-block;margin-top:8px}}
+  `;
+  document.head.appendChild(style);
+}
+
+function openUsMvnoConfig() {
+  installUsMvnoConfigStyles();
+  let modal = document.getElementById('us-mvno-config');
+  if (!modal) {
+    const sloCards = US_MVNO_SLOS.map(([code, title, eligibility]) => `
+      <article class="uscfg-slo-card" data-slo-code="${code}">
+        <div class="uscfg-slo-title">${title}</div><div class="uscfg-slo-code">${code}</div>
+        <div class="uscfg-eligibility">${eligibility}</div>
+        <input type="number" min="0" name="sloLimit" placeholder="Limit" aria-label="${title} limit">
+        <label class="uscfg-renew"><input type="checkbox" name="sloAutoRenew" value="${code}"> AUTO-RENEW</label>
+      </article>`).join('');
+    const flags = ['3-Way Calling','Voice Mail','WiFi Calling','Whitelist Data','Block Tethering','Visual Voicemail','Video Compression','Call Forwarding'];
+    const flagChecks = flags.map((flag, i) => `<label class="uscfg-check"><input type="checkbox" name="featureFlag" value="${esc(flag)}" checked> ${esc(flag)}</label>`).join('');
+    const throttleTier = (tier, defaultValue) => `<article class="uscfg-tier"><h4>Data Controls Tier ${tier}</h4>
+      <div class="uscfg-field"><label for="throttle-${tier}">Throttle ${tier}</label><select id="throttle-${tier}" name="throttle${tier}"><option ${defaultValue === 'No' ? 'selected' : ''}>No</option><option>Yes</option></select></div>
+      <div class="uscfg-field"><label for="speed-${tier}">Throttle Speed</label><select id="speed-${tier}" name="throttleSpeed${tier}"><option value="">Select speed</option><option>64 kbps</option><option>128 kbps</option><option>256 kbps</option><option>512 kbps</option><option>1 Mbps</option><option>5 Mbps</option></select></div>
+      <div class="uscfg-field"><label for="threshold-${tier}">Throttle Threshold (MB)</label><input id="threshold-${tier}" type="number" min="0" name="throttleThreshold${tier}" placeholder="Megabytes (MBs)"></div>
+      </article>`;
+    modal = document.createElement('div');
+    modal.id = 'us-mvno-config'; modal.className = 'uscfg-open'; modal.hidden = true;
+    modal.innerHTML = `<div class="uscfg-backdrop" data-act="uscfg-close"></div>
+      <section class="uscfg-dialog" role="dialog" aria-modal="true" aria-labelledby="uscfg-title">
+        <header class="uscfg-head"><h2 id="uscfg-title">Configure Custom System Rate Plan Parameters</h2><button type="button" class="uscfg-close" data-act="uscfg-close" aria-label="Close">×</button></header>
+        <form id="us-mvno-config-form"><div class="uscfg-scroll">
+          <div class="uscfg-grid">
+            <div class="uscfg-field"><label for="billing-plan">Billing Rate Plan Selection</label><select id="billing-plan" name="billingPlan"><option value="PREPAID_10000">PREPAID 10,000 (Default: $24.50)</option><option value="PREPAID_30000">PREPAID 30,000</option><option value="POOLED_10000">POOLED 10,000</option><option value="CUSTOM">Custom plan</option></select></div>
+            <div class="uscfg-field"><label for="retail-price">Retail Price ($)</label><input id="retail-price" type="number" min="0" step="0.01" name="retailPrice" value="19.00" required></div>
+            <div class="uscfg-field"><label for="product-type">Product Type</label><select id="product-type" name="productType"><option>Master Plan</option><option>Add-on</option><option>Service Plan</option></select></div>
+            <div class="uscfg-field"><label for="voice-cap">Voice (mins cap)</label><input id="voice-cap" type="number" min="0" name="voiceCap" value="30000"></div>
+            <div class="uscfg-field"><label for="sms-cap">SMS/MMS (cap)</label><input id="sms-cap" type="number" min="0" name="smsCap" value="30000"></div>
+            <div class="uscfg-field"><label for="data-cap">Data in MB cap</label><input id="data-cap" type="number" min="0" name="dataCap" value="30000"></div>
+          </div>
+          <hr class="uscfg-separator">
+          <div class="uscfg-grid" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+            <div class="uscfg-field"><label for="activation-rule">Activation Rule</label><select id="activation-rule" name="activationRule"><option>Active Status</option><option>First Usage</option><option>Manual Activation</option></select></div>
+            <div class="uscfg-field"><label for="auto-repurchase">Auto-Repurchase</label><select id="auto-repurchase" name="autoRepurchase"><option>Yes</option><option>No</option></select></div>
+            <div class="uscfg-field"><label for="expiration-type">Expiration Type</label><select id="expiration-type" name="expirationType"><option>Calendar</option><option>Rolling</option></select></div>
+            <div class="uscfg-field"><label for="expiration-value">Expiration Days/Months</label><input id="expiration-value" type="number" min="1" name="expirationValue" value="30"></div>
+          </div>
+          <hr class="uscfg-separator">
+          <div class="uscfg-panel-head"><span class="uscfg-eyebrow">ADVANCED CARRIER CONFIGURATION</span><span class="uscfg-db">DATABASE DRIVEN</span><h3>International, Roaming &amp; Global Data SLOs</h3></div>
+          <div class="uscfg-slos">${sloCards}</div>
+          <hr class="uscfg-separator">
+          <h3 class="uscfg-section-title">Feature Mapping Flags</h3><div class="uscfg-flags">${flagChecks}</div>
+          <hr class="uscfg-separator">
+          <h3 class="uscfg-section-title">Data Controls: Main Data Throttle Cascades</h3>
+          <div class="uscfg-throttle">${throttleTier(1,'No')}${throttleTier(2,'No')}${throttleTier(3,'No')}</div>
+          <hr class="uscfg-separator">
+          <div class="uscfg-field" style="max-width:520px"><label for="tethering-option">Tethering Hot Spot Option</label><select id="tethering-option" name="tetheringOption"><option>No Tethering</option><option>Included</option><option>Limited Hotspot</option></select></div>
+          <div class="uscfg-result" id="uscfg-result" role="status"></div>
+        </div>
+        <footer class="uscfg-footer"><button type="button" class="btn" data-act="uscfg-close">Cancel</button><button type="submit" class="btn btn-primary">Submit Network Request</button></footer></form>
+      </section>`;
+    document.body.appendChild(modal);
+  }
+  modal.hidden = false;
+  document.body.classList.add('uscfg-active');
+  modal.querySelector('#billing-plan').focus();
+}
+
+function closeUsMvnoConfig() {
+  const modal = document.getElementById('us-mvno-config');
+  if (modal) modal.hidden = true;
+  document.body.classList.remove('uscfg-active');
+}
+
+document.addEventListener('submit', event => {
+  if (event.target.id !== 'us-mvno-config-form') return;
+  event.preventDefault();
+  const form = event.target;
+  if (!form.reportValidity()) return;
+  const payload = Object.fromEntries(new FormData(form).entries());
+  payload.featureFlags = [...form.querySelectorAll('[name="featureFlag"]:checked')].map(input => input.value);
+  payload.slos = [...form.querySelectorAll('[data-slo-code]')].map(card => ({
+    code: card.dataset.sloCode,
+    limit: card.querySelector('[name="sloLimit"]').value,
+    autoRenew: card.querySelector('[name="sloAutoRenew"]').checked
+  }));
+  const result = document.getElementById('uscfg-result');
+  result.classList.add('show');
+  result.innerHTML = '<strong>Network request form is ready.</strong><p>This preview does not send a request until a provisioning API is connected.</p><details><summary>View request fields</summary><pre>' + esc(JSON.stringify(payload, null, 2)) + '</pre></details>';
+  result.scrollIntoView({behavior:'smooth', block:'nearest'});
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeUsMvnoConfig();
+});
+
 /* ---------- events ---------- */
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el) return;
@@ -2476,7 +2546,7 @@ document.addEventListener('click', e => {
     case 'toggle-pw': { const i = document.getElementById(el.dataset.for); const show = i.type === 'password'; i.type = show ? 'text' : 'password'; el.textContent = show ? 'Hide' : 'Show'; break; }
     case 'copy-secret': { const t = S.pending.secret; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Key copied')).catch(() => { const r = document.createRange(); r.selectNodeContents($('#secret')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Key selected. Press copy.'); }); break; }
     case 'home': S.cartOpen = false; S.step = 1; if (S.view === 'checkout' && S.order) S.order = null; go('home'); renderCart(); break;
-    case 'open': S.service = id; if (id === 'usmvno') S.mvnoMode = 'default'; S.dest = 'US'; S.eq = ''; S.pgsvc = id === 'pg' ? 'crypto' : null; go('service'); break;
+    case 'open': S.service = id; S.dest = 'US'; S.eq = ''; S.pgsvc = id === 'pg' ? 'crypto' : null; go('service'); break;
     case 'dest': S.service = 'esim'; S.dest = id; S.filter = 'all'; S.ptype = defPtype(); go('country'); break;
     case 'chat-toggle': chatToggle(); break;
     case 'chat-q': chatSend(el.dataset.q); break;
@@ -2489,13 +2559,8 @@ document.addEventListener('click', e => {
     case 'filter': S.filter = id; renderPlans(); break;
     case 'add': cartAdd(id); break;
     case 'facts': S.fx = S.fx || {}; S.fx[id] = !S.fx[id]; renderPlans(); break;
-    case 'bldstep': { S.bld = S.bld || { min: '500', gb: 5, term: '30', sim: 'esim', number: 'new', addons: [], step: 1 }; S.bld.step = Math.max(1, Math.min(5, Number(S.bld.step || 1) + Number(id))); saveBldDraft(); if (S.bld.step === 5) saveCreatedBundle(buildPlan()); renderPlans(); break; }
-    case 'bldadd': { const plan = REG[id]; if (plan) saveCreatedBundle(plan); cartAdd(id); break; }
-    case 'bldrestore': { const item = store.get('lp_us_bundle_saved', []).find(x => x.id === id); if (item) { S.bld = { ...item.config, step: 1 }; S.mvnoMode = 'custom'; saveBldDraft(); renderPlans(); requestAnimationFrame(() => document.querySelector('.mvno-custom')?.scrollIntoView({ behavior: 'smooth', block: 'start' })); } break; }
-    case 'bldaddsaved': { const item = store.get('lp_us_bundle_saved', []).find(x => x.id === id); if (item) { S.bld = { ...item.config, step: 5 }; saveBldDraft(); const plan = buildPlan(); cartAdd(plan.id); } break; }
-    case 'bld': { const [k, v] = id.split(':'); S.bld = S.bld || { min: '500', gb: 5, term: '30', sim: 'esim', number: 'new', addons: [] }; S.bld[k] = k === 'gb' && v !== 'unl' ? +v : v; saveBldDraft(); renderPlans(); break; }
-    case 'bldopt': { S.bld = S.bld || { min: '500', gb: 5, term: '30', sim: 'esim', number: 'new', addons: [] }; S.bld.addons = S.bld.addons || []; S.bld.addons = S.bld.addons.includes(id) ? S.bld.addons.filter(x => x !== id) : [...S.bld.addons, id]; saveBldDraft(); renderPlans(); break; }
-    case 'mvnomode': S.mvnoMode = id === 'custom' ? 'custom' : 'default'; renderPlans(); if (id === 'custom') requestAnimationFrame(() => document.querySelector('#plans .mvno-custom')?.scrollIntoView({ behavior: 'smooth', block: 'start' })); break;
+    case 'uscfg-open': openUsMvnoConfig(); break;
+    case 'uscfg-close': closeUsMvnoConfig(); break;
     
     case 'inc': cartSet(id, 1); break;
     case 'dec': cartSet(id, -1); break;
@@ -2523,8 +2588,7 @@ document.addEventListener('click', e => {
     case 'logout': document.getElementById('login-offer')?.remove(); S.user = null; S.pending = null; S.cartOpen = false; S.authTab = 'in'; S.order = null; S.step = 1; go('auth'); renderCart(); break;
   }
 });
-document.addEventListener('input', e => { const r = e.target.closest('[data-bld-days]'); if (!r) return; S.bld = S.bld || { min: '100', gb: 0, days: 30, addons: [] }; S.bld.days = +r.value; const n = document.getElementById('builder-days-value'), o = document.querySelector('.builder-days-output'); if (n) n.textContent = r.value; if (o) o.textContent = r.value + ' / 30 days'; });
-document.addEventListener('change', e => { const r = e.target.closest('[data-bld-days]'); if (r) { S.bld = S.bld || { min: '100', gb: 0, days: 30, addons: [] }; S.bld.days = +r.value; renderPlans(); return; } const sa = e.target.closest('[data-selall]'); if (sa) { document.querySelectorAll('[data-pick="' + sa.dataset.selall + '"]').forEach(c => c.checked = sa.checked); return; } const ot = e.target.closest('[data-sel="otype"]'); if (ot) { S.otype = ot.value; renderMain(); return; } const el = e.target.closest('[data-sel="kind"]'); if (!el) return; S.kind = el.value; S.etab = 'local'; S.eq = ''; if (S.view === 'country' && S.kind === 'sim' && !SIM_CODES.includes(S.dest)) S.dest = 'US'; renderMain(); });
+document.addEventListener('change', e => { const sa = e.target.closest('[data-selall]'); if (sa) { document.querySelectorAll('[data-pick="' + sa.dataset.selall + '"]').forEach(c => c.checked = sa.checked); return; } const ot = e.target.closest('[data-sel="otype"]'); if (ot) { S.otype = ot.value; renderMain(); return; } const el = e.target.closest('[data-sel="kind"]'); if (!el) return; S.kind = el.value; S.etab = 'local'; S.eq = ''; if (S.view === 'country' && S.kind === 'sim' && !SIM_CODES.includes(S.dest)) S.dest = 'US'; renderMain(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (S.cartOpen) { S.cartOpen = false; renderCart(); } else if (CHAT.open) chatToggle(false); } });
 
 /* ---------- blue-marble globe (drawn once with noise, no image files) ---------- */

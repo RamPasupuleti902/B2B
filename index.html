@@ -2704,6 +2704,8 @@ window.addEventListener('DOMContentLoaded', () => {
  fab.addEventListener('click',e=>{if(moved){e.stopImmediatePropagation();e.preventDefault();moved=false;}},true);
 });
 </script>
+
+
 <style id="requested-updates-style">
   .did-flow .back { color: #a4a9b1; margin: 0 0 8px; }
   .did-flow .back:hover { color: #fff; }
@@ -2734,6 +2736,254 @@ window.addEventListener('DOMContentLoaded', () => {
   .pc-l { font-size: 13px !important; }
   .pc-body { padding: 12px !important; gap: 8px !important; }
   .pc-price b { font-size: 24px !important; }
+
+  /* Mode switcher for Ready-made vs Create Plan */
+  .cp-tabs {
+    display: inline-flex;
+    gap: 6px;
+    padding: 5px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    margin: 0 0 18px;
+    flex-wrap: wrap;
+  }
+  .cp-tab {
+    border: 0;
+    background: transparent;
+    color: var(--ink-2);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    transition: background .15s, color .15s;
+  }
+  .cp-tab:hover { color: var(--ink); }
+  .cp-tab[aria-selected="true"] {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .cp-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 1px dashed var(--accent);
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+  .cp-banner p { color: var(--ink-2); font-size: 13px; margin-top: 3px; }
+
+  /* Create Plan Builder Layout */
+  .cpb-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, .85fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .cpb-main { display: grid; gap: 16px; min-width: 0; }
+  .cpb-sec {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .cpb-sec-h {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .cpb-sec-h h3 { font-size: 17px; display: flex; align-items: center; gap: 9px; }
+  .cpb-step {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-ink);
+    display: inline-grid;
+    place-items: center;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .cpb-sec-h small { color: var(--ink-2); font-size: 12.5px; }
+
+  /* Ad tier toggle & multi-select option grid */
+  .cpb-seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cpb-seg-btn {
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--line);
+    background: var(--surface-2);
+    color: var(--ink);
+    text-align: left;
+    display: grid;
+    gap: 2px;
+  }
+  .cpb-seg-btn small { color: var(--ink-2); font-size: 12px; }
+  .cpb-seg-btn.on {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .cpb-seg-btn.on b { color: var(--accent); }
+
+  .cpb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 9px;
+  }
+  .cpb-opt {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 12px;
+    border-radius: 13px;
+    border: 1.5px solid var(--line);
+    background: var(--surface-2);
+    color: var(--ink);
+    text-align: left;
+    transition: border-color .12s, background .12s;
+  }
+  .cpb-opt:hover { border-color: var(--accent); }
+  .cpb-opt.on {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .cpb-chk {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--accent-ink);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+  .cpb-opt.on .cpb-chk {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .cpb-opt-txt { display: grid; gap: 3px; min-width: 0; }
+  .cpb-opt-txt b { font-size: 13.5px; line-height: 1.25; }
+  .cpb-opt-txt small { color: var(--ink-2); font-size: 11.5px; line-height: 1.35; }
+  .cpb-opt-txt em { font-style: normal; font-family: var(--f-mono); font-size: 12px; font-weight: 700; color: var(--accent); margin-top: 2px; }
+
+  /* Days / Device / Employee Count Controls */
+  .cpb-presets { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+  .cpb-pre {
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .cpb-pre.on {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .cpb-num-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cpb-num-row label { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+  .cpb-num-box {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+  .cpb-num-box button {
+    width: 38px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .cpb-num-box input {
+    width: 78px;
+    height: 40px;
+    border: 0;
+    background: transparent;
+    text-align: center;
+    font-family: var(--f-mono);
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+  }
+
+  /* Summary Box */
+  .cpb-summary {
+    position: sticky;
+    top: 16px;
+    background: var(--surface);
+    border: 1.5px solid var(--accent);
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 12px;
+  }
+  .cpb-summary h3 { font-size: 20px; }
+  .cpb-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cpb-tags span {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .cpb-rows { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 10px; font-size: 13px; }
+  .cpb-rows > div { display: flex; justify-content: space-between; gap: 10px; }
+  .cpb-rows span { color: var(--ink-2); }
+  .cpb-total {
+    border-top: 1px dashed var(--line);
+    padding-top: 12px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .cpb-total b { font-family: var(--f-mono); font-size: 28px; color: var(--accent); }
+  .cpb-total small { color: var(--ink-2); font-size: 12.5px; }
+  .cpb-warn { color: var(--danger); font-size: 13px; font-weight: 700; }
+
+  @media (max-width: 860px) {
+    .cpb-wrap { grid-template-columns: 1fr; }
+    .cpb-summary { position: static; }
+  }
+  @media (max-width: 520px) {
+    .plans, .plans.four, .plans.pcs { grid-template-columns: 1fr !important; }
+    .cpb-seg { grid-template-columns: 1fr; }
+    .pdm-box { max-height: 92dvh; border-radius: 16px; }
+  }
 
   /* Plan Details Modal Popup */
   .pdm-overlay {
@@ -2824,10 +3074,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   .pdm-price { font-family: var(--f-mono); font-size: 22px; font-weight: 700; }
   .pdm-price small { display: block; font-family: var(--f-body); font-size: 12px; font-weight: 400; color: var(--ink-2); }
-  @media (max-width: 520px) {
-    .plans, .plans.four, .plans.pcs { grid-template-columns: 1fr !important; }
-    .pdm-box { max-height: 92dvh; border-radius: 16px; }
-  }
 </style>
 
 <script id="requested-updates-script">
@@ -2937,11 +3183,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sub: 'Netflix, Hulu, Disney+, Max',
       price: 14.99,
       per: 'per month',
-      feats: [
-        'With Ads on all 4 OTTs',
-        'Netflix, Hulu, Disney+, Max',
-        '1080p HD · 2 devices'
-      ],
+      feats: ['With Ads on all 4 OTTs', 'Netflix, Hulu, Disney+, Max', '1080p HD · 2 devices'],
       info: [
         ['Plan tier', 'With Ads (ad-supported OTT bundle)'],
         ['OTTs included', 'Netflix Standard with ads, Hulu (With Ads), Disney+ Basic (With Ads), Max (With Ads)'],
@@ -2958,11 +3200,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sub: 'Netflix, Prime, Hulu, Disney+, Max, Peacock',
       price: 21.99,
       per: 'per month',
-      feats: [
-        'With Ads on all 6 OTTs',
-        'Adds Amazon Prime Video & Peacock',
-        '1080p HD · 3 devices + sports'
-      ],
+      feats: ['With Ads on all 6 OTTs', 'Adds Amazon Prime Video & Peacock', '1080p HD · 3 devices + sports'],
       info: [
         ['Plan tier', 'With Ads (ad-supported OTT bundle)'],
         ['OTTs included', 'Netflix, Amazon Prime Video, Hulu, Disney+, Max, Peacock (all ad-supported tiers)'],
@@ -2981,11 +3219,7 @@ window.addEventListener('DOMContentLoaded', () => {
       per: 'per month',
       pop: true,
       badge: 'Ad-Free · Popular',
-      feats: [
-        '100% Ad-Free (Without Ads)',
-        'Netflix, Prime, Disney+, Max, Apple TV+',
-        '4K UHD + offline downloads · 4 devices'
-      ],
+      feats: ['100% Ad-Free (Without Ads)', 'Netflix, Prime, Disney+, Max, Apple TV+', '4K UHD + offline downloads · 4 devices'],
       info: [
         ['Plan tier', 'Without Ads (100% Ad-Free OTT bundle)'],
         ['OTTs included', 'Netflix Standard (No Ads), Amazon Prime Video (Ad-Free), Disney+ Premium, Max Ad-Free, Apple TV+'],
@@ -3003,11 +3237,7 @@ window.addEventListener('DOMContentLoaded', () => {
       price: 49.99,
       per: 'per month',
       badge: 'All 7 · No Ads',
-      feats: [
-        'Zero ads across all 7 OTTs',
-        'Includes Hulu No Ads & Paramount+',
-        '4K Dolby Vision · 5 devices'
-      ],
+      feats: ['Zero ads across all 7 OTTs', 'Includes Hulu No Ads & Paramount+', '4K Dolby Vision · 5 devices'],
       info: [
         ['Plan tier', 'Without Ads (All-Access Ad-Free OTT bundle)'],
         ['OTTs included', 'Netflix Premium 4K, Amazon Prime Video (Ad-Free), Disney+ Premium, Hulu (No Ads), Max Ultimate, Apple TV+, Paramount+ with Showtime'],
@@ -3028,11 +3258,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sub: 'Per device · monthly',
       price: 3.5,
       per: 'per device / month',
-      feats: [
-        'Chrome Safe Browsing locked ON',
-        'Block stores — new apps won\'t install',
-        'App deny list & remote wipe'
-      ],
+      feats: ['Chrome Safe Browsing locked ON', 'Block stores — new apps won\'t install', 'App deny list & remote wipe'],
       info: [
         ['Chrome Safe Browsing', 'Locked to Enhanced Safe Browsing (user cannot disable); incognito & risky extensions blocked'],
         ['New app installations', 'Play Store & App Store disabled — new apps will not install'],
@@ -3050,11 +3276,7 @@ window.addEventListener('DOMContentLoaded', () => {
       per: 'per device / month',
       pop: true,
       badge: 'Popular',
-      feats: [
-        'Google Maps restriction enforced',
-        'Chrome Safe Browsing + block browsers',
-        'App deny list & zero new installs'
-      ],
+      feats: ['Google Maps restriction enforced', 'Chrome Safe Browsing + block browsers', 'App deny list & zero new installs'],
       info: [
         ['Google Maps restriction', 'Restrict Maps to approved work routes; disable timeline, location sharing & offline map tampering'],
         ['Chrome Safe Browsing', 'Mandatory Safe Browsing enforced; third-party browsers denied'],
@@ -3071,11 +3293,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sub: 'Per device · monthly',
       price: 9.5,
       per: 'per device / month',
-      feats: [
-        'Single / multi-app Kiosk lock',
-        'Permanent no-install OS policy',
-        'Chrome, Maps & YouTube restrictions'
-      ],
+      feats: ['Single / multi-app Kiosk lock', 'Permanent no-install OS policy', 'Chrome, Maps & YouTube restrictions'],
       info: [
         ['Kiosk mode', 'Lock device strictly to approved company apps'],
         ['Web & Maps lock', 'Chrome Safe Browsing + Google Maps & YouTube restrictions enforced'],
@@ -3092,11 +3310,7 @@ window.addEventListener('DOMContentLoaded', () => {
       price: 125,
       per: 'per month',
       badge: 'Save 16%',
-      feats: [
-        '25 managed phones or tablets',
-        'Chrome Safe Browsing + Maps lock',
-        'App deny list & no new installs'
-      ],
+      feats: ['25 managed phones or tablets', 'Chrome Safe Browsing + Maps lock', 'App deny list & no new installs'],
       info: [
         ['Devices included', '25 managed Android, iOS or ChromeOS devices'],
         ['Included restrictions', 'Chrome Safe Browsing, Google Maps restriction, App denylist & Block new app installs'],
@@ -3105,7 +3319,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   ]);
 
-  /* 5. Real Employee Safety Platform plans: USA danger zones, family notify in settings, > 2 hours SOS call with location */
+  /* 5. Real Employee Safety Platform plans */
   STATIC.safety = reg([
     {
       id: 'safe:geo-family',
@@ -3115,11 +3329,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sub: 'Minimum 5 employees · monthly',
       price: 5,
       per: 'per user / month',
-      feats: [
-        'USA & global danger-zone alerts',
-        'Notify family option in settings',
-        '1-tap SOS with live GPS location'
-      ],
+      feats: ['USA & global danger-zone alerts', 'Notify family option in settings', '1-tap SOS with live GPS location'],
       info: [
         ['Danger zone alerts', 'Automatic warning when entering flagged high-risk or restricted US and global areas'],
         ['Family notification setting', 'Employees can enable "Notify Family" in app settings with emergency family contacts'],
@@ -3137,11 +3347,7 @@ window.addEventListener('DOMContentLoaded', () => {
       per: 'per user / month',
       pop: true,
       badge: 'Popular',
-      feats: [
-        'Auto SOS call + GPS if stay > 2 hrs',
-        'USA danger-zone geofencing',
-        'Auto-notify family from settings'
-      ],
+      feats: ['Auto SOS call + GPS if stay > 2 hrs', 'USA danger-zone geofencing', 'Auto-notify family from settings'],
       info: [
         ['2-hour overstay SOS rule', 'If an employee stays longer than 2 hours in a flagged danger place, the app places an automatic SOS call with live GPS location'],
         ['Custom dwell timers', 'Configurable 30 min, 1 hr, or 2+ hour stay thresholds per zone'],
@@ -3157,11 +3363,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sub: '24/7 SOC + 2-hr Auto SOS Call',
       price: 21,
       per: 'per user / month',
-      feats: [
-        '24/7 team answers > 2 hr SOS calls',
-        'Direct 911 dispatch with GPS pin',
-        'Simultaneous family call & link'
-      ],
+      feats: ['24/7 team answers > 2 hr SOS calls', 'Direct 911 dispatch with GPS pin', 'Simultaneous family call & link'],
       info: [
         ['24/7 monitoring centre', 'Live operators verify manual SOS & 2-hour danger-zone overstay SOS calls'],
         ['Emergency dispatch', 'Operators contact US 911 / local responders with exact GPS coordinates'],
@@ -3177,11 +3379,7 @@ window.addEventListener('DOMContentLoaded', () => {
       sub: 'US high-risk area protection',
       price: 14,
       per: 'per traveller / month',
-      feats: [
-        'USA city & county danger-zone map',
-        '2-hr stay auto SOS call + location',
-        'Family notify setting + 24/7 hotline'
-      ],
+      feats: ['USA city & county danger-zone map', '2-hr stay auto SOS call + location', 'Family notify setting + 24/7 hotline'],
       info: [
         ['USA danger-zone coverage', 'Real-time alerts when entering flagged high-crime or severe-weather areas'],
         ['2-hour stay trigger', 'Automatic SOS call with live GPS location if employee stays > 2 hours'],
@@ -3193,13 +3391,289 @@ window.addEventListener('DOMContentLoaded', () => {
 
   /* Update service card descriptions on Home dashboard */
   const descMap = {
-    iptv: 'OTT streaming platform bundles with ads or without ads (ad-free). View exact OTT apps included in every plan.',
-    mdm: 'Restrict company devices: enforce Chrome Safe Browsing, restrict Google Maps, deny restricted apps and block new app installations.',
-    safety: 'Protect staff in high-risk USA & global places with family notification settings and automatic SOS calls with location if they stay over 2 hours.'
+    iptv: 'OTT streaming bundles with ads or ad-free, or create your own custom OTT + days plan.',
+    mdm: 'Restrict devices (Chrome Safe Browsing, Google Maps, app deny & no new installs) or build a plan by features & device count.',
+    safety: 'USA danger-zone alerts, family notify settings & 2-hr auto SOS calls — choose a plan or build by features & employee count.'
   };
   SERVICES.forEach(sv => { if (descMap[sv.id]) sv.desc = descMap[sv.id]; });
 
-  /* 6. Shared Plan Details Modal Popup for ALL plans */
+  /* 6. Create Plan Builder State & Catalogues for IPTV, MDM, Safety */
+  const CP_OTTS = [
+    { id: 'netflix', name: 'Netflix', ads: 5.5, noads: 9.5, note: 'Movies, series & originals' },
+    { id: 'prime', name: 'Amazon Prime Video', ads: 3.5, noads: 5.5, note: 'Originals, movies & sports' },
+    { id: 'disney', name: 'Disney+', ads: 4.0, noads: 7.0, note: 'Disney, Pixar, Marvel & Star Wars' },
+    { id: 'hulu', name: 'Hulu', ads: 4.0, noads: 7.5, note: 'TV shows, FX & next-day airings' },
+    { id: 'max', name: 'Max', ads: 4.5, noads: 7.5, note: 'HBO, Warner Bros. & DC' },
+    { id: 'peacock', name: 'Peacock', ads: 3.0, noads: 5.0, note: 'Live sports, NBC & movies' },
+    { id: 'apple', name: 'Apple TV+', ads: 4.5, noads: 4.5, note: 'Apple Originals (always ad-free)' },
+    { id: 'paramount', name: 'Paramount+ w/ Showtime', ads: 3.5, noads: 6.0, note: 'Showtime, CBS & Champions League' }
+  ];
+
+  const CP_MDM_FEATS = [
+    { id: 'safe_browsing', name: 'Chrome Safe Browsing (Locked ON)', desc: 'Enforce Safe Browsing; block incognito & extensions', rate: 1.25 },
+    { id: 'no_install', name: 'Block New App Installations', desc: 'Disable Play Store / App Store & block unknown APKs', rate: 1.50 },
+    { id: 'maps_lock', name: 'Google Maps Restriction', desc: 'Approved work routes only; disable timeline & location sharing', rate: 1.50 },
+    { id: 'app_deny', name: 'App Denylist Control', desc: 'Block TikTok, social media, games or custom package IDs', rate: 1.25 },
+    { id: 'kiosk', name: 'Kiosk Mode Lock', desc: 'Lock device strictly to single or multi-app work mode', rate: 2.00 },
+    { id: 'wipe_reset', name: 'Remote Wipe & Reset Block', desc: 'Remote lock/wipe and disable factory reset & USB transfer', rate: 1.00 },
+    { id: 'zerotouch', name: 'Zero-Touch & Audit Logs', desc: 'QR enrolment, geofencing, SSO & SOC 2 compliance logs', rate: 1.50 }
+  ];
+
+  const CP_SAFE_FEATS = [
+    { id: 'danger_zone', name: 'USA & Global Danger-Zone Alerts', desc: 'Real-time boundary alerts when entering high-risk places', rate: 2.00 },
+    { id: 'notify_family', name: 'Notify Family Option in Settings', desc: 'Employees add family contacts in settings for SMS/call alerts', rate: 1.50 },
+    { id: 'sos_2hr', name: 'Auto SOS Call + GPS (Stay > 2 Hrs)', desc: 'Places automated SOS call with live GPS if stay exceeds 2 hours', rate: 3.50 },
+    { id: 'mandown', name: 'Man-Down & Check-In Escalation', desc: 'Detects no movement & escalates missed check-ins to managers', rate: 2.00 },
+    { id: 'soc_911', name: '24/7 Live SOC & 911 Dispatch', desc: 'Live operators verify SOS calls & dispatch emergency services', rate: 8.00 },
+    { id: 'travel_risk', name: 'US Travel Risk Briefings & Hotline', desc: 'City/county hazard briefings & 24/7 security/medical hotline', rate: 2.50 }
+  ];
+
+  S.cview = S.cview || { iptv: 'plans', mdm: 'plans', safety: 'plans' };
+  S.cp = S.cp || {
+    iptv: { ad: 'noads', otts: ['netflix', 'disney'], days: 30 },
+    mdm: { feats: ['safe_browsing', 'no_install', 'maps_lock'], count: 10 },
+    safety: { feats: ['danger_zone', 'notify_family', 'sos_2hr'], count: 10 }
+  };
+
+  function buildCustomPlan(sid) {
+    if (sid === 'iptv') {
+      const cfg = S.cp.iptv;
+      const picked = CP_OTTS.filter(o => cfg.otts.includes(o.id));
+      const days = Math.max(1, Math.min(365, Math.round(Number(cfg.days) || 30)));
+      const adLabel = cfg.ad === 'ads' ? 'With Ads' : 'Without Ads (Ad-Free)';
+      const monthlyBase = picked.reduce((sum, o) => sum + (cfg.ad === 'ads' ? o.ads : o.noads), 0);
+      const bundlePct = picked.length >= 5 ? 0.15 : picked.length >= 3 ? 0.10 : 0;
+      const monthlyAfterBundle = monthlyBase * (1 - bundlePct);
+      const rawTotal = monthlyAfterBundle * (days / 30);
+      const price = picked.length ? Math.max(1.99, Math.round(rawTotal * 100) / 100) : 0;
+      const names = picked.map(o => o.name);
+      const id = `iptv:custom:${cfg.ad}:${days}:${picked.map(o => o.id).join(',')}`;
+      const plan = {
+        id,
+        svc: 'iptv',
+        label: `Custom OTT · ${adLabel}`,
+        title: `Custom IPTV (${picked.length} OTTs · ${adLabel} · ${dayWord(days)})`,
+        big: `${picked.length} OTT${picked.length === 1 ? '' : 's'} · ${dayWord(days)}`,
+        sub: `${adLabel} · ${names.join(', ')}`,
+        price,
+        per: `for ${dayWord(days)}`,
+        days,
+        feats: [
+          `OTTs: ${names.join(', ') || 'None'}`,
+          `Tier: ${adLabel}`,
+          `Duration: ${dayWord(days)} (price scaled by days)`
+        ],
+        info: [
+          ['Plan type', 'Custom OTT Multi-Selection'],
+          ['Ad tier', adLabel],
+          ['Selected OTTs (' + picked.length + ')', names.join(', ') || 'None'],
+          ['Duration', dayWord(days)],
+          ['Bundle discount', bundlePct ? `${Math.round(bundlePct * 100)}% multi-OTT discount applied` : 'Select 3+ OTTs for 10% off, 5+ for 15% off'],
+          ['30-day equivalent', `${fmt(monthlyAfterBundle)} / 30 days`]
+        ]
+      };
+      return { valid: picked.length > 0, err: 'Select at least 1 OTT platform.', plan, monthlyBase, bundlePct, days };
+    }
+
+    if (sid === 'mdm') {
+      const cfg = S.cp.mdm;
+      const picked = CP_MDM_FEATS.filter(f => cfg.feats.includes(f.id));
+      const count = Math.max(1, Math.min(10000, Math.round(Number(cfg.count) || 1)));
+      const perUnit = picked.reduce((sum, f) => sum + f.rate, 0);
+      const volPct = count >= 100 ? 0.15 : count >= 25 ? 0.10 : 0;
+      const discountedUnit = perUnit * (1 - volPct);
+      const price = picked.length ? Math.round(discountedUnit * count * 100) / 100 : 0;
+      const names = picked.map(f => f.name);
+      const id = `mdm:custom:${count}:${picked.map(f => f.id).join(',')}`;
+      const plan = {
+        id,
+        svc: 'mdm',
+        label: 'Custom MDM Plan',
+        title: `Custom MDM (${count} device${count === 1 ? '' : 's'} · ${picked.length} features)`,
+        big: `${count} device${count === 1 ? '' : 's'}`,
+        sub: `${picked.length} restriction policies · ${fmt(discountedUnit)}/device/mo`,
+        price,
+        per: 'per month',
+        feats: names.slice(0, 4),
+        info: [
+          ['Plan type', 'Custom MDM by Features & Device Count'],
+          ['Device count', `${count} managed device${count === 1 ? '' : 's'}`],
+          ['Rate per device', `${fmt(discountedUnit)} / device / month`],
+          ['Volume discount', volPct ? `${Math.round(volPct * 100)}% fleet discount applied` : '25+ devices get 10% off, 100+ get 15% off'],
+          ...picked.map(f => [f.name, `${f.desc} (${fmt(f.rate)}/device)`])
+        ]
+      };
+      return { valid: picked.length > 0, err: 'Select at least 1 MDM restriction feature.', plan, perUnit, discountedUnit, volPct, count };
+    }
+
+    if (sid === 'safety') {
+      const cfg = S.cp.safety;
+      const picked = CP_SAFE_FEATS.filter(f => cfg.feats.includes(f.id));
+      const count = Math.max(1, Math.min(10000, Math.round(Number(cfg.count) || 1)));
+      const perUnit = picked.reduce((sum, f) => sum + f.rate, 0);
+      const volPct = count >= 100 ? 0.15 : count >= 25 ? 0.10 : 0;
+      const discountedUnit = perUnit * (1 - volPct);
+      const price = picked.length ? Math.round(discountedUnit * count * 100) / 100 : 0;
+      const names = picked.map(f => f.name);
+      const id = `safe:custom:${count}:${picked.map(f => f.id).join(',')}`;
+      const plan = {
+        id,
+        svc: 'safety',
+        label: 'Custom Safety Plan',
+        title: `Custom Employee Safety (${count} employee${count === 1 ? '' : 's'} · ${picked.length} features)`,
+        big: `${count} employee${count === 1 ? '' : 's'}`,
+        sub: `${picked.length} safety protections · ${fmt(discountedUnit)}/employee/mo`,
+        price,
+        per: 'per month',
+        feats: names.slice(0, 4),
+        info: [
+          ['Plan type', 'Custom Employee Safety by Features & Team Size'],
+          ['Employee count', `${count} employee${count === 1 ? '' : 's'}`],
+          ['Rate per employee', `${fmt(discountedUnit)} / employee / month`],
+          ['Volume discount', volPct ? `${Math.round(volPct * 100)}% team discount applied` : '25+ employees get 10% off, 100+ get 15% off'],
+          ...picked.map(f => [f.name, `${f.desc} (${fmt(f.rate)}/employee)`])
+        ]
+      };
+      return { valid: picked.length > 0, err: 'Select at least 1 safety feature.', plan, perUnit, discountedUnit, volPct, count };
+    }
+    return null;
+  }
+
+  function renderCpSummaryHtml(sid) {
+    const res = buildCustomPlan(sid);
+    if (!res) return '';
+    const { valid, err, plan } = res;
+    if (valid) REG[plan.id] = plan;
+    const inCart = valid && S.cart[plan.id];
+    let tags = [], rows = '';
+    if (sid === 'iptv') {
+      const cfg = S.cp.iptv;
+      tags = CP_OTTS.filter(o => cfg.otts.includes(o.id)).map(o => o.name);
+      rows = `
+        <div><span>Ad tier</span><b>${cfg.ad === 'ads' ? 'With Ads' : 'Without Ads'}</b></div>
+        <div><span>OTTs selected</span><b>${tags.length}</b></div>
+        <div><span>Duration</span><b>${dayWord(res.days)}</b></div>
+        ${res.bundlePct ? `<div><span>Multi-OTT discount</span><b style="color:var(--ok)">−${Math.round(res.bundlePct * 100)}%</b></div>` : ''}`;
+    } else {
+      const list = sid === 'mdm' ? CP_MDM_FEATS : CP_SAFE_FEATS;
+      const unitWord = sid === 'mdm' ? 'device' : 'employee';
+      tags = list.filter(f => S.cp[sid].feats.includes(f.id)).map(f => f.name);
+      rows = `
+        <div><span>Features selected</span><b>${tags.length}</b></div>
+        <div><span>Per ${unitWord} rate</span><b>${fmt(res.discountedUnit)} / mo</b></div>
+        <div><span>${sid === 'mdm' ? 'Devices' : 'Employees'}</span><b>${res.count}</b></div>
+        ${res.volPct ? `<div><span>Volume discount</span><b style="color:var(--ok)">−${Math.round(res.volPct * 100)}%</b></div>` : ''}`;
+    }
+    return `
+      <h3>Your custom plan</h3>
+      ${tags.length ? `<div class="cpb-tags">${tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : `<p class="cpb-warn">${esc(err)}</p>`}
+      <div class="cpb-rows">${rows}</div>
+      <div class="cpb-total">
+        <span>Total<small style="display:block">${esc(plan.per)}</small></span>
+        <b>${fmt(plan.price)}</b>
+      </div>
+      ${valid ? `<button type="button" class="pdbtn" data-act="cp-modal" data-id="${esc(sid)}">View plan details <span>›</span></button>` : ''}
+      ${!valid
+        ? `<button type="button" class="btn btn-primary btn-block" disabled>Add custom plan to cart</button>`
+        : inCart
+          ? `<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+               <span class="stepper"><button type="button" data-act="dec" data-id="${esc(plan.id)}" aria-label="Remove one">−</button><span>${inCart.qty}</span><button type="button" data-act="inc" data-id="${esc(plan.id)}" aria-label="Add one">+</button></span>
+               <button type="button" class="btn" data-act="cart-open">View cart</button>
+             </div>`
+          : `<button type="button" class="btn btn-primary btn-block" data-act="cp-add" data-id="${esc(sid)}">Add custom plan to cart</button>`}`;
+  }
+
+  function updateCpSummary(sid) {
+    const box = document.getElementById('cpb-summary-' + sid);
+    if (box) box.innerHTML = renderCpSummaryHtml(sid);
+  }
+
+  function renderCustomBuilder(sid) {
+    let sections = '';
+    if (sid === 'iptv') {
+      const cfg = S.cp.iptv;
+      const days = Math.max(1, Math.min(365, Math.round(Number(cfg.days) || 30)));
+      sections = `
+        <section class="cpb-sec">
+          <div class="cpb-sec-h"><h3><span class="cpb-step">1</span> Ad preference</h3><small>Switch anytime</small></div>
+          <div class="cpb-seg">
+            <button type="button" class="cpb-seg-btn ${cfg.ad === 'ads' ? 'on' : ''}" data-act="cp-ad" data-id="ads">
+              <b>With Ads</b><small>Lower rate · ad-supported OTTs</small>
+            </button>
+            <button type="button" class="cpb-seg-btn ${cfg.ad === 'noads' ? 'on' : ''}" data-act="cp-ad" data-id="noads">
+              <b>Without Ads (Ad-Free)</b><small>Zero commercial breaks</small>
+            </button>
+          </div>
+        </section>
+        <section class="cpb-sec">
+          <div class="cpb-sec-h"><h3><span class="cpb-step">2</span> Select OTT platforms</h3><small>Multi-select · 3+ OTTs save 10%, 5+ save 15%</small></div>
+          <div class="cpb-grid">
+            ${CP_OTTS.map(o => {
+              const on = cfg.otts.includes(o.id);
+              const rate = cfg.ad === 'ads' ? o.ads : o.noads;
+              return `<button type="button" class="cpb-opt ${on ? 'on' : ''}" data-act="cp-ott" data-id="${o.id}" aria-pressed="${on}">
+                <span class="cpb-chk">${on ? '✓' : ''}</span>
+                <span class="cpb-opt-txt"><b>${esc(o.name)}</b><small>${esc(o.note)}</small><em>${fmt(rate)} / 30 days</em></span>
+              </button>`;
+            }).join('')}
+          </div>
+        </section>
+        <section class="cpb-sec">
+          <div class="cpb-sec-h"><h3><span class="cpb-step">3</span> Choose duration (days)</h3><small>Price adjusts automatically by days</small></div>
+          <div class="cpb-presets">
+            ${[7, 15, 30, 90, 180, 365].map(d => `<button type="button" class="cpb-pre ${days === d ? 'on' : ''}" data-act="cp-days" data-id="${d}">${d} days</button>`).join('')}
+          </div>
+          <div class="cpb-num-row">
+            <label for="cp-days-in">Custom days (1–365):</label>
+            <div class="cpb-num-box">
+              <button type="button" data-act="cp-step" data-id="iptv:-1" aria-label="Decrease days">−</button>
+              <input id="cp-days-in" type="number" min="1" max="365" value="${days}">
+              <button type="button" data-act="cp-step" data-id="iptv:1" aria-label="Increase days">+</button>
+            </div>
+          </div>
+        </section>`;
+    } else {
+      const isMdm = sid === 'mdm';
+      const list = isMdm ? CP_MDM_FEATS : CP_SAFE_FEATS;
+      const cfg = S.cp[sid];
+      const count = Math.max(1, Math.min(10000, Math.round(Number(cfg.count) || 1)));
+      const unit = isMdm ? 'device' : 'employee';
+      const unitPlural = isMdm ? 'devices' : 'employees';
+      sections = `
+        <section class="cpb-sec">
+          <div class="cpb-sec-h"><h3><span class="cpb-step">1</span> Select ${isMdm ? 'device restriction' : 'employee safety'} features</h3><small>Multi-select · priced per ${unit}/month</small></div>
+          <div class="cpb-grid">
+            ${list.map(f => {
+              const on = cfg.feats.includes(f.id);
+              return `<button type="button" class="cpb-opt ${on ? 'on' : ''}" data-act="cp-feat" data-id="${sid}:${f.id}" aria-pressed="${on}">
+                <span class="cpb-chk">${on ? '✓' : ''}</span>
+                <span class="cpb-opt-txt"><b>${esc(f.name)}</b><small>${esc(f.desc)}</small><em>+${fmt(f.rate)} / ${unit}/mo</em></span>
+              </button>`;
+            }).join('')}
+          </div>
+        </section>
+        <section class="cpb-sec">
+          <div class="cpb-sec-h"><h3><span class="cpb-step">2</span> Number of ${unitPlural}</h3><small>25+ save 10% · 100+ save 15%</small></div>
+          <div class="cpb-presets">
+            ${[5, 10, 25, 50, 100, 250].map(n => `<button type="button" class="cpb-pre ${count === n ? 'on' : ''}" data-act="cp-qty" data-id="${sid}:${n}">${n} ${unitPlural}</button>`).join('')}
+          </div>
+          <div class="cpb-num-row">
+            <label for="cp-qty-in">Exact ${unitPlural} count:</label>
+            <div class="cpb-num-box">
+              <button type="button" data-act="cp-step" data-id="${sid}:-1" aria-label="Decrease count">−</button>
+              <input id="cp-qty-in" data-sid="${sid}" type="number" min="1" max="10000" value="${count}">
+              <button type="button" data-act="cp-step" data-id="${sid}:1" aria-label="Increase count">+</button>
+            </div>
+          </div>
+        </section>`;
+    }
+    return `<div class="cpb-wrap">
+      <div class="cpb-main">${sections}</div>
+      <aside class="cpb-summary" id="cpb-summary-${sid}">${renderCpSummaryHtml(sid)}</aside>
+    </div>`;
+  }
+
+  /* 7. Shared Plan Details Modal Popup for ALL plans */
   function inferSid(id) {
     if (!id) return S.service || '';
     const p = id.split(':')[0];
@@ -3297,14 +3771,13 @@ window.addEventListener('DOMContentLoaded', () => {
     modalPlanId = null;
   }
 
-  /* Keep modal stepper synced whenever cart changes */
   const origAfterCart = afterCart;
   afterCart = function () {
     origAfterCart();
     renderPlanModalBody();
   };
 
-  /* 7. Override planCard & renderPlans so ALL plans are compact and open the modal on "View plan details" */
+  /* 8. Override planCard & renderPlans */
   planCard = function (p, sid) {
     const l = S.cart[p.id], mv = sid === 'usmvno' || sid === 'ukmvno', lines = cardLines(p, sid), promo = p.promo;
     const pill = p.pill || (mv ? String(p.label).replace(/\s*\d+\s*GB$/, '') : `${p.tier || ''}${p.phys ? ' SIM' : ' eSIM'}`.trim());
@@ -3325,6 +3798,27 @@ window.addEventListener('DOMContentLoaded', () => {
   renderPlans = function () {
     const s = SERVICES.find(x => x.id === S.service);
     if (s.id === 'did') return renderDid();
+
+    const hasCreate = ['iptv', 'mdm', 'safety'].includes(s.id);
+    if (hasCreate) {
+      const mode = S.cview[s.id] === 'create' ? 'create' : 'plans';
+      const tabs = `
+        <div class="cp-tabs" role="tablist" aria-label="${esc(s.name)} mode">
+          <button type="button" class="cp-tab" role="tab" aria-selected="${mode === 'plans'}" data-act="cview" data-id="plans">Ready-made plans</button>
+          <button type="button" class="cp-tab" role="tab" aria-selected="${mode === 'create'}" data-act="cview" data-id="create">+ Create plan</button>
+        </div>`;
+
+      if (mode === 'create') {
+        const sub = s.id === 'iptv'
+          ? 'Pick your OTT platforms and number of days. Price updates automatically.'
+          : s.id === 'mdm'
+            ? 'Choose the device restrictions you need and enter your device count.'
+            : 'Choose employee safety features and enter your employee count.';
+        $('#plans').innerHTML = `${tabs}<div class="plans-head"><div><h2>Create custom ${esc(s.name)} plan</h2><p>${sub}</p></div></div>${renderCustomBuilder(s.id)}`;
+        return;
+      }
+    }
+
     let list, head, note, chips = '', ptype = '', after = '';
     if (s.id === 'esim') {
       const d = [...DESTS, ...REGIONS].find(x => x.code === S.dest), f = S.filter || 'all';
@@ -3343,6 +3837,21 @@ window.addEventListener('DOMContentLoaded', () => {
       head = `${s.name} plans`;
       note = 'Prices shown in US dollars. Click "View plan details" on any card for full specs.';
       if (s.id === 'usmvno') note = 'Choose a ready-made US local plan or configure a custom system rate plan.';
+      if (hasCreate) {
+        ptype = `
+          <div class="cp-tabs" role="tablist" aria-label="${esc(s.name)} mode">
+            <button type="button" class="cp-tab" role="tab" aria-selected="true" data-act="cview" data-id="plans">Ready-made plans</button>
+            <button type="button" class="cp-tab" role="tab" aria-selected="false" data-act="cview" data-id="create">+ Create plan</button>
+          </div>`;
+        after = `
+          <div class="cp-banner">
+            <div>
+              <strong>Need a custom ${esc(s.name)} setup?</strong>
+              <p>${s.id === 'iptv' ? 'Multi-select OTT apps and choose exact days.' : s.id === 'mdm' ? 'Pick restriction features and set your device count.' : 'Pick safety features and set your employee count.'}</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-act="cview" data-id="create">+ Create your own plan</button>
+          </div>`;
+      }
       if (s.id === 'pg') {
         ptype = pgButtons();
         const sv = PGS.find(x => x.id === S.pgsvc);
@@ -3350,6 +3859,7 @@ window.addEventListener('DOMContentLoaded', () => {
         else { $('#plans').innerHTML = ptype + '<div class="pg-hint">Select a service above to see its plans and prices.</div>'; return; }
       }
     }
+
     const pcs = ['usmvno', 'ukmvno', 'esim'].includes(s.id);
     $('#plans').innerHTML = `${ptype}<div class="plans-head"><div><h2>${head}</h2><p>${note}</p></div>${chips}</div><div class="plans${list.length === 1 ? ' one' : list.length === 4 ? ' four' : ''}${pcs ? ' pcs' : ''}">${list.map(p => {
       if (pcs) return planCard(p, s.id);
@@ -3385,12 +3895,78 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  /* Modal open/close listeners */
+  /* 9. Click & Input Events for Modal + Create Plan Builders */
   document.addEventListener('click', e => {
-    const openBtn = e.target.closest('[data-act="plan-modal"]');
-    if (openBtn) { openPlanModal(openBtn.dataset.id); return; }
-    if (e.target.closest('[data-act="modal-close"]')) { closePlanModal(); return; }
+    const el = e.target.closest('[data-act]');
+    if (!el) return;
+    const act = el.dataset.act, id = el.dataset.id;
+
+    if (act === 'plan-modal') { openPlanModal(id); return; }
+    if (act === 'modal-close') { closePlanModal(); return; }
+
+    if (act === 'cview') { S.cview[S.service] = id; renderPlans(); return; }
+    if (act === 'cp-ad') { S.cp.iptv.ad = id; renderPlans(); return; }
+    if (act === 'cp-ott') {
+      const arr = S.cp.iptv.otts, idx = arr.indexOf(id);
+      if (idx >= 0) arr.splice(idx, 1); else arr.push(id);
+      renderPlans();
+      return;
+    }
+    if (act === 'cp-days') { S.cp.iptv.days = +id; renderPlans(); return; }
+    if (act === 'cp-feat') {
+      const [sid, fid] = id.split(':'), arr = S.cp[sid].feats, idx = arr.indexOf(fid);
+      if (idx >= 0) arr.splice(idx, 1); else arr.push(fid);
+      renderPlans();
+      return;
+    }
+    if (act === 'cp-qty') {
+      const [sid, qty] = id.split(':');
+      S.cp[sid].count = +qty;
+      renderPlans();
+      return;
+    }
+    if (act === 'cp-step') {
+      const [sid, delta] = id.split(':');
+      if (sid === 'iptv') {
+        S.cp.iptv.days = Math.max(1, Math.min(365, (Number(S.cp.iptv.days) || 30) + Number(delta)));
+      } else {
+        S.cp[sid].count = Math.max(1, Math.min(10000, (Number(S.cp[sid].count) || 1) + Number(delta)));
+      }
+      renderPlans();
+      return;
+    }
+    if (act === 'cp-add') {
+      const res = buildCustomPlan(id);
+      if (!res || !res.valid) return toast(res ? res.err : 'Select at least 1 option');
+      REG[res.plan.id] = res.plan;
+      cartAdd(res.plan.id);
+      updateCpSummary(id);
+      return;
+    }
+    if (act === 'cp-modal') {
+      const res = buildCustomPlan(id);
+      if (!res || !res.valid) return;
+      REG[res.plan.id] = res.plan;
+      openPlanModal(res.plan.id);
+      return;
+    }
   });
+
+  document.addEventListener('input', e => {
+    if (e.target.id === 'cp-days-in') {
+      const v = Math.max(1, Math.min(365, Math.round(Number(e.target.value) || 1)));
+      S.cp.iptv.days = v;
+      document.querySelectorAll('[data-act="cp-days"]').forEach(b => b.classList.toggle('on', +b.dataset.id === v));
+      updateCpSummary('iptv');
+    } else if (e.target.id === 'cp-qty-in') {
+      const sid = e.target.dataset.sid;
+      const v = Math.max(1, Math.min(10000, Math.round(Number(e.target.value) || 1)));
+      S.cp[sid].count = v;
+      document.querySelectorAll('[data-act="cp-qty"]').forEach(b => b.classList.toggle('on', b.dataset.id === `${sid}:${v}`));
+      updateCpSummary(sid);
+    }
+  });
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && modalPlanId) closePlanModal();
   });

@@ -2707,6 +2707,127 @@ window.addEventListener('DOMContentLoaded', () => {
 <style id="requested-updates-style">
   .did-flow .back { color: #a4a9b1; margin: 0 0 8px; }
   .did-flow .back:hover { color: #fff; }
+
+  /* Compact plan cards for all services */
+  .plans { grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr)) !important; gap: 12px !important; align-items: stretch !important; }
+  .plans.four { grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr)) !important; }
+  .plan { padding: 15px 16px !important; gap: 9px !important; border-radius: 16px !important; height: 100%; }
+  .plan .lab { gap: 8px; align-items: center; min-height: 24px; }
+  .plan .lab-l { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .plan .badge, .pc-tag { white-space: nowrap !important; flex-shrink: 0; }
+  .plan .big { font-size: clamp(21px, 2.2vw, 25px) !important; line-height: 1.15 !important; }
+  .plan .sub { font-size: 12.5px !important; margin-top: -2px !important; line-height: 1.35; }
+  .plan ul { gap: 5px !important; font-size: 12.5px !important; line-height: 1.35; margin: 2px 0 !important; flex: 1; }
+  .plan li::before { width: 14px !important; height: 14px !important; margin-top: 2px !important; }
+  .plan .pdbtn, .pc-body .pdbtn {
+    margin-top: auto;
+    padding: 8px 11px;
+    font-size: 12.5px;
+    border-radius: 10px;
+  }
+  .plan .buy { padding-top: 10px !important; margin-top: 2px !important; }
+  .plan .price { font-size: 19px !important; }
+
+  /* Compact .pc / .pcw cards (US/UK MVNO, eSIM/SIM) */
+  .pc-top { padding: 14px 12px !important; gap: 3px !important; }
+  .pc-big { font-size: clamp(22px, 2.4vw, 28px) !important; }
+  .pc-l { font-size: 13px !important; }
+  .pc-body { padding: 12px !important; gap: 8px !important; }
+  .pc-price b { font-size: 24px !important; }
+
+  /* Plan Details Modal Popup */
+  .pdm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(5, 10, 18, 0.72);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+  .pdm-overlay[hidden] { display: none !important; }
+  .pdm-box {
+    width: min(560px, 100%);
+    max-height: min(88vh, 760px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+  }
+  .pdm-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+  .pdm-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .pdm-head h2 { font-size: clamp(22px, 3vw, 28px); margin-top: 6px; color: var(--ink); }
+  .pdm-sub { font-size: 13.5px; color: var(--ink-2); margin-top: 3px; }
+  .pdm-close {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 20px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+  }
+  .pdm-body {
+    overflow: auto;
+    padding: 18px 20px;
+    display: grid;
+    gap: 16px;
+  }
+  .pdm-sec-title {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin: 0 0 8px;
+  }
+  .pdm-body .pc-feats { gap: 8px; font-size: 14px; }
+  .pdm-body .spec { margin: 0; }
+  .pdm-body .spec div { padding: 9px 0; font-size: 13.5px; }
+  .pdm-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--line);
+    background: var(--surface-2);
+    flex-wrap: wrap;
+  }
+  .pdm-price { font-family: var(--f-mono); font-size: 22px; font-weight: 700; }
+  .pdm-price small { display: block; font-family: var(--f-body); font-size: 12px; font-weight: 400; color: var(--ink-2); }
+  @media (max-width: 520px) {
+    .plans, .plans.four, .plans.pcs { grid-template-columns: 1fr !important; }
+    .pdm-box { max-height: 92dvh; border-radius: 16px; }
+  }
 </style>
 
 <script id="requested-updates-script">
@@ -2810,85 +2931,89 @@ window.addEventListener('DOMContentLoaded', () => {
   STATIC.iptv = reg([
     {
       id: 'iptv:ads-starter',
+      svc: 'iptv',
       label: 'OTT With Ads · Basic',
-      big: '4 OTTs (With Ads)',
-      sub: 'Netflix, Hulu, Disney+, Max · 2 devices',
+      big: '4 OTTs · With Ads',
+      sub: 'Netflix, Hulu, Disney+, Max',
       price: 14.99,
       per: 'per month',
       feats: [
-        'Netflix Standard with ads',
-        'Hulu (With Ads) & Disney+ Basic (With Ads)',
-        'Max (With Ads) · 1080p Full HD',
-        'Watch on 2 devices simultaneously'
+        'With Ads on all 4 OTTs',
+        'Netflix, Hulu, Disney+, Max',
+        '1080p HD · 2 devices'
       ],
       info: [
-        ['Plan type', 'With Ads (ad-supported OTT bundle)'],
-        ['OTTs offered', 'Netflix, Hulu, Disney+, Max'],
-        ['Ad experience', 'Short ad breaks before & during shows/movies'],
-        ['Quality & screens', 'Up to 1080p Full HD · 2 concurrent streams']
+        ['Plan tier', 'With Ads (ad-supported OTT bundle)'],
+        ['OTTs included', 'Netflix Standard with ads, Hulu (With Ads), Disney+ Basic (With Ads), Max (With Ads)'],
+        ['Ad experience', 'Short ad breaks before and during titles'],
+        ['Video quality', 'Up to 1080p Full HD'],
+        ['Concurrent devices', '2 simultaneous streams']
       ]
     },
     {
       id: 'iptv:ads-plus',
+      svc: 'iptv',
       label: 'OTT With Ads · Plus',
-      big: '6 OTTs (With Ads)',
+      big: '6 OTTs · With Ads',
       sub: 'Netflix, Prime, Hulu, Disney+, Max, Peacock',
       price: 21.99,
       per: 'per month',
       feats: [
-        'Netflix, Hulu, Disney+ & Max (With Ads)',
-        'Amazon Prime Video & Peacock (With Ads)',
-        'Live sports & news channels included',
-        'Watch on 3 devices simultaneously'
+        'With Ads on all 6 OTTs',
+        'Adds Amazon Prime Video & Peacock',
+        '1080p HD · 3 devices + sports'
       ],
       info: [
-        ['Plan type', 'With Ads (ad-supported OTT bundle)'],
-        ['OTTs offered', 'Netflix, Amazon Prime Video, Hulu, Disney+, Max, Peacock'],
-        ['Ad experience', 'Standard ad-supported tiers on all 6 OTTs'],
-        ['Quality & screens', 'Up to 1080p Full HD · 3 concurrent streams']
+        ['Plan tier', 'With Ads (ad-supported OTT bundle)'],
+        ['OTTs included', 'Netflix, Amazon Prime Video, Hulu, Disney+, Max, Peacock (all ad-supported tiers)'],
+        ['Live extras', 'Live sports & news channels included'],
+        ['Video quality', 'Up to 1080p Full HD'],
+        ['Concurrent devices', '3 simultaneous streams']
       ]
     },
     {
       id: 'iptv:noads-pro',
+      svc: 'iptv',
       label: 'OTT Without Ads · Pro',
-      big: '5 OTTs (No Ads)',
+      big: '5 OTTs · No Ads',
       sub: 'Netflix, Prime, Disney+, Max, Apple TV+',
       price: 34.99,
       per: 'per month',
       pop: true,
       badge: 'Ad-Free · Popular',
       feats: [
-        '100% ad-free streaming on all 5 OTT platforms',
-        'Netflix Standard (No Ads) & Prime Video (Ad-Free)',
-        'Disney+ Premium, Max Ad-Free & Apple TV+',
-        '4K UHD + offline downloads on 4 devices'
+        '100% Ad-Free (Without Ads)',
+        'Netflix, Prime, Disney+, Max, Apple TV+',
+        '4K UHD + offline downloads · 4 devices'
       ],
       info: [
-        ['Plan type', 'Without Ads (100% Ad-Free OTT bundle)'],
-        ['OTTs offered', 'Netflix, Amazon Prime Video, Disney+, Max, Apple TV+'],
+        ['Plan tier', 'Without Ads (100% Ad-Free OTT bundle)'],
+        ['OTTs included', 'Netflix Standard (No Ads), Amazon Prime Video (Ad-Free), Disney+ Premium, Max Ad-Free, Apple TV+'],
         ['Ad experience', 'Zero commercial breaks'],
-        ['Quality & screens', 'Up to 4K UHD + HDR · 4 devices + downloads']
+        ['Video quality', 'Up to 4K UHD + HDR'],
+        ['Concurrent devices', '4 simultaneous streams + offline downloads']
       ]
     },
     {
       id: 'iptv:noads-ultimate',
+      svc: 'iptv',
       label: 'OTT Without Ads · Ultimate',
-      big: '7 OTTs (No Ads)',
+      big: '7 OTTs · No Ads',
       sub: 'Netflix, Prime, Disney+, Hulu, Max, Apple TV+, Paramount+',
       price: 49.99,
       per: 'per month',
-      badge: 'All 7 OTTs · No Ads',
+      badge: 'All 7 · No Ads',
       feats: [
-        'Zero ads across all 7 OTT platforms',
-        'Netflix Premium 4K, Hulu (No Ads) & Disney+ Premium',
-        'Prime Video (Ad-Free), Max Ultimate, Apple TV+ & Paramount+ w/ Showtime',
-        '5 simultaneous 4K streams + family profiles'
+        'Zero ads across all 7 OTTs',
+        'Includes Hulu No Ads & Paramount+',
+        '4K Dolby Vision · 5 devices'
       ],
       info: [
-        ['Plan type', 'Without Ads (All-Access Ad-Free OTT bundle)'],
-        ['OTTs offered', 'Netflix, Amazon Prime Video, Disney+, Hulu, Max, Apple TV+, Paramount+ with Showtime'],
+        ['Plan tier', 'Without Ads (All-Access Ad-Free OTT bundle)'],
+        ['OTTs included', 'Netflix Premium 4K, Amazon Prime Video (Ad-Free), Disney+ Premium, Hulu (No Ads), Max Ultimate, Apple TV+, Paramount+ with Showtime'],
         ['Ad experience', 'Completely ad-free on-demand streaming'],
-        ['Quality & screens', '4K UHD + Dolby Vision · 5 concurrent streams']
+        ['Video quality', '4K UHD + Dolby Vision'],
+        ['Concurrent devices', '5 simultaneous streams + family profiles']
       ]
     }
   ]);
@@ -2897,84 +3022,85 @@ window.addEventListener('DOMContentLoaded', () => {
   STATIC.mdm = reg([
     {
       id: 'mdm:browser-lock',
-      label: 'MDM · Safe Web & No-Install',
+      svc: 'mdm',
+      label: 'Safe Web & No-Install',
       big: '$3.50 / device',
-      sub: 'Per device, every month',
+      sub: 'Per device · monthly',
       price: 3.5,
       per: 'per device / month',
       feats: [
-        'Enforce Chrome Safe Browsing (always ON, cannot disable)',
-        'Block Play Store & App Store — new apps will not install',
-        'App deny list & block unknown APK / third-party installs',
-        'Remote lock, wipe & phishing URL blocking'
+        'Chrome Safe Browsing locked ON',
+        'Block stores — new apps won\'t install',
+        'App deny list & remote wipe'
       ],
       info: [
-        ['Chrome policy', 'Mandatory Safe Browsing; incognito & risky extensions blocked'],
-        ['New app installs', 'Blocked — employees cannot install any new apps'],
-        ['App denylist', 'Deny social media, games & unapproved apps'],
-        ['OS support', 'Android Enterprise, iOS Supervised & ChromeOS']
+        ['Chrome Safe Browsing', 'Locked to Enhanced Safe Browsing (user cannot disable); incognito & risky extensions blocked'],
+        ['New app installations', 'Play Store & App Store disabled — new apps will not install'],
+        ['App denylist', 'Deny social media, gaming & unknown APK sideloading'],
+        ['Security & OS', 'Remote lock/wipe on Android Enterprise, iOS Supervised & ChromeOS']
       ]
     },
     {
       id: 'mdm:field-control',
-      label: 'MDM · Maps & App Restriction',
+      svc: 'mdm',
+      label: 'Maps & App Restriction',
       big: '$6 / device',
-      sub: 'Per device, every month',
+      sub: 'Per device · monthly',
       price: 6,
       per: 'per device / month',
       pop: true,
       badge: 'Popular',
       feats: [
-        'Google Maps restriction (work routes only, block timeline & sharing)',
-        'Chrome Safe Browsing enforced + block other browsers',
-        'Strict app deny list & block all new app installations',
-        'Disable factory reset, USB transfer & hotspot changes'
+        'Google Maps restriction enforced',
+        'Chrome Safe Browsing + block browsers',
+        'App deny list & zero new installs'
       ],
       info: [
-        ['Google Maps policy', 'Restrict Maps features, location sharing & offline map tampering'],
-        ['Chrome policy', 'Enhanced Chrome Safe Browsing locked on; other browsers denied'],
-        ['New app installs', 'Store disabled; zero user installs (admin push only)'],
-        ['App denylist', 'Block TikTok, WhatsApp, games or custom package IDs']
+        ['Google Maps restriction', 'Restrict Maps to approved work routes; disable timeline, location sharing & offline map tampering'],
+        ['Chrome Safe Browsing', 'Mandatory Safe Browsing enforced; third-party browsers denied'],
+        ['New app installations', 'Zero user app installs; only admin-pushed work apps allowed'],
+        ['App denylist', 'Block TikTok, WhatsApp, games or custom package IDs'],
+        ['Tamper protection', 'Disable Factory Reset, Developer Options & USB file transfer']
       ]
     },
     {
       id: 'mdm:kiosk-pro',
-      label: 'MDM · Kiosk & Zero-Install',
+      svc: 'mdm',
+      label: 'Kiosk & Zero-Install',
       big: '$9.50 / device',
-      sub: 'Per device, every month',
+      sub: 'Per device · monthly',
       price: 9.5,
       per: 'per device / month',
       feats: [
-        'Single-app or multi-app Kiosk mode lock',
-        'Permanent zero-install policy: new apps never install',
-        'Chrome Safe Browsing, Google Maps & YouTube restrictions',
-        'Zero-touch enrolment, geofencing & SOC 2 audit logs'
+        'Single / multi-app Kiosk lock',
+        'Permanent no-install OS policy',
+        'Chrome, Maps & YouTube restrictions'
       ],
       info: [
-        ['Kiosk lock', 'Lock devices strictly to approved company apps'],
-        ['Web & Maps lock', 'Chrome Safe Browsing + Google Maps restrictions enforced'],
-        ['New app installs', 'Blocked at OS policy level; stores hidden'],
-        ['Compliance', 'SSO, tamper alerts & full audit trail']
+        ['Kiosk mode', 'Lock device strictly to approved company apps'],
+        ['Web & Maps lock', 'Chrome Safe Browsing + Google Maps & YouTube restrictions enforced'],
+        ['New app installations', 'Permanently blocked at OS policy level; app stores hidden'],
+        ['Compliance', 'Zero-touch enrolment, geofencing, SSO & SOC 2 audit logs']
       ]
     },
     {
       id: 'mdm:fleet25',
-      label: 'MDM · Fleet 25 Pack',
+      svc: 'mdm',
+      label: 'Fleet 25 Pack',
       big: '25 devices',
-      sub: 'Bundle with Maps & App Restriction',
+      sub: 'Maps & App Restriction bundle',
       price: 125,
       per: 'per month',
       badge: 'Save 16%',
       feats: [
-        '25 devices with full Maps & App Restriction policies',
-        'Chrome Safe Browsing & Google Maps restrictions included',
-        'App deny list & block new app installations',
-        'Central admin console & onboarding help'
+        '25 managed phones or tablets',
+        'Chrome Safe Browsing + Maps lock',
+        'App deny list & no new installs'
       ],
       info: [
-        ['Devices included', '25 managed phones or tablets'],
-        ['Restrictions', 'Chrome Safe Browsing, Google Maps lock, App denylist, No new installs'],
-        ['Setup', 'QR / Zero-touch enrolment included']
+        ['Devices included', '25 managed Android, iOS or ChromeOS devices'],
+        ['Included restrictions', 'Chrome Safe Browsing, Google Maps restriction, App denylist & Block new app installs'],
+        ['Management', 'Central admin console, QR enrolment & onboarding support']
       ]
     }
   ]);
@@ -2983,89 +3109,89 @@ window.addEventListener('DOMContentLoaded', () => {
   STATIC.safety = reg([
     {
       id: 'safe:geo-family',
-      label: 'Safety · Danger Zone & Family',
-      big: '$5 / employee',
-      sub: 'Minimum 5 employees',
+      svc: 'safety',
+      label: 'Danger Zone & Family',
+      big: '$5 / user',
+      sub: 'Minimum 5 employees · monthly',
       price: 5,
       per: 'per user / month',
       feats: [
-        'USA & global danger-zone boundary entry alerts',
-        'Settings option to mention & notify family contacts',
-        'One-tap SOS button with live GPS location link',
-        'No hardware needed — iOS & Android app'
+        'USA & global danger-zone alerts',
+        'Notify family option in settings',
+        '1-tap SOS with live GPS location'
       ],
       info: [
-        ['Danger zones', 'Alerts when entering flagged high-risk or restricted US/global areas'],
-        ['Family notify setting', 'Employees can enable "Notify Family" in settings with emergency contacts'],
-        ['SOS location', 'Sends live GPS coordinates by SMS, push & email'],
-        ['Minimum', '5 employees']
+        ['Danger zone alerts', 'Automatic warning when entering flagged high-risk or restricted US and global areas'],
+        ['Family notification setting', 'Employees can enable "Notify Family" in app settings with emergency family contacts'],
+        ['SOS trigger', 'One-tap SOS sends live GPS map coordinates via SMS, push & email'],
+        ['Minimum', '5 employees · iOS & Android app']
       ]
     },
     {
       id: 'safe:dwell-pro',
-      label: 'Safety · 2-Hr Overstay SOS',
-      big: '$11 / employee',
+      svc: 'safety',
+      label: '2-Hr Overstay SOS',
+      big: '$11 / user',
       sub: 'Auto SOS call if stay > 2 hours',
       price: 11,
       per: 'per user / month',
       pop: true,
       badge: 'Popular',
       feats: [
-        'Automatic SOS call with GPS location if employee stays > 2 hours in a danger place',
-        'Configurable overstay timer (30 min, 1 hr, 2 hrs+) per zone',
-        'Notify family (configured in settings) + safety manager',
-        'Man-down detection & missed check-in escalation'
+        'Auto SOS call + GPS if stay > 2 hrs',
+        'USA danger-zone geofencing',
+        'Auto-notify family from settings'
       ],
       info: [
-        ['2-hour overstay rule', 'If stay exceeds 2 hours in a danger area, app places an auto SOS call with live location'],
-        ['USA danger zones', 'Real-time US neighborhood & site hazard geofences'],
-        ['Family notify setting', 'Automatically alerts family contacts saved in employee settings'],
-        ['Escalation', 'Calls manager & family, sharing live GPS map link']
+        ['2-hour overstay SOS rule', 'If an employee stays longer than 2 hours in a flagged danger place, the app places an automatic SOS call with live GPS location'],
+        ['Custom dwell timers', 'Configurable 30 min, 1 hr, or 2+ hour stay thresholds per zone'],
+        ['Family notification setting', 'Automatically calls/texts family contacts configured in employee settings'],
+        ['Escalation', 'Calls safety manager & family + man-down detection']
       ]
     },
     {
       id: 'safe:dispatch-247',
-      label: 'Safety · 24/7 Dispatch & Auto-Call',
-      big: '$21 / employee',
-      sub: 'Live SOC + 2-hr Auto SOS Call',
+      svc: 'safety',
+      label: '24/7 Live Dispatch',
+      big: '$21 / user',
+      sub: '24/7 SOC + 2-hr Auto SOS Call',
       price: 21,
       per: 'per user / month',
       feats: [
-        '24/7 monitoring centre answers > 2 hr danger-zone SOS calls',
-        'Direct 911 / emergency dispatch with exact GPS location',
-        'Simultaneous notify-family call, SMS & live tracking link',
-        'Shift audit logs, incident photos & compliance reports'
+        '24/7 team answers > 2 hr SOS calls',
+        'Direct 911 dispatch with GPS pin',
+        'Simultaneous family call & link'
       ],
       info: [
-        ['24/7 monitoring', 'Live operators verify manual SOS & 2-hour overstay SOS calls'],
+        ['24/7 monitoring centre', 'Live operators verify manual SOS & 2-hour danger-zone overstay SOS calls'],
         ['Emergency dispatch', 'Operators contact US 911 / local responders with exact GPS coordinates'],
-        ['Family notify setting', 'Opt-in family alert settings notify relatives immediately'],
-        ['Compliance', 'SSO, full audit trail & dedicated account manager']
+        ['Family notification setting', 'Opt-in family alert settings notify relatives immediately with live tracking'],
+        ['Compliance', 'Audit logs, incident photos, SSO & dedicated account manager']
       ]
     },
     {
       id: 'safe:us-travel',
-      label: 'Safety · US Field & Travel',
+      svc: 'safety',
+      label: 'US Field & Travel',
       big: '$14 / traveller',
       sub: 'US high-risk area protection',
       price: 14,
       per: 'per traveller / month',
       feats: [
-        'Real-time USA city & county danger-zone alerts',
-        '2-hour stationary / site-stay timer triggers SOS call + location',
-        'Settings toggle to notify family & HR emergency contacts',
-        '24/7 medical and security assistance helpline'
+        'USA city & county danger-zone map',
+        '2-hr stay auto SOS call + location',
+        'Family notify setting + 24/7 hotline'
       ],
       info: [
-        ['USA risk map', 'Alerts before & on entering high-crime or severe-weather areas'],
-        ['2-hour stay trigger', 'Auto SOS call with GPS location if stay exceeds 2 hours'],
-        ['Family notify setting', 'Employee-controlled family notification in app settings'],
-        ['Support', '24/7 emergency security & travel hotline']
+        ['USA danger-zone coverage', 'Real-time alerts when entering flagged high-crime or severe-weather areas'],
+        ['2-hour stay trigger', 'Automatic SOS call with live GPS location if employee stays > 2 hours'],
+        ['Family notification setting', 'Employee-controlled family & HR emergency notification in settings'],
+        ['Support', '24/7 emergency security & medical travel assistance hotline']
       ]
     }
   ]);
 
-  /* Update service card descriptions on the Home dashboard */
+  /* Update service card descriptions on Home dashboard */
   const descMap = {
     iptv: 'OTT streaming platform bundles with ads or without ads (ad-free). View exact OTT apps included in every plan.',
     mdm: 'Restrict company devices: enforce Chrome Safe Browsing, restrict Google Maps, deny restricted apps and block new app installations.',
@@ -3073,382 +3199,203 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   SERVICES.forEach(sv => { if (descMap[sv.id]) sv.desc = descMap[sv.id]; });
 
-  /* Re-render current screen with all updates active */
-  renderHeader();
-  renderCart();
-  renderMain();
-})();
-</script>
-<style id="requested-updates-style">
-  .did-flow .back { color: #a4a9b1; margin: 0 0 8px; }
-  .did-flow .back:hover { color: #fff; }
-</style>
+  /* 6. Shared Plan Details Modal Popup for ALL plans */
+  function inferSid(id) {
+    if (!id) return S.service || '';
+    const p = id.split(':')[0];
+    if (p.startsWith('esim') || p === 'sim') return 'esim';
+    if (p === 'us') return 'usmvno';
+    if (p === 'uk') return 'ukmvno';
+    if (p === 'safe') return 'safety';
+    return p;
+  }
 
-<script id="requested-updates-script">
-(() => {
-  /* 1. Remove "Create account" option from the login page */
-  S.authTab = 'in';
+  let modalPlanId = null;
 
-  authSignIn = function () {
-    return `<h2>Welcome back</h2><p class="sub">Sign in with your username and password. You will be asked for a 2FA code next.</p>
-    <div id="f-in" novalidate>
-      <div class="field"><label for="u">Username</label><input class="input" id="u" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
-      ${pwField('pw', 'Password', 'current-password')}
-      <p class="msg" id="msg" role="alert"></p>
-      <button class="btn btn-primary btn-block" id="go">Continue</button>
-    </div>${DEMO_MODE ? `<div class="demo">Demo login: <b class="mono">demo</b> / <b class="mono">Demo@1234</b> <button type="button" class="btn-link" data-act="fill-demo" style="margin-left:6px">Fill in</button></div>` : ''}`;
-  };
-
-  viewAuth = function (m) {
-    const left = `<section class="auth-brand">
-      <div class="brand">${LOGO_TAG}</div>
-      <div><h1>One account for <span class="grad">every line</span> you carry.</h1><p class="lead">Buy travel eSIMs, phone numbers, SMS packs, VPN and mobile plans from a single place.</p></div>
-      <div class="facts"><div class="fact"><b>12</b>eSIM destinations, countries and regions</div><div class="fact"><b>2FA</b>Every sign-in needs a 6-digit code</div><div class="fact"><b>12</b>services under one cart</div></div>
-      <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div><div class="svcchips" aria-label="All services"><span>📶 eSIM &amp; SIM</span><span>🇺🇸 US local MVNO</span><span>🇬🇧 UK local MVNO</span><span>💬 SMS</span><span>☎️ DID numbers</span><span>🛡️ VPN</span><span>🎧 VoIP / Call Recording</span><span>📡 IoT SIM</span><span>💳 Payment Gateway</span><span>📺 IPTV</span><span>📱 MDM</span><span>🆘 Employee Safety</span></div>
-    </section>`;
-    let body;
-    const p = S.pending;
-    if (p && p.mode === 'setup') body = authSetup(p);
-    else if (p && p.mode === 'verify') body = authVerify(p);
-    else body = authSignIn();
-    m.innerHTML = `<div class="auth">${skinSw(true)}${left}<section class="auth-form"><div class="auth-card">${body}</div></section></div>`;
-    bindAuth();
-  };
-
-  /* 2. Add clear "← All services" back option across Country, DID, and Checkout views */
-  viewCountry = function (m) {
-    const d = [...DESTS, ...REGIONS].find(x => x.code === S.dest);
-    m.innerHTML = `<div class="wrap">
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:6px">
-        <button class="back" data-act="home" style="margin-bottom:0">← All services</button>
-        <button class="back" data-act="back-esim" style="margin-bottom:0">← All ${S.kind === 'sim' ? 'physical SIM countries' : 'eSIM destinations'}</button>
-      </div>
-      <div class="compact-country-title"><h1>${d.name} ${S.kind === 'sim' ? 'Physical SIM' : 'eSIM'} plans</h1><p>Select a plan below. Compare data, validity and price.</p></div>
-      <div class="sim-controls-inline">${typeSw()}${tierSwHtml()}</div><div id="plans"></div>${S.kind === 'sim' ? simOrder() : ''}
-      <section class="how"><div class="sec-title"><h2>How it works</h2><span>Takes about two minutes</span></div>
-        <ol><li><b>Pick a plan</b><span>Add it to your cart and pay.</span></li><li><b>Scan the QR code</b><span>In your phone settings, choose Add eSIM.</span></li><li><b>Connect</b><span>Turn on data roaming when you land.</span></li></ol></section>
-      <div class="sec-title"><h2>More destinations</h2><span>Jump straight to another plan list</span></div>
-      <div class="strip">${[...DESTS, ...REGIONS].filter(x => x.code !== d.code).map(x => `<button class="mini" data-act="dest" data-id="${x.code}"><span class="flag sm">${flag(x.code)}</span>${x.name}</button>`).join('')}</div>
-    </div>`;
-    renderPlans(); bindBanner();
-  };
-
-  renderDid = function () {
-    const cc = S.didc || 'US', country = DIDC.find(x => x[0] === cc) || DIDC[0];
-    const step = Math.max(1, Math.min(4, Number(S.didStep || 1))), selectedNumber = Math.max(0, Math.min(DID_NUMBERS.length - 1, Number(S.didNumber || 0)));
-    const plans = [
-      { key: 'number', name: 'Number only', term: '30 days', price: country[3], credits: 'No calling credits', detail: 'Keep the number active. Add prepaid credits when you want to make outbound calls.' },
-      { key: 'starter', name: 'Hub Starter', term: '30 days', price: country[3] + 6.99, credits: '400 calling credits', detail: 'A number plus a monthly credit allowance for calls to supported destinations.', badge: 'Most popular' },
-      { key: 'plus', name: 'Hub Plus', term: '30 days', price: country[3] + 12.99, credits: '1,000 calling credits', detail: 'More included calling credits for regular use.' },
-      { key: 'annual', name: 'Hub Starter Annual', term: '365 days', price: Math.round((country[3] + 6.99) * 10 * 100) / 100, credits: '400 credits each month', detail: 'Pay for the year up front. Monthly credits refresh during the active term.', badge: 'Save about 17%' }
-    ];
-    const current = plans.find(x => x.key === S.didPlan) || plans[1]; S.didPlan = current.key;
-    const number = country[2] + DID_NUMBERS[selectedNumber];
-    const id = `did:${cc}:${selectedNumber + 1}:${current.key}`;
-    const p = { id, svc: 'did', label: current.name, title: `${country[1]} ${current.name} · ${number}`, big: number, sub: current.term, price: current.price, per: current.term === '365 days' ? 'per year' : 'per 30 days', days: current.term === '365 days' ? 365 : 30, code: cc, feats: [current.credits, 'Free calls to other Hub users', 'Prepaid term · choose when to renew'], info: [['Country', country[1]], ['Selected number', number], ['Plan', current.name], ['Calling credits', current.credits], ['Term', current.term], ['Renewal', 'Does not renew automatically. Choose again when your term ends.'], ['Calling', 'Credits and destination rates apply to calls outside the Hub network.'], ['Price', 'Demo price in USD; taxes and any regulatory fees are confirmed at checkout.']] };
-    reg([p]);
-    const progress = `<nav class="did-progress" aria-label="Order progress">${[['Country',1],['Number',2],['Plan',3],['Review',4]].map(([label,n]) => `<span class="${step === n ? 'active' : step > n ? 'done' : ''}"><i>${n}</i>${label}</span>`).join('<b aria-hidden="true">›</b>')}</nav>`;
-    const countryCard = `<div class="did-country-summary"><span class="did-flag">${flag(cc)}</span><span><small>Country</small><strong>${country[1]}</strong></span><b>${cc}</b></div>`;
-    let content = '';
-    if (step === 1) content = `<h2>Choose a country</h2><p class="did-muted">Select where you want your local number.</p><div class="did-countries">${DIDC.map(x => `<button class="did-country ${x[0] === cc ? 'selected' : ''}" data-act="didc" data-id="${x[0]}" aria-pressed="${x[0] === cc}"><span class="did-flag">${flag(x[0])}</span><span><small>Country</small><strong>${x[1]}</strong></span><b>${x[0]}</b></button>`).join('')}</div>`;
-    if (step === 2) content = `${countryCard}<h2>Pick a number</h2><p class="did-muted">${DID_NUMBERS.length} demo numbers available · choose one to continue.</p><div class="did-number-list">${DID_NUMBERS.map((suffix,i) => `<button class="did-number ${i === selectedNumber ? 'selected' : ''}" data-act="didnum" data-id="${i}" aria-pressed="${i === selectedNumber}"><span><strong>${country[2] + suffix}</strong><small>Available now · Local number</small></span><i>${i === selectedNumber ? '●' : ''}</i></button>`).join('')}</div>`;
-    if (step === 3) content = `${countryCard}<div class="did-selected-number"><small>Selected number</small><strong>${number}</strong></div><h2>Choose your plan</h2><p class="did-muted">Prepaid options for your number. No automatic renewal.</p><div class="did-plan-list">${plans.map(x => `<button class="did-plan ${x.key === current.key ? 'selected' : ''}" data-act="didplan" data-id="${x.key}" aria-pressed="${x.key === current.key}"><span class="did-plan-radio">${x.key === current.key ? '●' : ''}</span><span class="did-plan-copy"><small>${x.key === 'number' ? 'NUMBER ONLY' : 'NUMBER + CALLING'}</small><strong>${x.name}${x.badge ? `<em>${x.badge}</em>` : ''}</strong><span>${x.term} · ${x.credits}</span><small>${x.detail}</small></span><b>${fmt(x.price)}<small> / ${x.term === '365 days' ? 'year' : '30 days'}</small></b></button>`).join('')}</div>`;
-    if (step === 4) content = `${countryCard}<div class="did-review"><div><small>Selected number</small><strong>${number}</strong></div><div><small>Plan</small><strong>${current.name}</strong></div><div><small>Calling credits</small><strong>${current.credits}</strong></div><div><small>Active for</small><strong>${current.term}</strong></div><div class="did-review-total"><strong>Total</strong><strong>${fmt(current.price)} / ${current.term === '365 days' ? 'year' : '30 days'}</strong></div></div><p class="did-terms">Your plan is prepaid and won’t renew automatically. Calls to destinations outside the Hub network use calling credits. Demo pricing is in USD; taxes or regulatory fees may apply.</p>`;
-    const cta = step === 4 ? (S.cart[id] ? `<button class="btn btn-primary did-continue" data-act="cart-open">In cart · View cart</button>` : `<button class="btn btn-primary did-continue" data-act="add" data-id="${id}">Add to cart · ${fmt(current.price)}</button>`) : `<button class="btn btn-primary did-continue" data-act="didstep" data-id="1">${step === 1 ? 'Continue · Choose a number' : step === 2 ? `Continue · ${fmt(current.price)} / 30 days` : 'Continue · Review order'}</button>`;
-    const back = step === 1 ? `<button class="did-back" data-act="home" aria-label="Back to all services">←</button>` : `<button class="did-back" data-act="didstep" data-id="-1" aria-label="Go back">←</button>`;
-    $('#plans').innerHTML = `<section class="did-flow"><button class="back" data-act="home">← All services</button><header class="did-heading">${back}<h1>Get your number</h1><span></span></header>${progress}<div class="did-content">${content}</div><footer class="did-bottom">${step > 1 ? `<div class="did-bottom-selection"><small>${step === 4 ? 'Order total' : 'Selected number'}</small><strong>${number}</strong></div>` : `<div class="did-bottom-selection"><small>Starting from</small><strong>${fmt(plans[1].price)} / 30 days</strong></div>`}<span class="did-bottom-price">${fmt(current.price)}<small>/${current.term === '365 days' ? 'year' : '30 days'}</small></span>${cta}</footer></section>`;
-  };
-
-  renderCheckout = function () {
-    const co = $('#co'); if (!co) return;
-    if (S.step === 3) return renderDone(co);
-    if (!cartCount()) { co.innerHTML = `<button class="back" data-act="home">← All services</button><div class="panel empty"><b>Your cart is empty</b><span>Add a plan before checking out.</span><button class="btn btn-primary" data-act="home">Browse services</button></div>`; return; }
-    const dt = S.details;
-    const form = S.step === 1 ? `<div class="panel"><h2>Delivery address</h2>
-        <div id="f-det" novalidate>${detFields(dt)}
-          <p class="hint" style="margin-bottom:12px">Your physical SIM will be delivered to this address.</p>
-          <p class="msg" id="msg" role="alert"></p>
-          <button class="btn btn-primary btn-block">Continue to payment</button></div></div>`
-      : payPanel();
-    co.innerHTML = `<button class="back" data-act="home">← All services</button>${stepsHtml()}<div class="co">${form}${summaryHtml()}</div>`;
-    if (S.step === 1) {
-      onSubmit($('#f-det'), e => {
-        e.preventDefault();
-        const g = i => (($('#' + i) || {}).value || '').trim(), fn = S.user, ln = '', n = S.user, em = '';
-        if (hasSim() && (!g('d-a1') || !g('d-city') || !g('d-zip') || g('d-phone').length < 6)) return setMsg('Enter your delivery address, city, postcode and a phone number.');
-        S.details = { fn, ln, name: n, email: em, phone: g('d-phone'), country: $('#d-country').value, a1: g('d-a1'), a2: g('d-a2'), city: g('d-city'), state: g('d-state'), zip: g('d-zip') }; S.step = 2; renderCheckout(); window.scrollTo(0, 0);
+  function ensurePlanModal() {
+    let el = document.getElementById('plan-detail-modal');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'plan-detail-modal';
+      el.className = 'pdm-overlay';
+      el.hidden = true;
+      el.innerHTML = `<section class="pdm-box" role="dialog" aria-modal="true" aria-labelledby="pdm-title"></section>`;
+      el.addEventListener('click', e => {
+        if (e.target === el) closePlanModal();
       });
-    } else bindPay();
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
+  function renderPlanModalBody() {
+    const modal = document.getElementById('plan-detail-modal');
+    if (!modal || modal.hidden || !modalPlanId) return;
+    const p = REG[modalPlanId];
+    if (!p) return closePlanModal();
+    const sid = p.svc || inferSid(p.id);
+    const l = S.cart[p.id];
+    const isEsim = p.code && (p.id.startsWith('esim') || p.id.startsWith('sim:'));
+    const pill = p.pill || p.label || (SERVICES.find(x => x.id === sid) || {}).name || 'Plan';
+    const rows = p.info || servicePlanFacts(p, sid);
+
+    let detailsHtml = '';
+    if (isEsim) {
+      detailsHtml = `<div><div class="pdm-sec-title">Plan coverage &amp; specifications</div>${esimFactsBody(p)}</div>`;
+    } else {
+      detailsHtml = `
+        <div>
+          <div class="pdm-sec-title">What is included</div>
+          <ul class="pc-feats">${(p.feats || []).map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+        </div>
+        <div>
+          <div class="pdm-sec-title">Additional plan information</div>
+          <dl class="spec">${rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+        </div>`;
+    }
+
+    const promoNote = p.promo ? `<small>${pf(p.promo.then)}/mo after first ${p.promo.months} months</small>` : `<small>${esc(p.per || 'one-time')}</small>`;
+    const actBtn = l
+      ? `<span class="stepper"><button type="button" data-act="dec" data-id="${esc(p.id)}" aria-label="Remove one">−</button><span>${l.qty}</span><button type="button" data-act="inc" data-id="${esc(p.id)}" aria-label="Add one">+</button></span>`
+      : `<button type="button" class="btn btn-primary" data-act="add" data-id="${esc(p.id)}">Add to cart</button>`;
+
+    modal.querySelector('.pdm-box').innerHTML = `
+      <header class="pdm-head">
+        <div>
+          <div class="pdm-eyebrow">
+            <span>${esc(pill)}</span>
+            ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ''}
+          </div>
+          <h2 id="pdm-title">${esc(p.title || p.big)}</h2>
+          <p class="pdm-sub">${esc(p.sub || '')}</p>
+        </div>
+        <button type="button" class="pdm-close" data-act="modal-close" aria-label="Close plan details">×</button>
+      </header>
+      <div class="pdm-body">
+        ${p.net ? netRow(p) : ''}
+        ${detailsHtml}
+      </div>
+      <footer class="pdm-foot">
+        <div class="pdm-price">${fmt(p.price)}${promoNote}</div>
+        ${actBtn}
+      </footer>`;
+  }
+
+  function openPlanModal(id) {
+    if (!REG[id]) return;
+    modalPlanId = id;
+    const modal = ensurePlanModal();
+    modal.hidden = false;
+    renderPlanModalBody();
+    const closeBtn = modal.querySelector('.pdm-close');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closePlanModal() {
+    const modal = document.getElementById('plan-detail-modal');
+    if (modal) modal.hidden = true;
+    modalPlanId = null;
+  }
+
+  /* Keep modal stepper synced whenever cart changes */
+  const origAfterCart = afterCart;
+  afterCart = function () {
+    origAfterCart();
+    renderPlanModalBody();
   };
 
-  /* 3. Real IPTV plans: OTT platforms With Ads & Without Ads */
-  STATIC.iptv = reg([
-    {
-      id: 'iptv:ads-starter',
-      label: 'OTT With Ads · Basic',
-      big: '4 OTTs (With Ads)',
-      sub: 'Netflix, Hulu, Disney+, Max · 2 devices',
-      price: 14.99,
-      per: 'per month',
-      feats: [
-        'Netflix Standard with ads',
-        'Hulu (With Ads) & Disney+ Basic (With Ads)',
-        'Max (With Ads) · 1080p Full HD',
-        'Watch on 2 devices simultaneously'
-      ],
-      info: [
-        ['Plan type', 'With Ads (ad-supported OTT bundle)'],
-        ['OTTs offered', 'Netflix, Hulu, Disney+, Max'],
-        ['Ad experience', 'Short ad breaks before & during shows/movies'],
-        ['Quality & screens', 'Up to 1080p Full HD · 2 concurrent streams']
-      ]
-    },
-    {
-      id: 'iptv:ads-plus',
-      label: 'OTT With Ads · Plus',
-      big: '6 OTTs (With Ads)',
-      sub: 'Netflix, Prime, Hulu, Disney+, Max, Peacock',
-      price: 21.99,
-      per: 'per month',
-      feats: [
-        'Netflix, Hulu, Disney+ & Max (With Ads)',
-        'Amazon Prime Video & Peacock (With Ads)',
-        'Live sports & news channels included',
-        'Watch on 3 devices simultaneously'
-      ],
-      info: [
-        ['Plan type', 'With Ads (ad-supported OTT bundle)'],
-        ['OTTs offered', 'Netflix, Amazon Prime Video, Hulu, Disney+, Max, Peacock'],
-        ['Ad experience', 'Standard ad-supported tiers on all 6 OTTs'],
-        ['Quality & screens', 'Up to 1080p Full HD · 3 concurrent streams']
-      ]
-    },
-    {
-      id: 'iptv:noads-pro',
-      label: 'OTT Without Ads · Pro',
-      big: '5 OTTs (No Ads)',
-      sub: 'Netflix, Prime, Disney+, Max, Apple TV+',
-      price: 34.99,
-      per: 'per month',
-      pop: true,
-      badge: 'Ad-Free · Popular',
-      feats: [
-        '100% ad-free streaming on all 5 OTT platforms',
-        'Netflix Standard (No Ads) & Prime Video (Ad-Free)',
-        'Disney+ Premium, Max Ad-Free & Apple TV+',
-        '4K UHD + offline downloads on 4 devices'
-      ],
-      info: [
-        ['Plan type', 'Without Ads (100% Ad-Free OTT bundle)'],
-        ['OTTs offered', 'Netflix, Amazon Prime Video, Disney+, Max, Apple TV+'],
-        ['Ad experience', 'Zero commercial breaks'],
-        ['Quality & screens', 'Up to 4K UHD + HDR · 4 devices + downloads']
-      ]
-    },
-    {
-      id: 'iptv:noads-ultimate',
-      label: 'OTT Without Ads · Ultimate',
-      big: '7 OTTs (No Ads)',
-      sub: 'Netflix, Prime, Disney+, Hulu, Max, Apple TV+, Paramount+',
-      price: 49.99,
-      per: 'per month',
-      badge: 'All 7 OTTs · No Ads',
-      feats: [
-        'Zero ads across all 7 OTT platforms',
-        'Netflix Premium 4K, Hulu (No Ads) & Disney+ Premium',
-        'Prime Video (Ad-Free), Max Ultimate, Apple TV+ & Paramount+ w/ Showtime',
-        '5 simultaneous 4K streams + family profiles'
-      ],
-      info: [
-        ['Plan type', 'Without Ads (All-Access Ad-Free OTT bundle)'],
-        ['OTTs offered', 'Netflix, Amazon Prime Video, Disney+, Hulu, Max, Apple TV+, Paramount+ with Showtime'],
-        ['Ad experience', 'Completely ad-free on-demand streaming'],
-        ['Quality & screens', '4K UHD + Dolby Vision · 5 concurrent streams']
-      ]
-    }
-  ]);
-
-  /* 4. Real MDM plans: Chrome Safe Browsing, Google Maps restrictions, app denylist, block new app installs */
-  STATIC.mdm = reg([
-    {
-      id: 'mdm:browser-lock',
-      label: 'MDM · Safe Web & No-Install',
-      big: '$3.50 / device',
-      sub: 'Per device, every month',
-      price: 3.5,
-      per: 'per device / month',
-      feats: [
-        'Enforce Chrome Safe Browsing (always ON, cannot disable)',
-        'Block Play Store & App Store — new apps will not install',
-        'App deny list & block unknown APK / third-party installs',
-        'Remote lock, wipe & phishing URL blocking'
-      ],
-      info: [
-        ['Chrome policy', 'Mandatory Safe Browsing; incognito & risky extensions blocked'],
-        ['New app installs', 'Blocked — employees cannot install any new apps'],
-        ['App denylist', 'Deny social media, games & unapproved apps'],
-        ['OS support', 'Android Enterprise, iOS Supervised & ChromeOS']
-      ]
-    },
-    {
-      id: 'mdm:field-control',
-      label: 'MDM · Maps & App Restriction',
-      big: '$6 / device',
-      sub: 'Per device, every month',
-      price: 6,
-      per: 'per device / month',
-      pop: true,
-      badge: 'Popular',
-      feats: [
-        'Google Maps restriction (work routes only, block timeline & sharing)',
-        'Chrome Safe Browsing enforced + block other browsers',
-        'Strict app deny list & block all new app installations',
-        'Disable factory reset, USB transfer & hotspot changes'
-      ],
-      info: [
-        ['Google Maps policy', 'Restrict Maps features, location sharing & offline map tampering'],
-        ['Chrome policy', 'Enhanced Chrome Safe Browsing locked on; other browsers denied'],
-        ['New app installs', 'Store disabled; zero user installs (admin push only)'],
-        ['App denylist', 'Block TikTok, WhatsApp, games or custom package IDs']
-      ]
-    },
-    {
-      id: 'mdm:kiosk-pro',
-      label: 'MDM · Kiosk & Zero-Install',
-      big: '$9.50 / device',
-      sub: 'Per device, every month',
-      price: 9.5,
-      per: 'per device / month',
-      feats: [
-        'Single-app or multi-app Kiosk mode lock',
-        'Permanent zero-install policy: new apps never install',
-        'Chrome Safe Browsing, Google Maps & YouTube restrictions',
-        'Zero-touch enrolment, geofencing & SOC 2 audit logs'
-      ],
-      info: [
-        ['Kiosk lock', 'Lock devices strictly to approved company apps'],
-        ['Web & Maps lock', 'Chrome Safe Browsing + Google Maps restrictions enforced'],
-        ['New app installs', 'Blocked at OS policy level; stores hidden'],
-        ['Compliance', 'SSO, tamper alerts & full audit trail']
-      ]
-    },
-    {
-      id: 'mdm:fleet25',
-      label: 'MDM · Fleet 25 Pack',
-      big: '25 devices',
-      sub: 'Bundle with Maps & App Restriction',
-      price: 125,
-      per: 'per month',
-      badge: 'Save 16%',
-      feats: [
-        '25 devices with full Maps & App Restriction policies',
-        'Chrome Safe Browsing & Google Maps restrictions included',
-        'App deny list & block new app installations',
-        'Central admin console & onboarding help'
-      ],
-      info: [
-        ['Devices included', '25 managed phones or tablets'],
-        ['Restrictions', 'Chrome Safe Browsing, Google Maps lock, App denylist, No new installs'],
-        ['Setup', 'QR / Zero-touch enrolment included']
-      ]
-    }
-  ]);
-
-  /* 5. Real Employee Safety Platform plans: USA danger zones, family notify in settings, > 2 hours SOS call with location */
-  STATIC.safety = reg([
-    {
-      id: 'safe:geo-family',
-      label: 'Safety · Danger Zone & Family',
-      big: '$5 / employee',
-      sub: 'Minimum 5 employees',
-      price: 5,
-      per: 'per user / month',
-      feats: [
-        'USA & global danger-zone boundary entry alerts',
-        'Settings option to mention & notify family contacts',
-        'One-tap SOS button with live GPS location link',
-        'No hardware needed — iOS & Android app'
-      ],
-      info: [
-        ['Danger zones', 'Alerts when entering flagged high-risk or restricted US/global areas'],
-        ['Family notify setting', 'Employees can enable "Notify Family" in settings with emergency contacts'],
-        ['SOS location', 'Sends live GPS coordinates by SMS, push & email'],
-        ['Minimum', '5 employees']
-      ]
-    },
-    {
-      id: 'safe:dwell-pro',
-      label: 'Safety · 2-Hr Overstay SOS',
-      big: '$11 / employee',
-      sub: 'Auto SOS call if stay > 2 hours',
-      price: 11,
-      per: 'per user / month',
-      pop: true,
-      badge: 'Popular',
-      feats: [
-        'Automatic SOS call with GPS location if employee stays > 2 hours in a danger place',
-        'Configurable overstay timer (30 min, 1 hr, 2 hrs+) per zone',
-        'Notify family (configured in settings) + safety manager',
-        'Man-down detection & missed check-in escalation'
-      ],
-      info: [
-        ['2-hour overstay rule', 'If stay exceeds 2 hours in a danger area, app places an auto SOS call with live location'],
-        ['USA danger zones', 'Real-time US neighborhood & site hazard geofences'],
-        ['Family notify setting', 'Automatically alerts family contacts saved in employee settings'],
-        ['Escalation', 'Calls manager & family, sharing live GPS map link']
-      ]
-    },
-    {
-      id: 'safe:dispatch-247',
-      label: 'Safety · 24/7 Dispatch & Auto-Call',
-      big: '$21 / employee',
-      sub: 'Live SOC + 2-hr Auto SOS Call',
-      price: 21,
-      per: 'per user / month',
-      feats: [
-        '24/7 monitoring centre answers > 2 hr danger-zone SOS calls',
-        'Direct 911 / emergency dispatch with exact GPS location',
-        'Simultaneous notify-family call, SMS & live tracking link',
-        'Shift audit logs, incident photos & compliance reports'
-      ],
-      info: [
-        ['24/7 monitoring', 'Live operators verify manual SOS & 2-hour overstay SOS calls'],
-        ['Emergency dispatch', 'Operators contact US 911 / local responders with exact GPS coordinates'],
-        ['Family notify setting', 'Opt-in family alert settings notify relatives immediately'],
-        ['Compliance', 'SSO, full audit trail & dedicated account manager']
-      ]
-    },
-    {
-      id: 'safe:us-travel',
-      label: 'Safety · US Field & Travel',
-      big: '$14 / traveller',
-      sub: 'US high-risk area protection',
-      price: 14,
-      per: 'per traveller / month',
-      feats: [
-        'Real-time USA city & county danger-zone alerts',
-        '2-hour stationary / site-stay timer triggers SOS call + location',
-        'Settings toggle to notify family & HR emergency contacts',
-        '24/7 medical and security assistance helpline'
-      ],
-      info: [
-        ['USA risk map', 'Alerts before & on entering high-crime or severe-weather areas'],
-        ['2-hour stay trigger', 'Auto SOS call with GPS location if stay exceeds 2 hours'],
-        ['Family notify setting', 'Employee-controlled family notification in app settings'],
-        ['Support', '24/7 emergency security & travel hotline']
-      ]
-    }
-  ]);
-
-  /* Update service card descriptions on the Home dashboard */
-  const descMap = {
-    iptv: 'OTT streaming platform bundles with ads or without ads (ad-free). View exact OTT apps included in every plan.',
-    mdm: 'Restrict company devices: enforce Chrome Safe Browsing, restrict Google Maps, deny restricted apps and block new app installations.',
-    safety: 'Protect staff in high-risk USA & global places with family notification settings and automatic SOS calls with location if they stay over 2 hours.'
+  /* 7. Override planCard & renderPlans so ALL plans are compact and open the modal on "View plan details" */
+  planCard = function (p, sid) {
+    const l = S.cart[p.id], mv = sid === 'usmvno' || sid === 'ukmvno', lines = cardLines(p, sid), promo = p.promo;
+    const pill = p.pill || (mv ? String(p.label).replace(/\s*\d+\s*GB$/, '') : `${p.tier || ''}${p.phys ? ' SIM' : ' eSIM'}`.trim());
+    const suffix = p.per === 'per month' ? '/mo' : ' ' + p.per;
+    const price = promo ? `<div class="pc-price"><b>${pf(p.price)}</b><small>/mo first ${promo.months} mo</small></div><div class="pc-then">${pf(promo.then)} going forward</div>` : `<div class="pc-price"><b>${pf(p.price)}</b><small>${suffix}</small></div>`;
+    const act = l ? `<span class="stepper pc-step"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></span>` : `<button class="btn btn-primary pc-btn${promo ? ' offer' : ''}" data-act="add" data-id="${p.id}">${promo ? 'Grab the Offer' : 'Get this plan'}</button>`;
+    const meta = mv ? '' : `<div class="pc-meta">${dayWord(p.days)} validity${p.phys ? ' · SIM delivered' : ' · Instant QR'}</div>`;
+    return `<div class="pcw"><article class="pc${p.pop ? ' pop' : ''}">
+      <div class="pc-top"><span class="pc-pill">${esc(pill)}</span>${p.badge ? `<span class="pc-tag">${esc(p.badge)}</span>` : ''}<div class="pc-big">${p.big}</div>${lines.map(t => t === '+' ? '<div class="pc-plus">+</div>' : `<div class="pc-l">${t}</div>`).join('')}</div>
+      <div class="pc-body">
+        ${netRow(p)}${meta}${price}
+        <button type="button" class="pdbtn" data-act="plan-modal" data-id="${esc(p.id)}">View plan details <span>›</span></button>
+        ${act}
+      </div>
+    </article></div>`;
   };
-  SERVICES.forEach(sv => { if (descMap[sv.id]) sv.desc = descMap[sv.id]; });
 
-  /* Re-render current screen with all updates active */
+  renderPlans = function () {
+    const s = SERVICES.find(x => x.id === S.service);
+    if (s.id === 'did') return renderDid();
+    let list, head, note, chips = '', ptype = '', after = '';
+    if (s.id === 'esim') {
+      const d = [...DESTS, ...REGIONS].find(x => x.code === S.dest), f = S.filter || 'all';
+      const sim = S.kind === 'sim', tr = S.tier === 'standard' ? 'standard' : 'premium', ks = SUBS[tr];
+      const kind = ks.some(k => k[0] === S.ptype) ? S.ptype : ks[0][0]; S.ptype = kind;
+      list = sim ? planListFor(d) : esimPlans(d, kind);
+      if (f === 'short') list = list.filter(p => p.days <= 15); else if (f === 'month') list = list.filter(p => p.days >= 30);
+      const nd = TIERS.length, nv = VTIERS.length;
+      ptype = `<div class="ptype" role="tablist" aria-label="Plan type"><button class="ptbtn" role="tab" aria-selected="${kind === 'data'}" data-act="ptype" data-id="data"><b>Data only</b><small>${nd} plans · internet only</small></button><button class="ptbtn" role="tab" aria-selected="${kind === 'voice'}" data-act="ptype" data-id="voice"><b>Data + Voice</b><small>${nv} plans · calls, SMS and data</small></button></div>`;
+      if (sim || tr === 'standard') ptype = '';
+      head = sim ? `${d.name} physical SIM plans` : `${d.name} ${TIER_INFO[tr].name} eSIM plans`;
+      note = sim ? 'SIMs with calls, SMS and data, or data only. Delivered to your address.' : TIER_INFO[tr].esim + ' Install by scanning a QR code.';
+      chips = `<div class="filters" role="group" aria-label="Filter plans">${[['all', 'All plans'], ['short', 'Short trips'], ['month', '30 days']].map(([k, t]) => `<button class="fchip" aria-pressed="${f === k}" data-act="filter" data-id="${k}">${t}</button>`).join('')}</div>`;
+    } else {
+      list = STATIC[s.id];
+      head = `${s.name} plans`;
+      note = 'Prices shown in US dollars. Click "View plan details" on any card for full specs.';
+      if (s.id === 'usmvno') note = 'Choose a ready-made US local plan or configure a custom system rate plan.';
+      if (s.id === 'pg') {
+        ptype = pgButtons();
+        const sv = PGS.find(x => x.id === S.pgsvc);
+        if (sv) { list = sv.ids.map(i => REG[i]).filter(Boolean); head = `${sv.name} plans`; note = sv.desc; }
+        else { $('#plans').innerHTML = ptype + '<div class="pg-hint">Select a service above to see its plans and prices.</div>'; return; }
+      }
+    }
+    const pcs = ['usmvno', 'ukmvno', 'esim'].includes(s.id);
+    $('#plans').innerHTML = `${ptype}<div class="plans-head"><div><h2>${head}</h2><p>${note}</p></div>${chips}</div><div class="plans${list.length === 1 ? ' one' : list.length === 4 ? ' four' : ''}${pcs ? ' pcs' : ''}">${list.map(p => {
+      if (pcs) return planCard(p, s.id);
+      const l = S.cart[p.id];
+      const act = l ? `<span class="stepper"><button data-act="dec" data-id="${p.id}" aria-label="Remove one">−</button><span>${l.qty}</span><button data-act="inc" data-id="${p.id}" aria-label="Add one">+</button></span>` : `<button class="btn btn-primary" data-act="add" data-id="${p.id}">Add to cart</button>`;
+      const previewFeats = (p.feats || []).slice(0, 3);
+      return `<article class="plan ${p.pop ? 'pop' : ''}${p.tier === 'Premium' ? ' t-gold' : p.tier === 'Standard' ? ' t-silver' : ''}">
+        <div class="lab"><span class="lab-l">${p.code ? `<span class="flag sm">${flag(p.code)}</span>` : ''}${esc(p.label)}</span>${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ''}</div>
+        <div class="big">${esc(p.big)}</div>
+        <div class="sub">${esc(p.sub)}</div>
+        ${netRow(p)}
+        <ul>${previewFeats.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+        <button type="button" class="pdbtn" data-act="plan-modal" data-id="${esc(p.id)}">View plan details <span>›</span></button>
+        <div class="buy"><div class="price">${fmt(p.price)}<small>${esc(p.per)}</small></div>${act}</div>
+      </article>`;
+    }).join('')}</div>${after}`;
+
+    if (s.id === 'usmvno') {
+      const host = document.getElementById('plans'), planGrid = host.querySelector('.plans');
+      const ready = document.createElement('section'); ready.className = 'mvno-ready';
+      const readyTitle = document.createElement('h3'); readyTitle.className = 'mvno-panel-title'; readyTitle.textContent = 'Default plans';
+      ready.append(readyTitle, planGrid);
+      const start = document.createElement('section'); start.className = 'mvno-start panel';
+      start.innerHTML = '<span class="builder-eyebrow">CUSTOM SYSTEM PLAN</span><h3>Create your own bundle</h3><p>Configure billing, allowance caps, carrier SLOs, feature flags, throttle tiers, and tethering.</p><button type="button" class="btn btn-primary" data-act="uscfg-open">Create your own bundle</button>';
+      const columns = document.createElement('div'); columns.className = 'mvno-columns';
+      columns.append(ready, start);
+      const heading = host.querySelector('.plans-head'); heading.after(columns);
+      const networkConfig = document.createElement('section');
+      networkConfig.className = 'uscfg-launch';
+      networkConfig.innerHTML = '<div><span class="uscfg-eyebrow">ADVANCED CARRIER CONFIGURATION</span><h3>Configure a custom system rate plan</h3><p>Set billing, allowance caps, carrier buckets, feature flags, throttling rules, and tethering options.</p></div><button type="button" class="btn btn-primary" data-act="uscfg-open">Configure network request</button>';
+      columns.after(networkConfig);
+      installUsMvnoConfigStyles();
+    }
+  };
+
+  /* Modal open/close listeners */
+  document.addEventListener('click', e => {
+    const openBtn = e.target.closest('[data-act="plan-modal"]');
+    if (openBtn) { openPlanModal(openBtn.dataset.id); return; }
+    if (e.target.closest('[data-act="modal-close"]')) { closePlanModal(); return; }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modalPlanId) closePlanModal();
+  });
+
+  /* Refresh active view immediately */
   renderHeader();
   renderCart();
   renderMain();
